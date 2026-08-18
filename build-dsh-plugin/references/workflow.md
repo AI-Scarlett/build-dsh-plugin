@@ -126,10 +126,10 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: reproducible installs and supportable rollback.
 - **Costs**: coordinated versioning, checks, public verification, and immutable anchors.
 - **Inputs**: E3-ready source and approved release scope.
-- **Actions**: synchronize package/README/catalog/tests; pin full commit; disclose lifecycle/allowBuilds; run repository checks, source verification, pack dry-run, secret scan; merge/publish; read back remote commit, checks, catalog, and assets.
+- **Actions**: synchronize package/README/INSTALL/catalog/tests; pin full commit/tag; disclose lifecycle/allowBuilds; for public artifacts synchronize release manifest, ZIP, SHA-256 sidecar, embedded license, source link, and asset URLs; run repository checks, source verification, pack/extraction dry-run, consistency verifier, and secret scan; merge/publish; read back remote commit, checks, catalog, release API, tagged manifest, and assets.
 - **Output**: repository release report with immutable identity.
-- **Gate**: public/remote source and metadata match; real Profile remains explicitly unchanged.
-- **Stop**: mutable source, inconsistent version, missing artifact, failed checks, or unverifiable public data.
+- **Gate**: public/remote source, license, artifact, manifest, checksum, and metadata match; real Profile remains explicitly unchanged.
+- **Stop**: mutable source, missing redistribution authority/license, inconsistent version/hash/file count, missing embedded license or artifact, failed checks, or unverifiable public data.
 
 ## 11. Phase 9 - real Profile acceptance
 
@@ -150,7 +150,7 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: E5 confidence for the claimed surface.
 - **Costs**: devices, accounts, network variability, publication controls, and potentially disruptive failure tests.
 - **Inputs**: E4 where relevant plus external acceptance plan.
-- **Actions**: test authorized real device/account/public endpoint; cover foreground/background, reconnect, network switch, tamper/replay, failure recovery, and rollback as applicable; redact evidence.
+- **Actions**: test authorized real device/account/public endpoint; for a download page verify visible license/source/version/SHA, fixed-tag manifest resolution, fail-closed mismatch behavior, direct ZIP/SHA links, and a recomputed unauthenticated download hash; cover foreground/background, reconnect, network switch, tamper/replay, failure recovery, and rollback as applicable; redact evidence.
 - **Output**: per-surface E5 report.
 - **Gate**: every public claim has direct readback and recovery evidence.
 - **Stop**: missing authorization/credentials/device, unsafe exposure, or no recovery path; mark partial rather than simulate completion.

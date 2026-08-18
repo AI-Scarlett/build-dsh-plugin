@@ -19,6 +19,7 @@
 15. Repository release and Profile acceptance separation
 16. Immutable source and catalog authority
 17. External runtime and ApiProxy bridges
+18. Licensed public artifact distribution
 
 ## 1. How to use a decision card
 
@@ -226,3 +227,15 @@ For each card, record:
 - **Procedure**: separate adapter install from runtime setup; define allowlist and forbidden actions; redact projections; authenticate; add AEAD/replay protection when transport is untrusted; bound frames/retries; validate each channel independently.
 - **Evidence / stop**: adapter E3, external doctor/real read, forbidden-action tests, transport tamper/replay tests, and device/public E5 where claimed. Stop if secrets or broad Host surfaces cross the bridge.
 - **Reconsider when**: real usage data justifies a new separately reviewed action or cloud relay.
+
+## 18. Licensed public artifact distribution
+
+- **Objective**: allow direct website downloads without losing license, source, version, checksum, or artifact identity.
+- **Why**: forbidding every website download blocks legitimate open-source distribution, while copying version/SHA facts into HTML or reading floating `main` creates drift and unreproducible downloads.
+- **Benefits**: low-friction installation for Agent Skills and artifacts, visible MIT terms, reproducible release assets, dynamic metadata, and independent public verification.
+- **Costs**: release coordination, CI checks, GitHub/API availability, cache diagnosis, and a separate public-page E5 gate.
+- **Use when**: the owner authorizes public distribution and the selected license permits it.
+- **Avoid when**: repository/license authority is unknown, the artifact contains private state, or a direct download would be mislabeled as a DSH Profile installation.
+- **Procedure**: classify the artifact; choose license; create immutable Release; include ZIP, SHA sidecar, manifest, INSTALL, and embedded license; make manifest authoritative; have the page resolve latest Release then tagged manifest; compare release assets/URLs; show source and license; fail closed on mismatch; read back and hash the public ZIP.
+- **Evidence / stop**: consistency verifier and CI pass, tag/Release/assets are public, downloaded hash matches, archive contains license, page displays matching dynamic facts and disables download on invalid data. Stop on `UNLICENSED`, moving sources, stale duplicated runtime metadata, or any mismatch.
+- **Reconsider when**: scale, API limits, signatures, availability, or governance justify a first-party signed registry/artifact host.

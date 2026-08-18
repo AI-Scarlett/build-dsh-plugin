@@ -10,6 +10,7 @@
 6. Decision record
 7. Stage-gate report
 8. Permission matrix
+9. Public distribution report
 
 ## 1. Host-contract record
 
@@ -134,6 +135,9 @@ Never execute a plan after any hash, source, target, phrase, expiry, or used sta
 - [ ] pack dry-run contains required runtime files
 - [ ] secrets/private paths scan clean
 - [ ] remote commit/checks/public assets read back
+- [ ] public artifact manifest, ZIP, SHA sidecar, file count, byte size, and embedded license agree
+- [ ] direct-download page reads the manifest from the resolved fixed Release tag and fails closed on mismatch
+- [ ] source link and license label remain visible; public ZIP hash was recomputed without authentication
 - [ ] local Profile deliberately left unchanged or separately confirmed
 - [ ] verification report distinguishes repository, Profile, UI, device, and rollback states
 ```
@@ -190,3 +194,26 @@ Use one record for each consequential architecture, permission, mutation, releas
 ```
 
 Remove any row that has no user outcome, bounded caller, failure behavior, and test.
+
+## 9. Public distribution report
+
+```markdown
+# Public distribution report
+
+- Artifact type: dsh-bundle/agent-skill/adapter/source
+- Repository and owner authority:
+- Release tag and commit:
+- Manifest URL at fixed tag:
+- ZIP URL:
+- SHA-256 sidecar URL:
+- Recomputed public SHA-256:
+- Bytes / regular file count:
+- License / copyright holder:
+- License embedded in archive: yes/no
+- Source link retained: yes/no
+- README / INSTALL / manifest / SHA consistency: PASS/PARTIAL/BLOCKED
+- Website dynamic metadata contract: PASS/PARTIAL/BLOCKED/not applicable
+- Public visible readback: E5 evidence/not deployed
+- DSH Profile state: unchanged/unverified/separately accepted
+- Remaining gate:
+```

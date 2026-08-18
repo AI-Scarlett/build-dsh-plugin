@@ -4,13 +4,13 @@
 
 ## 文件
 
-- `build-dsh-plugin-20260818.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
-- `build-dsh-plugin-20260818.sha256`：ZIP 完整性校验。
+- `build-dsh-plugin-20260818.1.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
+- `build-dsh-plugin-20260818.1.sha256`：ZIP 完整性校验。
 - `manifest.json`：版本、入口、依赖、校验状态和明确排除项。
 
-固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18>
+固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.1>
 
-发行版本：`2026.08.18`
+发行版本：`2026.08.18.1`
 
 `manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。分发页面应先解析最新 GitHub Release，再读取该标签下的 manifest；不要从 README 或 INSTALL 抽取运行时元数据。
 
@@ -19,14 +19,14 @@
 在本目录运行：
 
 ```bash
-shasum -a 256 -c build-dsh-plugin-20260818.sha256
-unzip -l build-dsh-plugin-20260818.zip
+shasum -a 256 -c build-dsh-plugin-20260818.1.sha256
+unzip -l build-dsh-plugin-20260818.1.zip
 ```
 
 期望 SHA-256：
 
 ```text
-f19ae506d79e55ca1fdd86a6eadecb7a0aefeaae7061c8f0cdc758f0404127fc
+2a6303b9c624ea6433855800ef33292b04bce64c6c8d2ac5bbd72da525d12b33
 ```
 
 ## 安装到另一套 Codex
@@ -42,7 +42,7 @@ f19ae506d79e55ca1fdd86a6eadecb7a0aefeaae7061c8f0cdc758f0404127fc
 例如目标使用默认目录时，可以在确认同名目录不存在后执行：
 
 ```bash
-unzip build-dsh-plugin-20260818.zip -d ~/.codex/skills
+unzip build-dsh-plugin-20260818.1.zip -d ~/.codex/skills
 ```
 
 重新打开任务或让 Agent 重新加载 Skills，然后用下面的方式触发：

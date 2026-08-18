@@ -1,6 +1,6 @@
 ---
 name: build-dsh-plugin
-description: Convert natural-language or structured product briefs into plans, source projects, audits, packages, releases, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for new DSH plugin ideas, DSH/Cordis Host plugins, Browser Client bundles, Skill adapters, ApiProxy bridges, plugin marketplaces, Profile lifecycle managers, catalog entries, fixed-commit releases, and third-party compatibility/install requests. Normalize goals, problems, capabilities, data, mutations, UI, external dependencies, constraints, and acceptance criteria; apply safe defaults; enforce host preflight, quantified gates, disposable tests, official CLI-only package changes, separate repository/Profile acceptance, and evidence-based status.
+description: Convert natural-language or structured product briefs into plans, source projects, audits, packages, releases, public download artifacts, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for new DSH plugin ideas, DSH/Cordis Host plugins, Browser Client bundles, Skill adapters, ApiProxy bridges, plugin marketplaces, Profile lifecycle managers, catalog entries, fixed-commit releases, GitHub Release/website distribution, and third-party compatibility/install requests. Normalize goals, problems, capabilities, data, mutations, UI, external dependencies, constraints, delivery, and acceptance criteria; apply safe defaults; enforce host preflight, quantified gates, disposable tests, official CLI-only package changes, licensed fixed-release distribution, separate repository/Profile acceptance, and evidence-based status.
 ---
 
 # Build DSH Plugin
@@ -19,7 +19,7 @@ Require only three semantic facts before source generation:
 
 Infer names, package IDs, architecture candidates, risk class, project structure, tests, and safe defaults. Do not ask the user to design Host APIs, Cordis entries, schemas, build tooling, or test strategy unless they have a preference.
 
-When optional fields are absent, default to source generation only, standard DSH Bundle, read-only behavior, no real Profile mutation, no restart, no external network/process/account/device, no credentials, local-only exposure, no publication, and E3 disposable acceptance. State every default as an assumption.
+When optional fields are absent, default to source generation only, standard DSH Bundle, read-only behavior, no real Profile mutation, no restart, no external network/process/account/device, no credentials, local-only exposure, no publication, and E3 disposable acceptance. State every default as an assumption. `No publication` is an authorization default, not a permanent prohibition: an explicitly authorized, properly licensed, internally consistent fixed release may be distributed from a website.
 
 Ask only questions whose answers materially change the product outcome or risk boundary. Missing problem, outcome, or acceptance blocks generation. Missing target Profile, mutation scope, credential owner, LAN/Internet security, or real device/account blocks only the corresponding real operation; it does not block a safe source scaffold when interfaces can remain abstract.
 
@@ -152,6 +152,18 @@ Run repository checks, source verification, and pack dry-run. Verify the remote 
 
 Produce two separate reports: repository release evidence and Profile/runtime acceptance evidence. When the second report is absent, state `Profile unchanged` or `Profile unverified`.
 
+### 8. Distribute public artifacts under a fixed contract
+
+Read [distribution.md](references/distribution.md) before creating a GitHub Release, direct-download page, public artifact, or marketplace/build-site distribution.
+
+Do not retain a blanket “website distribution is forbidden” rule after the owner explicitly authorizes publication and the license permits it. For public downloads, bind the ZIP, SHA-256 sidecar, release manifest, license, source link, README, and INSTALL to one immutable tag. Make the release manifest the machine-readable authority; website code must resolve the latest stable Release, read the manifest from that exact tag, compare asset names and URLs, and fail closed before enabling download.
+
+For MIT distribution, show the license label, include `LICENSE` inside an independently downloadable archive, keep the source repository visible, and preserve the copyright and permission notice. Display version, file count, byte size, and SHA-256 dynamically from the validated manifest; never scrape README or copy those facts into a second runtime data source.
+
+Keep artifact identity distinct from host identity. An Agent Skill download is not a DSH Bundle and must not be presented as a Profile install. A DSH Bundle download still does not authorize official-CLI installation, Profile mutation, or restart.
+
+Before claiming public distribution complete, verify the tagged manifest and unauthenticated release assets, recompute the downloaded ZIP hash, read back the license/source links, and separately verify the visible public page when one exists. Website source/tests alone remain E1/E2; public page and asset readback are E5 only for the distribution surface.
+
 ## Quantify readiness
 
 Run the deterministic read-only audit:
@@ -172,6 +184,7 @@ Use [templates.md](references/templates.md). Always report:
 - hard blockers and prohibited surfaces;
 - readiness score plus evidence level;
 - exact changed files and source identity;
+- release tag, manifest authority, public artifact hash, and license when distributed;
 - tests and disposable/runtime evidence;
 - real Profile/public/device state as a separate line;
 - rollback/recovery state;

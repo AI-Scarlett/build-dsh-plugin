@@ -189,7 +189,12 @@ function normalize(raw) {
       workspace: string(delivery.workspace),
       repository: string(delivery.repository),
       license: string(delivery.license),
-      releaseTarget: safeEnum(delivery.releaseTarget, ['none', 'local', 'github', 'marketplace'], 'none', errors, 'delivery.releaseTarget'),
+      releaseTarget: safeEnum(delivery.releaseTarget, ['none', 'local', 'github', 'marketplace', 'website'], 'none', errors, 'delivery.releaseTarget'),
+      artifactType: safeEnum(delivery.artifactType, ['source', 'dsh-bundle', 'agent-skill', 'adapter'], 'dsh-bundle', errors, 'delivery.artifactType'),
+      publicDownload: delivery.publicDownload === true,
+      metadataAuthority: safeEnum(delivery.metadataAuthority, ['manifest', 'catalog', 'release-manifest'], 'release-manifest', errors, 'delivery.metadataAuthority'),
+      sourceLinkRequired: delivery.sourceLinkRequired !== false,
+      licenseNoticeRequired: delivery.licenseNoticeRequired !== false,
     },
     acceptance: {
       targetEvidence: safeEnum(acceptance.targetEvidence, ['E3', 'E4', 'E5'], 'E3', errors, 'acceptance.targetEvidence'),
@@ -266,9 +271,22 @@ function normalize(raw) {
   if (normalized.external.devices.length > 0 && normalized.acceptance.externalAcceptanceAllowed !== true) realOperationBlockers.push('real device acceptance is not authorized')
   if (['E4', 'E5'].includes(normalized.acceptance.targetEvidence) && normalized.acceptance.realProfileAllowed !== true) realOperationBlockers.push('real target/Profile acceptance is not authorized')
   if (normalized.acceptance.targetEvidence === 'E5' && normalized.acceptance.externalAcceptanceAllowed !== true) realOperationBlockers.push('external/device/account/public acceptance is not authorized')
-  if (['github', 'marketplace'].includes(normalized.delivery.releaseTarget)) {
+  if (['github', 'marketplace', 'website'].includes(normalized.delivery.releaseTarget)) {
     if (!normalized.delivery.repository) realOperationBlockers.push('release repository is unspecified')
     if (!normalized.delivery.license) realOperationBlockers.push('release license is unspecified')
+  }
+  if (normalized.delivery.publicDownload) {
+    if (!['github', 'marketplace', 'website'].includes(normalized.delivery.releaseTarget)) {
+      realOperationBlockers.push('public download requires an authorized GitHub, marketplace, or website release target')
+    }
+    if (normalized.delivery.metadataAuthority !== 'release-manifest') {
+      realOperationBlockers.push('public download requires a fixed release manifest as metadata authority')
+    }
+    if (!normalized.delivery.sourceLinkRequired) realOperationBlockers.push('public download must retain a source repository link')
+    if (!normalized.delivery.licenseNoticeRequired) realOperationBlockers.push('public redistribution must preserve the license notice')
+    if (!normalized.delivery.license || normalized.delivery.license.toUpperCase() === 'UNLICENSED') {
+      realOperationBlockers.push('public redistribution license is missing or does not grant redistribution rights')
+    }
   }
 
   const completeness = calculateCompleteness(raw, normalized)
