@@ -31,7 +31,7 @@ Skill 入口是 [`build-dsh-plugin/SKILL.md`](build-dsh-plugin/SKILL.md)。完�
 
 ## 安装
 
-下载 `dist/build-dsh-plugin-20260818.zip`，先验证完整性：
+从固定发行页下载 [`build-dsh-plugin-20260818.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18/build-dsh-plugin-20260818.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18/build-dsh-plugin-20260818.sha256)，然后验证完整性：
 
 ```bash
 cd dist
@@ -55,6 +55,7 @@ unzip build-dsh-plugin-20260818.zip -d ~/.codex/skills
 ## 自检
 
 ```bash
+node scripts/verify-distribution.mjs
 cd build-dsh-plugin
 node scripts/test-normalize-brief.mjs
 node scripts/normalize-brief.mjs assets/plugin-brief.readonly-example.json
@@ -76,9 +77,12 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 ## 发行完整性
 
 - 发行版本：`2026.08.18`
+- 固定发行标签：[`v2026.08.18`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18)
 - ZIP SHA-256：`f19ae506d79e55ca1fdd86a6eadecb7a0aefeaae7061c8f0cdc758f0404127fc`
 - ZIP 内常规文件数：16（包含独立的 `LICENSE`）
 - 已通过 Skill 结构、Node 语法、Brief 测试、个人绝对路径、敏感模式和一次性解压复测
+
+`dist/manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。README 与 INSTALL 只负责说明；DSH STORE 等分发页面必须读取“最新 GitHub Release → 对应标签下的 manifest”，不能把这些字段复制成另一份运行时数据。这样即使网页缓存暂时未刷新，下载页仍会把同一固定标签的 manifest、ZIP 和校验值绑定在一起。
 
 ## 开源许可证
 

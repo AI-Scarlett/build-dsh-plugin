@@ -8,6 +8,12 @@
 - `build-dsh-plugin-20260818.sha256`：ZIP 完整性校验。
 - `manifest.json`：版本、入口、依赖、校验状态和明确排除项。
 
+固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18>
+
+发行版本：`2026.08.18`
+
+`manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。分发页面应先解析最新 GitHub Release，再读取该标签下的 manifest；不要从 README 或 INSTALL 抽取运行时元数据。
+
 ## 安装前验证
 
 在本目录运行：
