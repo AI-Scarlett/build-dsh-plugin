@@ -1,6 +1,6 @@
 ---
 name: build-dsh-plugin
-description: Convert natural-language or structured product briefs into plans, source projects, audits, packages, releases, public download artifacts, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for new DSH plugin ideas, DSH/Cordis Host plugins, Browser Client bundles, Skill adapters, ApiProxy bridges, plugin marketplaces, Profile lifecycle managers, catalog entries, fixed-commit releases, GitHub Release/website distribution, and third-party compatibility/install requests. Normalize goals, problems, capabilities, data, mutations, UI, external dependencies, constraints, delivery, and acceptance criteria; apply safe defaults; enforce host preflight, quantified gates, disposable tests, official CLI-only package changes, licensed fixed-release distribution, separate repository/Profile acceptance, and evidence-based status.
+description: Convert natural-language or structured product briefs into plans, source projects, audits, packages, releases, DSH STORE-ready catalog candidates, public download artifacts, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for new DSH plugin ideas, DSH/Cordis Host plugins, Browser Client bundles, Skill adapters, ApiProxy bridges, plugin marketplaces, third-party DSH STORE listing failures, catalog entries/submissions, Profile lifecycle managers, fixed-commit releases, GitHub Release/website distribution, and third-party compatibility/install requests. Normalize goals, problems, capabilities, data, mutations, UI, external dependencies, constraints, delivery, marketplace intent, and acceptance criteria; apply safe defaults; enforce host and marketplace preflight, quantified gates, disposable tests, official CLI-only package changes, licensed fixed-release distribution, separate repository/catalog/Profile acceptance, and evidence-based status.
 ---
 
 # Build DSH Plugin
@@ -19,7 +19,7 @@ Require only three semantic facts before source generation:
 
 Infer names, package IDs, architecture candidates, risk class, project structure, tests, and safe defaults. Do not ask the user to design Host APIs, Cordis entries, schemas, build tooling, or test strategy unless they have a preference.
 
-When optional fields are absent, default to source generation only, standard DSH Bundle, read-only behavior, no real Profile mutation, no restart, no external network/process/account/device, no credentials, local-only exposure, no publication, and E3 disposable acceptance. State every default as an assumption. `No publication` is an authorization default, not a permanent prohibition: an explicitly authorized, properly licensed, internally consistent fixed release may be distributed from a website.
+When optional fields are absent, default to source generation only, standard DSH Bundle, read-only behavior, no real Profile mutation, no restart, no external network/process/account/device, no credentials, local-only exposure, no publication, and E3 disposable acceptance. Build reusable DSH Bundles with marketplace-compatible package structure by default, but do not infer authorization to submit or change DSH STORE. State every default as an assumption. `No publication` is an authorization default, not a permanent prohibition: an explicitly authorized, properly licensed, internally consistent fixed release may be distributed from a website or proposed to a marketplace.
 
 Ask only questions whose answers materially change the product outcome or risk boundary. Missing problem, outcome, or acceptance blocks generation. Missing target Profile, mutation scope, credential owner, LAN/Internet security, or real device/account blocks only the corresponding real operation; it does not block a safe source scaffold when interfaces can remain abstract.
 
@@ -46,6 +46,7 @@ Always enforce these rules:
 - Keep tests in disposable homes/profiles. Never write tests against real `~/.dsh`.
 - Do not expose credentials, full user files, injected system/plugin context, model reasoning, or private paths through logs or clients.
 - Keep planning, code completion, package release, Profile installation, runtime acceptance, and external/device acceptance as separate states.
+- Keep plugin readiness, catalog-candidate readiness, Registry PR/CI, merged catalog, public marketplace visibility, and Profile installation as separate states.
 
 Read [boundaries.md](references/boundaries.md) before implementation or installation. Hard blockers in that file override every score.
 
@@ -152,7 +153,34 @@ Run repository checks, source verification, and pack dry-run. Verify the remote 
 
 Produce two separate reports: repository release evidence and Profile/runtime acceptance evidence. When the second report is absent, state `Profile unchanged` or `Profile unverified`.
 
-### 8. Distribute public artifacts under a fixed contract
+### 8. Make reusable plugins DSH STORE-ready
+
+Read [marketplace.md](references/marketplace.md) whenever building a reusable third-party DSH plugin, assessing an existing repository for DSH STORE, or preparing a catalog entry.
+
+Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. Preserve unknown metadata as unknown instead of guessing.
+
+Route each third-party repository to exactly one result:
+
+- `direct`: standard DSH package at repository root;
+- `monorepo`: standard package at explicit `manifestPath` + `installPath`;
+- `adapter-required`: upstream is another host/runtime but exposes a narrow supported seam;
+- `blocked`: source/authorization is unverifiable or the plugin violates a hard DSH boundary.
+
+Run both audits before a catalog candidate:
+
+```bash
+node scripts/audit-plugin.mjs /absolute/path/to/plugin --json
+node scripts/audit-marketplace-entry.mjs /absolute/path/to/plugin \
+  --entry /absolute/path/to/catalog-entry.json \
+  --registry /absolute/path/to/current/catalog.json \
+  --json
+```
+
+Use [catalog-entry.template.json](assets/catalog-entry.template.json), but derive its values from the pinned repository and current Registry contract. A local candidate can be `READY_FOR_PINNED_SOURCE_VERIFICATION`; only current STORE validation plus fixed-Commit source verification can make it PR-ready. Only a merged remote catalog and public page readback prove actual listing.
+
+Never silently edit or deploy DSH STORE while building the plugin. Prepare the candidate and evidence in the plugin work; make any STORE contribution a separate repository scope/branch with its own checks and authorization. Marketplace listing never authorizes real Profile installation.
+
+### 9. Distribute public artifacts under a fixed contract
 
 Read [distribution.md](references/distribution.md) before creating a GitHub Release, direct-download page, public artifact, or marketplace/build-site distribution.
 
@@ -176,6 +204,8 @@ node scripts/audit-plugin.mjs /absolute/path/to/plugin --evidence /path/to/evide
 
 The audit scores static readiness out of 80 and traceable runtime evidence out of 20. It never proves runtime by itself. Use [scorecard.md](references/scorecard.md) for thresholds and the evidence JSON schema.
 
+For a marketplace target, also run `audit-marketplace-entry.mjs`. Its result is a route and next gate, not a security certification or publication claim.
+
 ## Produce the required handoff
 
 Use [templates.md](references/templates.md). Always report:
@@ -185,6 +215,7 @@ Use [templates.md](references/templates.md). Always report:
 - readiness score plus evidence level;
 - exact changed files and source identity;
 - release tag, manifest authority, public artifact hash, and license when distributed;
+- DSH STORE route, catalog candidate identity, pinned source, Registry check state, merged-listing state, and public marketplace readback when requested;
 - tests and disposable/runtime evidence;
 - real Profile/public/device state as a separate line;
 - rollback/recovery state;

@@ -60,11 +60,11 @@ Use a release manifest as the runtime authority for public download metadata. At
 
 ```json
 {
-  "distributionVersion": "2026.08.18.1",
+  "distributionVersion": "2026.08.18.2",
   "artifact": {
     "file": "artifact.zip",
     "bytes": 12345,
-    "regularFileCount": 17,
+    "regularFileCount": 21,
     "sha256": "64-lowercase-hex",
     "sha256File": "artifact.sha256",
     "downloadUrl": "https://github.com/owner/repo/releases/download/tag/artifact.zip",

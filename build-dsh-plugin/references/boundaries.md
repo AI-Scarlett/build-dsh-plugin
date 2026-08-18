@@ -9,7 +9,8 @@
 5. External runtime and bridge boundary
 6. Mutation boundary
 7. Test and evidence boundary
-8. Hard blockers
+8. Marketplace listing boundary
+9. Hard blockers
 
 ## 1. Host-fit gate
 
@@ -158,7 +159,17 @@ Required test families scale with risk:
 
 Keep evidence levels distinct. A result is only as strong as its highest directly observed gate.
 
-## 8. Hard blockers
+## 8. Marketplace listing boundary
+
+Build reusable packages with marketplace-compatible structure, but keep the DSH STORE repository outside the plugin's write scope unless a separate contribution is explicitly requested.
+
+For approved listing, require a public GitHub repository pinned to one full Commit, safe manifest/install paths, matching package name/version/license, a resolvable `dsh.bundle.patch`, exact unique entry IDs, exact lifecycle-script declaration, current catalog categories, conservative permission/dependency/compatibility metadata, and current Registry source verification.
+
+Use `manifestPath` plus `installPath` for a self-contained monorepo package. Use a separately owned adapter when the upstream project targets another host and only exposes a compatible public seam. Do not fork-copy or redistribute unlicensed code to manufacture compatibility.
+
+Unknown permission or compatibility evidence stays unknown and may justify a `blocked` discovery entry; it must never be guessed into an approved claim. Keep these evidence states separate: local candidate, pinned-source verified, Registry CI passed, PR merged, public page visible, and Profile installed.
+
+## 9. Hard blockers
 
 Stop mutation, installation, or release when any blocker exists:
 
@@ -173,6 +184,9 @@ Stop mutation, installation, or release when any blocker exists:
 - official component identity, path, Profile, or source is ambiguous;
 - secrets may be logged, returned, committed, or uploaded;
 - release/version/source metadata is inconsistent;
+- approved marketplace listing uses a floating/non-GitHub source, unsafe/ambiguous package path, mismatched manifest/Patch/entry/lifecycle data, duplicate catalog identity, invalid category, or unverifiable license authority;
+- marketplace work requires DSH core/official-package mutation, official inventory shadowing, secret exposure, or unauthorized copying of third-party code;
+- a local catalog candidate or passing plugin tests are being presented as a merged/public marketplace listing;
 - public download lacks license authority, immutable release identity, matching manifest/ZIP/SHA, an embedded license notice where redistribution requires it, or a retained source link;
 - a lower evidence level is being presented as runtime/device/public acceptance.
 

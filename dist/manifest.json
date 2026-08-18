@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "2026.08.18.1",
-  "createdAt": "2026-08-18T10:43:14+08:00",
+  "distributionVersion": "2026.08.18.2",
+  "createdAt": "2026-08-18T12:25:54+08:00",
   "artifact": {
-    "file": "build-dsh-plugin-20260818.1.zip",
+    "file": "build-dsh-plugin-20260818.2.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 63272,
-    "regularFileCount": 17,
-    "sha256": "2a6303b9c624ea6433855800ef33292b04bce64c6c8d2ac5bbd72da525d12b33",
-    "sha256File": "build-dsh-plugin-20260818.1.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.1/build-dsh-plugin-20260818.1.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.1/build-dsh-plugin-20260818.1.sha256"
+    "bytes": 84336,
+    "regularFileCount": 21,
+    "sha256": "0c80d71fb0490df4f83bf5f774083bf8ce81514db5857d4ac6b4f45bd52e46bb",
+    "sha256File": "build-dsh-plugin-20260818.2.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.2/build-dsh-plugin-20260818.2.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.2/build-dsh-plugin-20260818.2.sha256"
   },
   "release": {
-    "tag": "v2026.08.18.1",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.1",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.08.18.1",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.08.18.1/dist/manifest.json"
+    "tag": "v2026.08.18.2",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.2",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.08.18.2",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.08.18.2/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.08.18.1/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.08.18.2/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -30,7 +30,10 @@
     "agentMetadata": "build-dsh-plugin/agents/openai.yaml",
     "briefNormalizer": "build-dsh-plugin/scripts/normalize-brief.mjs",
     "briefTests": "build-dsh-plugin/scripts/test-normalize-brief.mjs",
-    "pluginAudit": "build-dsh-plugin/scripts/audit-plugin.mjs"
+    "pluginAudit": "build-dsh-plugin/scripts/audit-plugin.mjs",
+    "marketplaceAudit": "build-dsh-plugin/scripts/audit-marketplace-entry.mjs",
+    "marketplaceTests": "build-dsh-plugin/scripts/test-marketplace-entry.mjs",
+    "catalogEntryTemplate": "build-dsh-plugin/assets/catalog-entry.template.json"
   },
   "runtime": {
     "required": ["Agent support for SKILL.md or equivalent instruction loading"],
@@ -41,6 +44,7 @@
     "skillStructure": "passed",
     "nodeSyntax": "passed",
     "briefTests": "BRIEF_TEST_OK",
+    "marketplaceTests": "MARKETPLACE_TEST_OK",
     "personalAbsolutePathScan": "passed",
     "secretPatternScan": "passed",
     "disposableExtractionRetest": "passed"
@@ -56,6 +60,7 @@
   "notes": [
     "This artifact is an Agent Skill bundle, not a DSH plugin package.",
     "The repository and the distributed Skill are licensed under the MIT License.",
-    "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies."
+    "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies.",
+    "The Skill prepares DSH STORE catalog candidates and evidence but does not silently modify or deploy the STORE repository."
   ]
 }

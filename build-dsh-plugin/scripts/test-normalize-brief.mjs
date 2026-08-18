@@ -126,6 +126,67 @@ try {
   for (const expected of ['repository', 'license', 'release manifest', 'source repository link', 'license notice']) {
     assert.ok(unsafeDistribution.body.analysis.realOperationBlockers.some(item => item.includes(expected)), expected)
   }
+
+  const marketplacePath = join(tempRoot, 'marketplace.json')
+  await writeFile(marketplacePath, JSON.stringify({
+    mode: 'release-plan',
+    problem: 'A standard DSH plugin needs a reproducible DSH STORE listing.',
+    outcome: {
+      expectedResult: 'Prepare an approved catalog candidate bound to one reviewed Commit.',
+      acceptanceCriteria: ['Registry source verification passes for the exact catalog entry.'],
+    },
+    delivery: {
+      repository: 'https://github.com/example/dsh-plugin',
+      license: 'MIT',
+      releaseTarget: 'marketplace',
+      artifactType: 'dsh-bundle',
+      marketplace: {
+        target: 'dsh-store',
+        listingIntent: 'approved',
+        repositoryUrl: 'https://github.com/example/dsh-plugin',
+        manifestPath: 'package.json',
+        installPath: '',
+        immutableCommit: 'a'.repeat(40),
+        categories: ['tools'],
+      },
+    },
+  }))
+  const marketplace = run(marketplacePath)
+  assert.equal(marketplace.status, 0)
+  assert.equal(marketplace.body.analysis.marketplaceRequested, true)
+  assert.equal(marketplace.body.analysis.marketplacePreflightRequired, true)
+  assert.equal(marketplace.body.analysis.realOperationBlocked, false)
+  assert.equal(marketplace.body.normalized.delivery.marketplace.listingIntent, 'approved')
+
+  const unsafeMarketplacePath = join(tempRoot, 'unsafe-marketplace.json')
+  await writeFile(unsafeMarketplacePath, JSON.stringify({
+    problem: 'A third-party package should be listed in DSH STORE.',
+    outcome: {
+      expectedResult: 'Prepare a safe marketplace route.',
+      acceptanceCriteria: ['The agent reports direct, monorepo, adapter-required, or blocked.'],
+    },
+    delivery: {
+      repository: 'npm:dsh-example',
+      license: 'UNLICENSED',
+      releaseTarget: 'marketplace',
+      artifactType: 'agent-skill',
+      marketplace: {
+        target: 'dsh-store',
+        listingIntent: 'approved',
+        repositoryUrl: 'npm:dsh-example',
+        manifestPath: '../package.json',
+        immutableCommit: 'main',
+        categories: [],
+      },
+    },
+  }))
+  const unsafeMarketplace = run(unsafeMarketplacePath)
+  assert.equal(unsafeMarketplace.status, 0)
+  assert.equal(unsafeMarketplace.body.analysis.generationReady, true)
+  assert.equal(unsafeMarketplace.body.analysis.realOperationBlocked, true)
+  for (const expected of ['standard DSH Bundle', 'GitHub repository', 'manifestPath', '40-character Git Commit', 'Registry category', 'license authority']) {
+    assert.ok(unsafeMarketplace.body.analysis.realOperationBlockers.some(item => item.includes(expected)), expected)
+  }
 } finally {
   await rm(tempRoot, { recursive: true, force: true })
 }

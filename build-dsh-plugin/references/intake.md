@@ -37,6 +37,8 @@ Accept this Chinese template directly:
 明确不能做什么：（可选；默认不改 DSH 核心、官方插件和真实 Profile）
 怎么才算成功：
 交付位置：（可选；不写则先提出建议路径）
+希望上架 DSH STORE：（可选；不写则只生成商城兼容结构，不提交）
+第三方 GitHub 仓库：（评估现有插件时提供）
 ```
 
 Only `现在的问题`, `希望达到的结果`, and one observable `怎么才算成功` are semantic blockers for source generation. Name, target user, trigger, capability split, UI, and delivery path may be inferred and shown as assumptions.
@@ -63,7 +65,8 @@ Use [plugin-brief.template.json](../assets/plugin-brief.template.json) for compl
 | `profile` | List Profile lifecycle changes/restart | Explicit none defaults | Exact target/scope for R3 |
 | `security` | Sensitive data, exposure, auth/encryption, forbidden actions | Safe local defaults | Exact for LAN/Internet/credentials |
 | `constraints` | Record must-use, must-not, privacy, compatibility | Defaults to DSH hard boundaries | Exact when product/legal constraint exists |
-| `delivery` | Workspace, repository, license, release target, artifact type, direct-download and metadata authority | May be proposed | Exact before publishing |
+| `delivery` | Workspace, repository, license, release target, artifact type, direct-download, metadata authority, and marketplace intent | May be proposed | Exact before publishing/listing |
+| `delivery.marketplace` | DSH STORE target, assess/approved/blocked/unlisted intent, repository, manifest/install path, immutable Commit, and categories | Defaults none; package structure remains marketplace-compatible | Exact before catalog submission |
 | `acceptance` | Target E-level and real-environment permission | Defaults E3/no real state | Exact before E4/E5 |
 
 Never put actual secrets, tokens, cookies, passwords, or private file contents in the brief. Record only ownership and delivery mechanism.
@@ -86,6 +89,7 @@ Apply and disclose these defaults when fields are absent:
 | Credentials | None | Prevents secret handling | Account integrations remain abstract |
 | Exposure | Local only | Safer default | No LAN/Internet access |
 | Publication | None; public download false; release manifest authority proposed | Prevents accidental release while preserving a standard publication path | Repository/website step remains pending until authorized |
+| Marketplace | No STORE submission; reusable DSH Bundles still use marketplace-compatible manifest/Patch/ID/lifecycle structure | Avoids late structural rewrites without changing another repository | Catalog fields and public listing remain pending |
 | Evidence target | E3 disposable | Proves integration safely | Does not prove real Profile/device/public state |
 
 Defaults are assumptions, not hidden requirements. If a default conflicts with the stated outcome, mark the conflict and ask only the deciding question.
@@ -103,6 +107,7 @@ The user should supply:
 - observable acceptance criteria;
 - authorization only when a later real mutation/release is wanted.
 - for public distribution: artifact type, repository authority, chosen license/copyright holder, direct-download intent, and observable public readback.
+- for an existing third-party STORE assessment: public GitHub URL, desired outcome (`approved`, `blocked` discovery, or assessment), target DSH/Profile/system, and repository-change authority when known.
 
 The agent derives and explains:
 
@@ -113,6 +118,7 @@ The agent derives and explains:
 - Host services, Client slots, schemas, permissions, redaction, limits, and failures;
 - test/fault matrix, disposable Profile strategy, audit score, and next gate;
 - build/package/source/release plan;
+- direct/monorepo/adapter-required/blocked marketplace route, catalog candidate, current Registry gaps, and submission evidence plan;
 - assumptions and questions that remain before E4/E5.
 
 Do not ask the user to choose implementation details that can be safely derived. Present architecture alternatives only when they materially change capability, UX, risk, operating cost, or delivery.
@@ -135,6 +141,8 @@ Allow source generation with assumptions, but block the corresponding real actio
 - device/account/public acceptance is requested without an authorized real target;
 - publication is requested without repository/license/source authority;
 - public download is requested without an immutable release manifest, embedded/preserved license notice, source link, ZIP checksum, or matching release assets;
+- approved DSH STORE listing is requested without a public canonical GitHub repository, standard DSH Bundle/adapter, full immutable Commit, current category, usable license authority, or matching manifest/Patch/entry/lifecycle data;
+- a third-party project needs DSH core/official-package changes, disables/shadows official inventory, or has no authorized reproducible source;
 - restart is requested without process owner, approved supervisor/manual mechanism, health, and rollback.
 
 Ask the smallest set of questions, preferably one grouped question and never a generic discovery questionnaire after a usable brief is present.
@@ -198,7 +206,8 @@ For `build-source`, produce in order:
 6. package name, entry IDs, project tree, source and tests;
 7. static audit and Phase 6 report;
 8. disposable E3 plan or execution when safe and supported;
-9. explicit line stating real Profile, release, device, account, and public state.
+9. marketplace route/candidate/preflight when the plugin is reusable or a STORE target was requested;
+10. explicit line stating real Profile, repository release, Registry PR/merge, public marketplace, device, account, and public state.
 
 Do not stop at a plan when the requested mode is `build-source` and no blocker prevents implementation. Do not cross into release or real mutation merely because source generation succeeded.
 
@@ -231,3 +240,16 @@ Expected derivation: `R0`, Host+Client, read-only, E3, no real Profile change.
 ```
 
 Expected derivation: `R3`, lifecycle manager, full mutation protocol, source build allowed, real Profile blocked pending exact plan and confirmation.
+
+### Existing third-party plugin for DSH STORE
+
+```markdown
+本次模式：审计并准备商城候选
+现在的问题：这个第三方插件能手工安装，但不知道为什么不能进入 DSH STORE。
+希望达到的结果：给出 direct、monorepo、adapter-required 或 blocked 结论，并生成可验证的 Catalog 候选或最小整改清单。
+第三方 GitHub 仓库：https://github.com/owner/repository
+希望上架 DSH STORE：优先 approved；证据不足时保持 blocked，不猜权限或兼容性。
+怎么才算成功：通用审计和商城预检通过；固定 Commit 源验证路径明确；不修改 DSH STORE 或真实 Profile。
+```
+
+Expected derivation: inspect the current Registry contract; derive manifest/install path, Patch IDs, lifecycle, license, permissions, compatibility, and route; generate a candidate plus evidence gaps. A catalog candidate is not a merged listing.

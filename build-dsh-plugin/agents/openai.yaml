@@ -1,4 +1,4 @@
 interface:
   display_name: "构建 DSH 插件"
-  short_description: "把 DSH 插件需求转成源码、发行包与证据化验收流程"
-  default_prompt: "Use $build-dsh-plugin to turn my brief into a standard DSH plugin or licensed fixed-release artifact, with explicit boundaries, tests, and evidence gates."
+  short_description: "生成可上架 DSH STORE 的安全插件、Catalog 与验收流程"
+  default_prompt: "Use $build-dsh-plugin to build or audit a standard DSH plugin, prepare a DSH STORE-ready catalog candidate when requested, and keep source, marketplace, Profile, and evidence gates separate."

@@ -66,7 +66,16 @@
     "publicDownload": false,
     "metadataAuthority": "release-manifest",
     "sourceLinkRequired": true,
-    "licenseNoticeRequired": true
+    "licenseNoticeRequired": true,
+    "marketplace": {
+      "target": "none",
+      "listingIntent": "none",
+      "repositoryUrl": "",
+      "manifestPath": "package.json",
+      "installPath": "",
+      "immutableCommit": "",
+      "categories": []
+    }
   },
   "acceptance": {
     "targetEvidence": "E3",

@@ -11,6 +11,7 @@
 7. Stage-gate report
 8. Permission matrix
 9. Public distribution report
+10. DSH STORE listing report
 
 ## 1. Host-contract record
 
@@ -217,3 +218,34 @@ Remove any row that has no user outcome, bounded caller, failure behavior, and t
 - DSH Profile state: unchanged/unverified/separately accepted
 - Remaining gate:
 ```
+
+## 10. DSH STORE listing report
+
+```markdown
+# DSH STORE listing report
+
+- Requested outcome: assess/approved/blocked/unlisted
+- Current Registry contract observed at:
+- Route: direct/monorepo/adapter-required/blocked
+- Public GitHub repository:
+- Repository/change authority: verified/unverified/not required for read-only assessment
+- Package / version / license:
+- Manifest path / install path:
+- Immutable Commit:
+- Bundle Patch / entry IDs:
+- Lifecycle scripts:
+- Catalog ID / categories / intended status:
+- Permissions / external dependencies / compatibility evidence:
+- General plugin audit: PASS/PARTIAL/BLOCKED
+- Marketplace preflight: READY_FOR_CATALOG_ENTRY/READY_FOR_PINNED_SOURCE_VERIFICATION/NEEDS_STANDARDIZATION/BLOCKED
+- Fixed-Commit manifest/Patch readback: PASS/PARTIAL/BLOCKED/not run
+- STORE validate:registry: PASS/PARTIAL/BLOCKED/not run
+- STORE verify:registry-sources: PASS/PARTIAL/BLOCKED/not run
+- Registry PR/CI: URL and state/not submitted
+- Merged GitHub catalog readback: E5 evidence/not merged
+- Public marketplace readback: visible/blocked/unlisted/not verified
+- DSH Profile state: unchanged/unverified/separately accepted
+- Smallest remediation / remaining gate:
+```
+
+Do not collapse catalog-candidate, pinned-source, CI, merged-catalog, public-page, and Profile states into one `published` or `verified` label.
