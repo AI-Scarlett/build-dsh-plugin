@@ -66,7 +66,7 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: explicit trade-offs and fewer rewrites.
 - **Costs**: comparison work; smallest pattern may omit convenience features.
 - **Inputs**: host contract and risk register.
-- **Actions**: compare Host-only, Host+Client, optional Web, Skill adapter, ApiProxy bridge, and lifecycle manager where applicable; score capability fit, privilege, DSH coupling, failure isolation, testability, UX, and operations.
+- **Actions**: compare Host-only, Host+Client, optional Web, Skill adapter, ApiProxy bridge, and lifecycle manager where applicable; for each model Tool choose a provider-neutral card intent or justify generic fallback before considering a custom Client card; score capability fit, privilege, DSH coupling, failure isolation, replay behavior, testability, UX, and operations.
 - **Output**: decision record with chosen pattern, rejected alternatives, benefits, costs, and reconsideration triggers.
 - **Gate**: chosen pattern uses only supported seams and covers every required outcome.
 - **Stop**: no option satisfies both outcome and hard boundaries.
@@ -78,8 +78,8 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: least privilege, stable contracts, straightforward negative tests.
 - **Costs**: schemas and error models slow the first implementation.
 - **Inputs**: architecture decision.
-- **Actions**: define entry IDs, services, routes/slots, request/response schemas, ownership, redaction, sizes, timeouts, rate limits, idempotency, error states, cleanup, and forbidden actions.
-- **Output**: permission matrix and interface contract.
+- **Actions**: define entry IDs, services, routes/slots, request/response schemas, ownership, redaction, sizes, timeouts, rate limits, idempotency, error states, cleanup, and forbidden actions; for each Tool define canonical output, model renderer, pending/completed card, durable metadata, caps, fallback, and live/replay behavior.
+- **Output**: permission matrix, interface contract, and Tool card matrix where applicable.
 - **Gate**: each operation maps to one user outcome and one test; unknown operations fail closed.
 - **Stop**: secret/full-file projection, Client Host imports, broad unbounded proxy, or ambiguous ownership.
 
@@ -90,7 +90,7 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: reviewable diffs and traceable behavior.
 - **Costs**: additional ideas must wait for a new decision record.
 - **Inputs**: approved artifacts from phases 0–4.
-- **Actions**: scaffold standard Bundle with unique package/catalog/entry identities; implement Host first, narrow interface second, Client/bridge last; add validation, redaction, disposal, observability, fail-closed behavior, explicit license/repository/lifecycle/build metadata, and conservative permission/compatibility evidence alongside each path.
+- **Actions**: scaffold standard Bundle with unique package/catalog/entry identities; implement Host first, canonical Tool output and pure provider-neutral card presenters second, narrow interface third, Client/bridge last; add validation, redaction, disposal, observability, fail-closed behavior, explicit license/repository/lifecycle/build metadata, and conservative permission/compatibility evidence alongside each path.
 - **Output**: source, package contract, tests, preliminary marketplace-readiness record, and updated decision records for deviations.
 - **Gate**: source implements only declared permissions and contains no hard blocker.
 - **Stop**: required core/official mutation, hidden shell string, secret exposure, or unreviewed scope increase.
@@ -102,7 +102,7 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: fast regression feedback and safe concurrency/rollback testing.
 - **Costs**: fixture and fault-injection maintenance.
 - **Inputs**: implementation and contracts.
-- **Actions**: run syntax/type/lint, unit, contract, negative, security, transaction fault, source consistency, and pack-content checks in disposable paths; run static audit; for reusable/STORE-targeted work generate a catalog candidate and run marketplace preflight against the current Registry catalog.
+- **Actions**: run syntax/type/lint, unit, contract, negative, security, transaction fault, source consistency, and pack-content checks in disposable paths; for Tool cards test pure determinism, malformed replay fallback, JSON/bounds, redaction, truth-preserving truncation/status, and no Client/UI imports; run static audit; for reusable/STORE-targeted work generate a catalog candidate and run marketplace preflight against the current Registry catalog.
 - **Output**: test matrix, static `/80` report, and marketplace route/gap report where applicable.
 - **Gate**: no blocker, all required tests pass, and score is at least 75 for isolated acceptance; lower scores return to implementation.
 - **Stop**: any test touches real `~/.dsh`, missing dependencies make results partial, or artifacts contain secrets/private paths.
@@ -114,7 +114,7 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: high-value integration evidence with recoverable state.
 - **Costs**: environment setup and possible differences from the real Profile.
 - **Inputs**: passing automated verification and package artifact/source.
-- **Actions**: create temp DSH home/Profile; install through official CLI; run `--dump-config`; check entries; cold start; smoke Host/API; inspect Client UI if applicable; inject start/stop/failure cases; clean up.
+- **Actions**: create temp DSH home/Profile by setting `DSH_HOME` before the first CLI invocation; install through official CLI; run `--dump-config`; check entries; cold start; smoke Host/API; compare Tool cards on live and persisted replay paths; inspect Client UI and generic fallback if applicable; inject start/stop/failure cases; clean up. Never use `dsh plugin --profile <new-name> --help` without a temporary `DSH_HOME`, because the CLI may initialize that Profile before showing help.
 - **Output**: E3 evidence bundle and runtime points.
 - **Gate**: expected config, stable startup, correct API/UI, failure behavior, and cleanup all pass.
 - **Stop**: duplicate IDs, composition drift, crash, leakage, incomplete cleanup, or access to real home.
@@ -178,6 +178,8 @@ Track these across projects:
 | Runtime evidence `/20` | Reward current observed proof | Higher | Evidence text must still be independently verified |
 | Evidence level per capability | Prevent cross-surface overclaim | Matches claim | Not one project-wide number |
 | Permission count | Detect growing attack surface | Minimum needed | Fewer is not always better if outcome breaks |
+| Tool card replay parity | Detect non-deterministic or non-durable presentation | Live and replay equivalent | Does not prove the user's visible Client without E4 |
+| Card metadata bytes/items | Prevent UI persistence from becoming a data leak or storage sink | Minimum bounded projection | Bounds must fit the specific card semantics |
 | Forbidden-action tests | Prove least privilege | All pass | Tests cover only enumerated attacks |
 | Fault cases covered | Measure recoverability | All credible faults | Cannot exhaust real-world failures |
 | Rollback time/result | Measure operational recovery | Short and successful | Requires safe environment to test |

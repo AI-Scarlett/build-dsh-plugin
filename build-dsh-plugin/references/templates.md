@@ -12,6 +12,7 @@
 8. Permission matrix
 9. Public distribution report
 10. DSH STORE listing report
+11. Tool card contract
 
 ## 1. Host-contract record
 
@@ -46,6 +47,8 @@ Stop on `incompatible` or `unknown` before installation.
 ## Host services and entry IDs
 
 ## Client slots/routes
+
+## Model Tools and card contracts
 
 ## Data and permission boundary
 
@@ -112,6 +115,7 @@ Never execute a plan after any hash, source, target, phrase, expiry, or used sta
 | Real Profile install | | | |
 | Runtime API/process | | | |
 | Browser UI | | | |
+| Tool card live/replay/fallback | | | |
 | External account/device/public | | | |
 | Rollback/recovery | | | |
 
@@ -131,6 +135,7 @@ Never execute a plan after any hash, source, target, phrase, expiry, or used sta
 - [ ] version consistency tests updated
 - [ ] lifecycle/build scripts disclosed
 - [ ] unit/contract/fault tests passed
+- [ ] each model Tool records canonical output, pending/completed card, bounded metadata, generic fallback, and live/replay tests
 - [ ] disposable official-CLI install passed
 - [ ] dump-config and isolated startup passed
 - [ ] pack dry-run contains required runtime files
@@ -249,3 +254,26 @@ Remove any row that has no user outcome, bounded caller, failure behavior, and t
 ```
 
 Do not collapse catalog-candidate, pinned-source, CI, merged-catalog, public-page, and Profile states into one `published` or `verified` label.
+
+## 11. Tool card contract
+
+```markdown
+# Tool card contract
+
+- Target DSH version/Commit inspected:
+- Custom Client card required: yes/no
+- Official Tool card keys replaced: none
+
+| Tool | Canonical value | Model renderer | Pending card | Completed card | `presentationMeta` | Bounds/redaction | Generic fallback | E2/E3 evidence |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| | | | generic/terminal/diff/none | generic/terminal/diff/search/read/web/none | fields/none | | | |
+
+- Live/replay deterministic: PASS/PARTIAL/BLOCKED
+- Malformed old record fallback: PASS/PARTIAL/BLOCKED
+- Unsupported/incapable Client fallback: PASS/PARTIAL/BLOCKED
+- Secret/private-path scan: PASS/PARTIAL/BLOCKED
+- Visible real-Profile readback: E4 evidence/not authorized/not run
+- Remaining gate:
+```
+
+Do not mark a card verified from presenter unit tests alone. E3 requires isolated live and persisted replay behavior; visible behavior in the user's Profile is a separate E4 gate.

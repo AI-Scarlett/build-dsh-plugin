@@ -21,6 +21,7 @@
 17. External runtime and ApiProxy bridges
 18. Licensed public artifact distribution
 19. Marketplace-ready package and listing route
+20. Provider-neutral Tool card before custom Client UI
 
 ## 1. How to use a decision card
 
@@ -252,3 +253,15 @@ For each card, record:
 - **Procedure**: reread the current STORE policy/schema/validator/catalog; run host fit; choose `direct`, `monorepo`, `adapter-required`, or `blocked`; standardize manifest/Patch/build/license/lifecycle/IDs; generate conservative catalog metadata; run general and marketplace audits; complete disposable install; pin a full Commit; verify remote manifest/Patch; run Registry checks in a separate STORE contribution scope; verify merge and public page separately.
 - **Evidence / stop**: local audit and catalog candidate, pinned-source readback, Registry CI, merged catalog, and public page are separate gates. Stop approved listing on floating/non-GitHub source, unsafe paths, mismatches, official shadowing, duplicate identity, invalid category, unlicensed copying, or guessed critical metadata.
 - **Reconsider when**: STORE adopts a signed registry, package registry, new schema/status model, or official submission API; update the reference and deterministic audit before the next listing.
+
+## 20. Provider-neutral Tool card before custom Client UI
+
+- **Objective**: make a model Tool's pending, completed, failed, and replayed states understandable without binding its semantics to one DSH Client implementation.
+- **Why**: DSH separates canonical Tool JSON, model-visible rendering, provider-neutral card intents, and Client components. Mixing them makes Code Mode parse display text, duplicates data in session logs, or forces a Tool to import UI types. A custom `tool.call.toolview` registration can also replace an existing product card when its key collides.
+- **Benefits**: one Tool definition serves live streaming, replay, CLI/editor bridges, generic fallback, and future clients; card data stays bounded and the canonical API remains stable.
+- **Costs**: built-in card discriminants are intentionally limited; presenters, `presentationMeta`, malformed replay, redaction, and caps require explicit design and tests. A generic fallback may be less visually rich.
+- **Use when**: every model Tool. Choose `generic`, `terminal`, or `diff` for pending calls and the inspected completed-card union for results; explicitly record `none/generic fallback` when no custom projection is needed.
+- **Avoid when**: do not use a terminal card for any Tool that happens to spawn a process, a diff card for non-file mutation, or a custom Client card merely for styling. Do not replace official Tool card keys.
+- **Procedure**: inspect the target DSH exports; define canonical output and `output.render`; choose pending/completed card semantics; map fields to args or bounded JSON `presentationMeta`; specify redaction, truncation, generic fallback, failure, and replay; implement pure presenters; add a Client Slot only for a plugin-owned Tool whose outcome cannot fit the provider-neutral vocabulary.
+- **Evidence / stop**: require deterministic E2 presenter/replay tests, malformed-record fallback, JSON/size bounds, secret/path redaction, truthful totals/status, and import scans; require isolated live/replay parity at E3. Stop on I/O/state/time/randomness in presenters, unsupported discriminants, unbounded persistence, model/card disagreement, or official card replacement.
+- **Reconsider when**: the exported DSH card union or Client bridge changes, a new built-in card satisfies the outcome, or real user evidence justifies a separately reviewed plugin-owned custom card.

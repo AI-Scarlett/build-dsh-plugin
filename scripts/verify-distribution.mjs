@@ -36,6 +36,9 @@ const archivedFiles = execFileSync('unzip', ['-Z1', artifactPath], { encoding: '
   .filter(entry => entry && !entry.endsWith('/'))
 const readme = (await read('README.md')).toString('utf8')
 const install = (await read('dist/INSTALL.md')).toString('utf8')
+const dshPackage = JSON.parse(await read('package.json'))
+const dshPatch = (await read('cordis.patch.yml')).toString('utf8')
+const cardContract = (await read(manifest.entrypoints.cardContract)).toString('utf8')
 
 if (artifactSha !== manifest.artifact.sha256) throw new Error('manifest SHA-256 does not match ZIP')
 if (artifactStat.size !== manifest.artifact.bytes) throw new Error('manifest byte size does not match ZIP')
@@ -48,12 +51,25 @@ if (!archivedFiles.includes(manifest.license.file)) throw new Error('ZIP does no
 if (!manifest.release.tag || !manifest.artifact.downloadUrl.includes(`/${manifest.release.tag}/`)) {
   throw new Error('artifact download URL is not bound to the declared release tag')
 }
+if (dshPackage.name !== 'dsh-build-plugin' || dshPackage.dsh?.bundle?.patch !== './cordis.patch.yml') {
+  throw new Error('repository root is not the declared DSH Bundle')
+}
+for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
+  if (dshPackage.scripts?.[name] !== undefined) throw new Error(`DSH Bundle declares forbidden lifecycle script: ${name}`)
+}
+requireText(dshPatch, 'dsh-build-plugin-skill-provider', 'DSH Patch')
+requireText(dshPatch, "resolve('dsh-build-plugin/package.json')", 'DSH Patch')
+for (const expected of ['presentCall', 'presentResult', 'presentationMeta', 'live and replay']) {
+  requireText(cardContract, expected, 'card contract')
+}
+if (!archivedFiles.includes(manifest.entrypoints.cardContract)) throw new Error('ZIP does not contain the card contract')
 
 for (const [owner, text] of [['README', readme], ['INSTALL', install]]) {
   requireText(text, manifest.distributionVersion, owner)
   requireText(text, manifest.artifact.sha256, owner)
   requireText(text, manifest.release.tag, owner)
   requireText(text, 'MIT', owner)
+  requireText(text, 'dsh-build-plugin-skill-provider', owner)
 }
 
 console.log(`DISTRIBUTION_OK ${manifest.distributionVersion} ${artifactSha} ${archivedFiles.length} MIT`)

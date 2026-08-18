@@ -15,6 +15,12 @@
     "nonGoals": []
   },
   "capabilities": [],
+  "presentation": {
+    "tools": [],
+    "defaultCard": "derive",
+    "customClientCards": false,
+    "replayRequired": true
+  },
   "data": {
     "read": [],
     "write": []

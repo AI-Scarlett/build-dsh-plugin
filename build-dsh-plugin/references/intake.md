@@ -30,6 +30,7 @@ Accept this Chinese template directly:
 现在的问题：
 希望达到的结果：
 核心能力：（可选，可写 1–5 条）
+需要模型工具/卡片：（可选；说明工具用途即可，卡片类型由 Agent 按 DSH 契约推导）
 需要读取的数据：（可选；不写则默认无）
 需要执行的动作：（可选；不写则默认只读）
 需要界面：（可选；不写则默认 Host-only）
@@ -59,6 +60,7 @@ Use [plugin-brief.template.json](../assets/plugin-brief.template.json) for compl
 | `targetUsers` | Identify whose workflow changes | No; default `DSH user` | Recommended |
 | `trigger` | State how capability begins | No; infer manual | Required for automation/remote triggers |
 | `capabilities` | List user abilities, not technical functions | No; infer | Required before interface freeze |
+| `presentation` | State whether model Tools need cards and any user-visible card outcome | Defaults to derived generic fallback/no custom Client card | Exact Tool/card matrix before Tool implementation |
 | `data.read` / `data.write` | Bound information access | Explicit empty defaults | Exact for real writes |
 | `ui` | State whether/where UI is needed | Defaults Host-only | Exact before UI acceptance |
 | `external` | List network/process/account/credential/device dependencies | Explicit none defaults | Exact for R2/E5 |
@@ -82,6 +84,7 @@ Apply and disclose these defaults when fields are absent:
 | Target user | `DSH user` | Keeps work moving | Less precise UX until refined |
 | Trigger | Explicit manual action | Avoids surprise automation | No background behavior |
 | Capability mode | Read-only | Lowest blast radius | Write outcome may require later expansion |
+| Tool presentation | Derive from Tool semantics; generic fallback; no custom Client card | Preserves cross-client compatibility and avoids official-card collisions | Rich custom visuals may require a later explicit Client decision |
 | UI | Host-only | Smallest architecture | No visual page unless requested |
 | Profile mutation | None | Protects active state | Installation/enablement remains separate |
 | Restart | False | Avoids downtime | Runtime activation is not proven |
@@ -116,6 +119,7 @@ The agent derives and explains:
 - Host-only, Host+Client, optional Web, Skill Adapter, ApiProxy, or lifecycle architecture;
 - package name, entry IDs, project tree, Patch and manifests;
 - Host services, Client slots, schemas, permissions, redaction, limits, and failures;
+- canonical Tool outputs, model renderers, pending/completed cards, durable metadata, generic fallbacks, and live/replay tests;
 - test/fault matrix, disposable Profile strategy, audit score, and next gate;
 - build/package/source/release plan;
 - direct/monorepo/adapter-required/blocked marketplace route, catalog candidate, current Registry gaps, and submission evidence plan;
@@ -140,6 +144,7 @@ Allow source generation with assumptions, but block the corresponding real actio
 - LAN/Internet exposure is requested without authentication, encryption/transport, listener, and threat boundary;
 - device/account/public acceptance is requested without an authorized real target;
 - publication is requested without repository/license/source authority;
+- a requested Tool card requires secret/full-file projection, unsupported card discriminants, stateful/I/O presenters, or replacement of an official Tool card;
 - public download is requested without an immutable release manifest, embedded/preserved license notice, source link, ZIP checksum, or matching release assets;
 - approved DSH STORE listing is requested without a public canonical GitHub repository, standard DSH Bundle/adapter, full immutable Commit, current category, usable license authority, or matching manifest/Patch/entry/lifecycle data;
 - a third-party project needs DSH core/official-package changes, disables/shadows official inventory, or has no authorized reproducible source;
@@ -189,6 +194,7 @@ Derive architecture candidates:
 - add `host-client` when UI is needed;
 - add `optional-web` when HTTP/Browser routes are needed;
 - add `skill-adapter` when mounting skills or adapting an external CLI;
+- add a `tool-card` decision for every registered model Tool without increasing the risk class by itself; classify the Tool's actual reads, writes, process, network, credentials, and Profile effects separately;
 - add `api-proxy` for bounded DSH remote/device actions;
 - add `lifecycle-manager` for Profile operations.
 

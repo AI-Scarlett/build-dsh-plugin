@@ -33,17 +33,19 @@ Run the blockers in [boundaries.md](boundaries.md) first. Any blocker sets statu
 
 For a DSH STORE target, marketplace hard blockers include non-GitHub/floating source, missing standard Bundle/adapter contract, unsafe package paths, manifest/version/license/Patch/entry/lifecycle mismatch, official shadowing, duplicate catalog identity, invalid category, or unauthorized third-party copying. A local candidate never overrides these blockers.
 
+For model Tools, card hard blockers include stateful or I/O presenters, unsupported discriminants, unbounded or secret-bearing `rawInput`/metadata, missing generic fallback, canonical/card success or truncation disagreement, and replacement of an official Tool card key.
+
 ## 3. Readiness score
 
 The static audit covers 80 points; traceable runtime evidence covers 20.
 
 | Category | Points | Objective and why | Benefit | Cost/limitation | Full-credit condition |
 | --- | ---: | --- | --- | --- | --- |
-| Host contract | 16 | Prove DSH can resolve the package through supported seams | Prevents wrong-host work and cold-start surprises | Rewards structure, not feature quality | Standard bundle/patch, resolvable entries, correct optional Web and Client boundaries |
+| Host contract | 16 | Prove DSH can resolve the package through supported seams | Prevents wrong-host work and cold-start surprises | Rewards structure, not feature quality | Standard bundle/patch, resolvable entries, correct optional Web/Client boundaries, and provider-neutral Tool cards where applicable |
 | Non-destructive safety | 16 | Preserve core, official inventory, secrets, and command integrity | Small blast radius and upgrade safety | Restricts shortcuts and broad integrations | No core/official/Loader mutation, shell string, secret projection, or Client Host imports |
 | Mutation discipline | 16 | Make real-state writes intentional and recoverable | Concurrency safety and rollback | More code and confirmation friction | Read-only, or complete typed plan/confirmation/hash/backup/atomic/health/rollback protocol |
 | Packaging/source | 12 | Make installed or downloaded code reproducible and complete | Reliable Git/marketplace install, public download, and rollback | Coordinated metadata/build work | Synchronized name/version/files/build/license/provenance, release manifest/checksum when distributed, immutable source, and matching catalog candidate when STORE-targeted |
-| Tests | 12 | Prove logic and failures without real-state risk | Fast regressions and safe fault injection | Fixtures can drift from real Profiles | Test script, fixtures, disposable home, safety/fault contracts |
+| Tests | 12 | Prove logic and failures without real-state risk | Fast regressions and safe fault injection | Fixtures can drift from real Profiles | Test script, fixtures, disposable home, safety/fault contracts, plus card determinism/replay/fallback/bounds when applicable |
 | Documentation/status | 8 | Preserve boundaries and prevent evidence overclaim | Better operations and future reuse | Documentation can become stale | Boundaries, permissions, evidence distinctions, and next gates are explicit |
 | Runtime evidence | 20 | Reward current observation beyond source/tests | Detects integration and environment failures | Expensive and can expire quickly | Current command/readback evidence as listed below |
 
@@ -100,7 +102,7 @@ Only award runtime points when the evidence was observed in the current task and
 | `E0` | Idea/plan | Requirements and architecture only |
 | `E1` | Static | Source, manifest, patch, package review |
 | `E2` | Automated | Unit, contract, fault-injection tests |
-| `E3` | Disposable runtime | Official CLI install, dump-config, isolated startup/API smoke |
+| `E3` | Disposable runtime | Official CLI install, dump-config, isolated startup/API smoke, and live/persisted replay card parity when a Tool presenter exists |
 | `E4` | Real target | Exact Profile version, process/port, official inventory/API and visible UI |
 | `E5` | External acceptance | Public readback, real device/account traffic, or proven rollback/recovery |
 
