@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "name": "build-dsh-plugin",
+  "distributionVersion": "2026.08.18",
+  "createdAt": "2026-08-18T09:24:54+08:00",
+  "artifact": {
+    "file": "build-dsh-plugin-20260818.zip",
+    "archiveRoot": "build-dsh-plugin/",
+    "bytes": 54999,
+    "regularFileCount": 15,
+    "sha256": "90713e73587a9bf5fb1b4ef3e46f94e817397a08631dcd0afff98e384fe28a96"
+  },
+  "entrypoints": {
+    "skill": "build-dsh-plugin/SKILL.md",
+    "agentMetadata": "build-dsh-plugin/agents/openai.yaml",
+    "briefNormalizer": "build-dsh-plugin/scripts/normalize-brief.mjs",
+    "briefTests": "build-dsh-plugin/scripts/test-normalize-brief.mjs",
+    "pluginAudit": "build-dsh-plugin/scripts/audit-plugin.mjs"
+  },
+  "runtime": {
+    "required": ["Agent support for SKILL.md or equivalent instruction loading"],
+    "scripts": ["Node.js 18 or newer"],
+    "externalPackages": []
+  },
+  "verification": {
+    "skillStructure": "passed",
+    "nodeSyntax": "passed",
+    "briefTests": "BRIEF_TEST_OK",
+    "personalAbsolutePathScan": "passed",
+    "secretPatternScan": "passed",
+    "disposableExtractionRetest": "passed"
+  },
+  "excluded": [
+    "Obsidian vault notes",
+    "DSH source/runtime",
+    "real DSH Profiles",
+    "repositories and worktrees",
+    "credentials and private user data",
+    "temporary files and caches"
+  ],
+  "notes": [
+    "This artifact is an Agent Skill bundle, not a DSH plugin package.",
+    "No public redistribution license is asserted by this packaging step."
+  ]
+}

@@ -1,0 +1,182 @@
+---
+name: build-dsh-plugin
+description: Convert natural-language or structured product briefs into plans, source projects, audits, packages, releases, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for new DSH plugin ideas, DSH/Cordis Host plugins, Browser Client bundles, Skill adapters, ApiProxy bridges, plugin marketplaces, Profile lifecycle managers, catalog entries, fixed-commit releases, and third-party compatibility/install requests. Normalize goals, problems, capabilities, data, mutations, UI, external dependencies, constraints, and acceptance criteria; apply safe defaults; enforce host preflight, quantified gates, disposable tests, official CLI-only package changes, separate repository/Profile acceptance, and evidence-based status.
+---
+
+# Build DSH Plugin
+
+Use this workflow to turn a DSH plugin idea into a standard bundle without modifying or shadowing the Harness itself.
+
+## Normalize the user brief
+
+Read [intake.md](references/intake.md) for every new plugin request. Accept either ordinary language, the minimal Chinese brief, or the structured JSON template at [plugin-brief.template.json](assets/plugin-brief.template.json).
+
+Require only three semantic facts before source generation:
+
+1. the current user problem;
+2. the expected user outcome;
+3. at least one observable acceptance criterion.
+
+Infer names, package IDs, architecture candidates, risk class, project structure, tests, and safe defaults. Do not ask the user to design Host APIs, Cordis entries, schemas, build tooling, or test strategy unless they have a preference.
+
+When optional fields are absent, default to source generation only, standard DSH Bundle, read-only behavior, no real Profile mutation, no restart, no external network/process/account/device, no credentials, local-only exposure, no publication, and E3 disposable acceptance. State every default as an assumption.
+
+Ask only questions whose answers materially change the product outcome or risk boundary. Missing problem, outcome, or acceptance blocks generation. Missing target Profile, mutation scope, credential owner, LAN/Internet security, or real device/account blocks only the corresponding real operation; it does not block a safe source scaffold when interfaces can remain abstract.
+
+Run the deterministic normalizer when a JSON brief is available:
+
+```bash
+node scripts/normalize-brief.mjs /absolute/path/to/plugin-brief.json
+node scripts/normalize-brief.mjs /absolute/path/to/plugin-brief.json --json
+```
+
+If the normalized status is `READY` or `READY_WITH_ASSUMPTIONS` and the requested mode is `build-source`, proceed through Phases 0–6 without another broad clarification round. Stop before release, real Profile mutation, restart, credentials, device, or public exposure unless separately authorized and fully specified.
+
+## Establish the contract
+
+Start read-only. Inspect repository instructions, the target DSH version, official plugin docs, the active Profile only when relevant, and one current standard plugin example. Do not assume an API or package contract from an older project.
+
+Always enforce these rules:
+
+- Build a DSH bundle, not a desktop app or a fork of DSH.
+- Never modify the DSH source tree or any `@deepseek-ai/*` package.
+- Never disable, replace, or shadow the official plugin inventory.
+- Never call Loader/Fiber mutation APIs. Use public Host services and bundle composition.
+- Use the official DSH CLI for package changes. Pass fixed argument arrays; never build shell command strings.
+- Keep tests in disposable homes/profiles. Never write tests against real `~/.dsh`.
+- Do not expose credentials, full user files, injected system/plugin context, model reasoning, or private paths through logs or clients.
+- Keep planning, code completion, package release, Profile installation, runtime acceptance, and external/device acceptance as separate states.
+
+Read [boundaries.md](references/boundaries.md) before implementation or installation. Hard blockers in that file override every score.
+
+## Explain every consequential decision
+
+Do not emit a rule list without its decision logic. For each architecture, permission, mutation, release, or acceptance decision, record:
+
+1. **Objective**: the failure or outcome the decision controls.
+2. **Rationale**: why DSH mechanics or the current threat model require it.
+3. **Benefits**: what becomes safer, simpler, more compatible, or easier to verify.
+4. **Costs**: implementation burden, UX friction, performance cost, capability loss, or operational delay.
+5. **Applicability**: the conditions under which the decision is appropriate.
+6. **Alternatives**: viable options, why they were rejected, and when to reconsider them.
+7. **Procedure**: concrete steps, owner, inputs, outputs, and rollback behavior.
+8. **Evidence gate**: the observable proof required to advance and the condition that stops work.
+
+Read [decision-guide.md](references/decision-guide.md) when planning, reviewing, or explaining a plugin. Use its decision cards rather than copying a preferred pattern without analysis.
+
+## Run the workflow
+
+Follow [workflow.md](references/workflow.md) for the complete stage-gated process and required artifacts. Do not skip a stage merely because a similar plugin previously passed it; DSH versions, Profile composition, dependencies, and external services can drift.
+
+### 1. Prove host fit
+
+Identify the target host, extension seam, requested user outcome, state mutations, external dependencies, and acceptance surface.
+
+Stop and report a host mismatch when the project targets Obsidian, VS Code, a browser extension, MCP only, or another runtime without a proven DSH bundle contract. Offer the compatible host or a deliberately scoped adapter. Do not divert into an adjacent project.
+
+Produce a host-contract record and an architecture comparison. Gate: `compatible`, `adapter-required`, or `incompatible`; never leave this as implicit prose.
+
+### 2. Classify risk
+
+Assign one class from [scorecard.md](references/scorecard.md):
+
+- `R0`: read-only metadata/UI.
+- `R1`: Host tools/services or user-owned plugin state, no Profile lifecycle writes.
+- `R2`: external process, network, credentials, or device bridge.
+- `R3`: Profile lifecycle, restart, remote control, or broad management.
+
+Use the higher class when uncertain. Record non-goals and prohibited surfaces before coding.
+
+Produce a risk register that names assets, actors, trust boundaries, write surfaces, failure impact, minimum evidence level, and the reason for choosing the class.
+
+### 3. Select the standard pattern
+
+- **Host-only bundle**: expose a public Cordis service/tool and contribute one or more unique patch rows.
+- **Host + Client**: keep Browser code separate; register with `window.__ModuleLoader__.load()` and slots. Browser code must not import Host/Node modules.
+- **Optional Web route**: delay registration with `ctx.inject(['webServer'], ...)`; headless/no-Web profiles must still boot.
+- **Skill adapter**: mount isolated Skill files; do not silently install the external runtime, extension, or credentials.
+- **ApiProxy bridge**: adapt the narrow public remote surface with an allowlist, redaction, authentication, bounded parsing, and fail-closed transport security.
+- **Lifecycle manager**: treat every Profile change as an `R3` transaction and use the mutation protocol below.
+
+Create a bundle manifest with `dsh.bundle.patch`, a package-resolvable `cordis.patch.yml`, unique entry IDs, explicit files, version, license, and build contract. Remember that later patch layers replace a row's complete `config`; they do not deep-merge it.
+
+Compare at least two plausible patterns when the choice affects permissions, process boundaries, install behavior, or user experience. Record benefits and costs; do not select an architecture only because an earlier project used it.
+
+### 4. Implement least privilege
+
+Use public services already provided by the inspected DSH version. If the required seam is absent, stop and propose an adapter or upstream change instead of patching core.
+
+Prefer read-only discovery and dry-run/preview APIs. Make write features separately enabled. Validate schemas and size limits before business logic. Reject malformed profiles, ambiguous paths, unknown official components, stale state, replay, concurrent changes, and missing evidence.
+
+For recurring failure patterns, read [problem-playbook.md](references/problem-playbook.md).
+
+Produce a permission matrix with each data source/action, owning side, allowed caller, redaction, size/rate limit, failure mode, and test. Any permission without a user outcome and a test is removed.
+
+### 5. Apply the mutation protocol
+
+For Profile/package/restart mutations, create a fresh typed plan for exactly one operation containing:
+
+1. operation and target Profile;
+2. immutable package/source identity;
+3. exact file scope and expected precondition hashes;
+4. command argv and working directory;
+5. backup location and rollback procedure;
+6. postcondition and health checks;
+7. one exact confirmation phrase;
+8. expiration and single-use identity.
+
+Show the plan and wait for exact per-operation confirmation. Invalidate it on mismatch, expiry, concurrent change, or previous use. Back up before writing, commit atomically, run configuration and runtime health checks, and roll back on failure. A repository release never authorizes a local Profile update.
+
+Treat the confirmation friction and transaction machinery as explicit costs. Accept those costs for `R3` because the alternative is silent, difficult-to-recover corruption of user state. Do not impose the mutation protocol on pure `R0` reads.
+
+### 6. Climb the evidence ladder
+
+Advance only with current evidence:
+
+- `E0`: idea or plan.
+- `E1`: static structure/source review.
+- `E2`: automated unit/contract/fault tests.
+- `E3`: disposable Profile install, `--dump-config`, startup, and API smoke.
+- `E4`: separately confirmed real Profile version, process/port, official inventory/API, and visible UI readback.
+- `E5`: external/public/device acceptance plus failure recovery or rollback evidence.
+
+Never infer a higher level from a lower one. UI screenshots do not prove rollback; HTTP 200 does not prove visible UI; install success does not prove restart health; simulator output does not prove a real device.
+
+Produce an evidence matrix per capability. Include negative and recovery evidence, not only the happy path. A score ranks readiness; it never grants authority or replaces a hard gate.
+
+### 7. Release and install separately
+
+Before repository release, synchronize package version, README, catalog entry, immutable install anchor, tests, and fixed source metadata. For Git sources, either ship built artifacts or declare a self-contained `prepare` script and disclose pnpm `allowBuilds`; pin a full commit SHA.
+
+Run repository checks, source verification, and pack dry-run. Verify the remote commit and public assets after merge. Then stop. Update a real Profile only under a new confirmed mutation plan, restart it through the approved mechanism, and read back the resolved version and runtime state.
+
+Produce two separate reports: repository release evidence and Profile/runtime acceptance evidence. When the second report is absent, state `Profile unchanged` or `Profile unverified`.
+
+## Quantify readiness
+
+Run the deterministic read-only audit:
+
+```bash
+node scripts/audit-plugin.mjs /absolute/path/to/plugin
+node scripts/audit-plugin.mjs /absolute/path/to/plugin --json
+node scripts/audit-plugin.mjs /absolute/path/to/plugin --evidence /path/to/evidence.json
+```
+
+The audit scores static readiness out of 80 and traceable runtime evidence out of 20. It never proves runtime by itself. Use [scorecard.md](references/scorecard.md) for thresholds and the evidence JSON schema.
+
+## Produce the required handoff
+
+Use [templates.md](references/templates.md). Always report:
+
+- host-fit conclusion and risk class;
+- hard blockers and prohibited surfaces;
+- readiness score plus evidence level;
+- exact changed files and source identity;
+- tests and disposable/runtime evidence;
+- real Profile/public/device state as a separate line;
+- rollback/recovery state;
+- the next unmet gate.
+
+Also include a concise decision table with `decision`, `objective`, `benefit`, `cost`, `evidence`, and `reconsider when` columns. This makes future plugins reuse the reasoning rather than only the final choice.
+
+Do not use “done” when only planning, source review, tests, packaging, or a static preview has completed.

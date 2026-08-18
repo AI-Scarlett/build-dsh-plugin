@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "mode": "build-source",
+  "plugin": {
+    "name": "",
+    "summary": ""
+  },
+  "targetUsers": [],
+  "problem": "",
+  "whyNow": "",
+  "trigger": "",
+  "outcome": {
+    "expectedResult": "",
+    "acceptanceCriteria": [],
+    "nonGoals": []
+  },
+  "capabilities": [],
+  "data": {
+    "read": [],
+    "write": []
+  },
+  "ui": {
+    "needed": false,
+    "surface": "none",
+    "notes": ""
+  },
+  "external": {
+    "network": "none",
+    "services": [],
+    "processes": [],
+    "accounts": [],
+    "credentials": "none",
+    "credentialHandling": "none",
+    "devices": []
+  },
+  "profile": {
+    "target": "",
+    "mutations": [],
+    "restart": false,
+    "restartOwner": "none"
+  },
+  "security": {
+    "sensitiveData": [],
+    "exposure": "local",
+    "authentication": "none",
+    "encryption": "local-only",
+    "forbiddenActions": [
+      "modify-dsh-core",
+      "modify-official-packages",
+      "shadow-official-inventory",
+      "unconfirmed-real-profile-write"
+    ]
+  },
+  "constraints": {
+    "mustUse": [],
+    "mustNot": [],
+    "privacy": [],
+    "compatibility": []
+  },
+  "delivery": {
+    "workspace": "",
+    "repository": "",
+    "license": "",
+    "releaseTarget": "none"
+  },
+  "acceptance": {
+    "targetEvidence": "E3",
+    "realProfileAllowed": false,
+    "externalAcceptanceAllowed": false
+  },
+  "notes": ""
+}
