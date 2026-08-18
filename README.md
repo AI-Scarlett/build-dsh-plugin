@@ -2,6 +2,8 @@
 
 面向 DeepSeek Harness（DSH）插件开发的可复用 Agent Skill 与 DSH 原生 Skill Provider Bundle。它把自然语言或结构化 Brief 转换为标准插件方案、源码工程、工具卡片契约、审计、发行、安装和验收流程，同时把宿主边界、风险等级、权限、变更授权与证据门槛固化为可执行约束。
 
+官网：[DSH STORE Build Lab](https://dsh.store/build/)
+
 仓库现在同时提供两种宿主入口：
 
 - `build-dsh-plugin/` 是可部署到 Codex、Claude、Grok 等兼容 `SKILL.md` 的 Agent Skill；
