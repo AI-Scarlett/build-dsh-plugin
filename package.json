@@ -30,5 +30,6 @@
     "type": "git",
     "url": "https://github.com/AI-Scarlett/build-dsh-plugin.git"
   },
+  "homepage": "https://dsh.store/build/",
   "license": "MIT"
 }
