@@ -11,6 +11,7 @@ const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 const COMMIT = /^[0-9a-f]{40}$/
 const ENUMS = {
   status: ['approved', 'blocked', 'unlisted'],
+  updatePolicy: ['source-verified', 'user-reviewed', 'external-only'],
   pluginType: ['feature', 'theme', 'suite', 'client', 'provider', 'unknown'],
   installSource: ['npm', 'github', 'local-bundle', 'unknown'],
   permissionLevel: ['low', 'medium', 'high', 'unknown'],
@@ -132,6 +133,7 @@ function validateEntryShape(entry, report) {
   if (!VERSION.test(entry.version ?? '')) add(report, 'errors', 'MKT_SCHEMA', 'catalog version must be semantic version text', entry.version)
   if (!canonicalGithub(entry.repositoryUrl)) add(report, 'errors', 'MKT001', 'repositoryUrl must be a public canonical GitHub repository URL', entry.repositoryUrl)
   requireEnum(report, entry.status, ENUMS.status, 'status')
+  if (entry.updatePolicy !== undefined) requireEnum(report, entry.updatePolicy, ENUMS.updatePolicy, 'updatePolicy')
   const declaredEntryIds = strings(entry.entryIds)
   if (!Array.isArray(entry.entryIds) || declaredEntryIds.some(value => !SIMPLE_ID.test(value))) add(report, 'errors', 'MKT005', 'entryIds must be an array of valid DSH identifiers')
   if (entry.status === 'approved' && declaredEntryIds.length === 0) add(report, 'errors', 'MKT005', 'approved entries must declare at least one DSH entry ID')
@@ -180,6 +182,14 @@ function validateEntryShape(entry, report) {
   const installScripts = strings(entry.risk?.installScripts)
   if (!isObject(entry.risk) || !Array.isArray(entry.risk.installScripts) || typeof entry.risk.review !== 'string' || entry.risk.review.trim() === '') add(report, 'errors', 'MKT_SCHEMA', 'risk.installScripts and risk.review are required')
   if (installScripts.some(value => !ENUMS.lifecycle.includes(value))) add(report, 'errors', 'MKT006', 'risk.installScripts contains unsupported lifecycle names', installScripts)
+  const permissions = entry.details?.permissions
+  const sourceVerified = permissions?.files === 'none'
+    && permissions?.network === 'none'
+    && permissions?.commands === 'none'
+    && sameSet(strings(permissions?.credentials), ['none'])
+    && installScripts.length === 0
+  if (entry.updatePolicy === 'source-verified' && !sourceVerified) add(report, 'errors', 'MKT_UPDATE_POLICY', 'source-verified requires no file, network, command, credential, or install-lifecycle capability')
+  if (entry.updatePolicy === 'external-only' && entry.status === 'approved') add(report, 'errors', 'MKT_UPDATE_POLICY', 'external-only entries cannot be presented as approved guarded installs')
 }
 
 async function main() {

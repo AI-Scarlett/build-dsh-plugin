@@ -43,6 +43,7 @@ function entry(overrides = {}) {
     repositoryUrl: 'https://github.com/example/dsh-example-plugin',
     defaultBranch: 'main',
     manifestPath: 'package.json',
+    updatePolicy: 'source-verified',
     commit: 'a'.repeat(40),
     version: '1.2.3',
     categories: ['tools'],

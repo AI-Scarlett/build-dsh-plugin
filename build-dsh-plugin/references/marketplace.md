@@ -45,6 +45,15 @@ Catalog state is separate from engineering route:
 - `blocked`: may remain visible with an explicit reason and manual GitHub route, but must not be presented as protected installable;
 - `unlisted`: hidden from the public catalog while installed users may still manage their local copy.
 
+Source-update policy is separate from listing status:
+
+- `source-verified` permits a normal local fixed-SHA update plan only when both the plugin and candidate are low risk and the source/install contract verifies.
+- `user-reviewed` keeps legitimate higher-risk plugins in the marketplace. The local marketplace shows permission, script, dependency, Bundle, and code changes; the user decides each update with a separate confirmation.
+- `external-only` denies guarded marketplace install/update for DSH-native mutation, protected namespace/component interference, or another hard boundary, while allowing an explicitly unprotected GitHub link.
+- `update-blocked` is a candidate result, not a catalog policy: use it when lineage, version, manifest, Patch, entry IDs, or installation contract cannot be verified.
+
+The GitHub catalog governs identity and update policy. The canonical plugin repository governs newer versions. The user's local marketplace resolves the upstream branch to a full Commit and performs the bounded check; it never installs floating `main`. Do not require a central crawler or a catalog edit for every legitimate high-risk release.
+
 `blocked` is not a way to bypass a dangerous contract. It is a truthful discovery/status option for incomplete or unverified third-party work.
 
 ## 3. Minimum user input
@@ -107,6 +116,7 @@ Before an `approved` catalog candidate, require all of the following:
 - `approved` entries declare at least one entry ID;
 - `blocked`/`unlisted` entries include a concrete `statusReason`;
 - metadata comes from the pinned repository and current acceptance evidence, not local guesses.
+- when the current schema supports `updatePolicy`, derive `source-verified`, `user-reviewed`, or `external-only` from the rules above; never label a permission-bearing plugin `source-verified`.
 
 Use [catalog-entry.template.json](../assets/catalog-entry.template.json) as a starting shape, then replace every placeholder from inspected evidence.
 
@@ -172,6 +182,8 @@ node scripts/audit-marketplace-entry.mjs /absolute/path/to/plugin \
 11. run the STORE's current `validate:registry` and `verify:registry-sources` checks;
 12. submit a PR and wait for Registry CI/review;
 13. after merge, read the GitHub catalog and public marketplace page independently.
+
+For an already-listed plugin update, the normal path ends before a Registry contribution when the local marketplace can verify a newer immutable candidate under its declared policy. A Registry change remains necessary for identity, policy, metadata, status, repository, or compatibility changes—not merely because a high-risk plugin released a newer version.
 
 The Skill may generate the candidate entry and contribution instructions. It must not silently modify or deploy DSH STORE; that repository is a separate target and authority.
 

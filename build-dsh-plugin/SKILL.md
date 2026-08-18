@@ -173,6 +173,14 @@ Route each third-party repository to exactly one result:
 - `adapter-required`: upstream is another host/runtime but exposes a narrow supported seam;
 - `blocked`: source/authorization is unverifiable or the plugin violates a hard DSH boundary.
 
+Derive source-update policy separately from listing eligibility:
+
+- `source-verified`: only for an approved plugin with no file, network, command, credential, or install-lifecycle capability. A newer version may produce a normal fixed-SHA local plan after contract verification.
+- `user-reviewed`: for a legitimate approved plugin with any elevated capability or change signal. The local marketplace shows the concrete changes and requires a distinct confirmation for every update; high risk alone does not require a catalog version bump or centralized Registry review.
+- `external-only`: for projects that modify DSH native code or `@deepseek-ai/*`, claim a protected namespace, or disable/replace/shadow protected components. Expose only an explicitly unprotected GitHub route.
+
+An unverifiable candidate version, source lineage, manifest, Patch, entry identity, or install contract is `update-blocked`, not user-reviewed. Catalog governs identity and policy; canonical GitHub governs newer versions, which the user's local marketplace resolves to a full Commit. Never install floating `main` or design a server-wide repository crawler.
+
 Run both audits before a catalog candidate:
 
 ```bash

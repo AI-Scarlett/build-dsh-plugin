@@ -6,6 +6,7 @@
   "repositoryUrl": "https://github.com/owner/repository",
   "defaultBranch": "main",
   "manifestPath": "package.json",
+  "updatePolicy": "user-reviewed",
   "commit": "replace-with-40-character-lowercase-commit-sha",
   "version": "0.1.0",
   "categories": ["replace-with-current-registry-category"],
