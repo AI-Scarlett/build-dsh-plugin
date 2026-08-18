@@ -10,6 +10,8 @@
 
 Skill 会补齐安全默认值，判断 DSH 宿主兼容性与 R0–R3 风险，比较 Host、Client、Skill Adapter、ApiProxy 或生命周期管理方案，并输出目的、原因、优势、劣势、适用条件、替代方案、执行步骤与证据门槛。
 
+对于准备进入 DSH STORE 的插件，Skill 会从开发第一天保持商城兼容结构，并把第三方仓库分流为 `direct`、`monorepo`、`adapter-required` 或 `blocked`。它能生成 Catalog 候选并做只读预检，但不会把本地候选误报为已经上架，也不会静默修改 DSH STORE。
+
 ## 核心边界
 
 - 构建标准 DSH Bundle，不修改 DSH 源码或 `@deepseek-ai/*` 包。
@@ -18,6 +20,7 @@ Skill 会补齐安全默认值，判断 DSH 宿主兼容性与 R0–R3 风险，
 - 测试只使用一次性 Profile/夹具，不写入真实 `~/.dsh`。
 - 区分规划、源码、自动化测试、发行、真实安装、运行时与外部验收，不用低层证据替代高层验收。
 - Profile/package 变更采用单次计划、精确确认、前置哈希、备份、原子提交、健康检查和回滚。
+- 商城上架要求公开 GitHub、40 位固定 Commit、匹配的 manifest/Patch/Entry ID/生命周期/许可证和保守权限元数据；候选、Registry CI、合并与公开页面分别验收。
 
 ## 仓库结构
 
@@ -31,17 +34,17 @@ Skill 入口是 [`build-dsh-plugin/SKILL.md`](build-dsh-plugin/SKILL.md)。完�
 
 ## 安装
 
-从固定发行页下载 [`build-dsh-plugin-20260818.1.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.1/build-dsh-plugin-20260818.1.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.1/build-dsh-plugin-20260818.1.sha256)，然后验证完整性：
+从固定发行页下载 [`build-dsh-plugin-20260818.2.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.2/build-dsh-plugin-20260818.2.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.2/build-dsh-plugin-20260818.2.sha256)，然后验证完整性：
 
 ```bash
 cd dist
-shasum -a 256 -c build-dsh-plugin-20260818.1.sha256
+shasum -a 256 -c build-dsh-plugin-20260818.2.sha256
 ```
 
 确认目标 Skills 目录不存在同名文件夹，或已单独备份已有版本，然后解压：
 
 ```bash
-unzip build-dsh-plugin-20260818.1.zip -d ~/.codex/skills
+unzip build-dsh-plugin-20260818.2.zip -d ~/.codex/skills
 ```
 
 最终入口应为：
@@ -58,11 +61,13 @@ unzip build-dsh-plugin-20260818.1.zip -d ~/.codex/skills
 node scripts/verify-distribution.mjs
 cd build-dsh-plugin
 node scripts/test-normalize-brief.mjs
+node scripts/test-marketplace-entry.mjs
 node scripts/normalize-brief.mjs assets/plugin-brief.readonly-example.json
 node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
+node scripts/audit-marketplace-entry.mjs /path/to/plugin --entry /path/to/entry.json --registry /path/to/catalog.json
 ```
 
-需要 Node.js 18 或更高版本，不依赖第三方 npm 包。预期测试输出包含 `BRIEF_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
+需要 Node.js 18 或更高版本，不依赖第三方 npm 包。预期测试输出包含 `BRIEF_TEST_OK` 和 `MARKETPLACE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
 
 ## 使用示例
 
@@ -76,11 +81,11 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 
 ## 发行完整性
 
-- 发行版本：`2026.08.18.1`
-- 固定发行标签：[`v2026.08.18.1`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.1)
-- ZIP SHA-256：`2a6303b9c624ea6433855800ef33292b04bce64c6c8d2ac5bbd72da525d12b33`
-- ZIP 内常规文件数：17（包含独立的 `LICENSE` 与公共分发契约）
-- 已通过 Skill 结构、Node 语法、Brief 测试、个人绝对路径、敏感模式和一次性解压复测
+- 发行版本：`2026.08.18.2`
+- 固定发行标签：[`v2026.08.18.2`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.2)
+- ZIP SHA-256：`0c80d71fb0490df4f83bf5f774083bf8ce81514db5857d4ac6b4f45bd52e46bb`
+- ZIP 内常规文件数：21（包含独立 `LICENSE`、公共分发契约、商城规范、Catalog 模板和商城预检器）
+- 已通过 Skill 结构、Node 语法、Brief 测试、商城路线测试、个人绝对路径、敏感模式和一次性解压复测
 
 `dist/manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。README 与 INSTALL 只负责说明；DSH STORE 等分发页面必须读取“最新 GitHub Release → 对应标签下的 manifest”，不能把这些字段复制成另一份运行时数据。这样即使网页缓存暂时未刷新，下载页仍会把同一固定标签的 manifest、ZIP 和校验值绑定在一起。
 

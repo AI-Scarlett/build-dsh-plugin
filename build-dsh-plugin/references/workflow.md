@@ -42,8 +42,8 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: avoids wrong-host installs and reveals adapter options.
 - **Costs**: reconnaissance time; may yield no implementation.
 - **Inputs**: target repository/package, inspected DSH version/docs, one current standard example.
-- **Actions**: inspect manifest/patch/entries, original host, public services, Client slots, external dependencies, and required mutations; compare standard Bundle, adapter, and native-host alternatives.
-- **Output**: host-contract record plus architecture alternatives.
+- **Actions**: inspect manifest/patch/entries, original host, public services, Client slots, external dependencies, required mutations, repository/license, and marketplace route; compare direct root Bundle, monorepo Bundle, adapter, and native-host alternatives.
+- **Output**: host-contract record, architecture alternatives, and `direct`/`monorepo`/`adapter-required`/`blocked` route for reusable third-party work.
 - **Gate**: `compatible` or explicitly approved `adapter-required`.
 - **Stop**: `incompatible`, unknown contract, or required core modification.
 
@@ -90,8 +90,8 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: reviewable diffs and traceable behavior.
 - **Costs**: additional ideas must wait for a new decision record.
 - **Inputs**: approved artifacts from phases 0–4.
-- **Actions**: scaffold standard Bundle; implement Host first, narrow interface second, Client/bridge last; add validation, redaction, disposal, observability, and fail-closed behavior alongside each path.
-- **Output**: source, package contract, tests, and updated decision records for deviations.
+- **Actions**: scaffold standard Bundle with unique package/catalog/entry identities; implement Host first, narrow interface second, Client/bridge last; add validation, redaction, disposal, observability, fail-closed behavior, explicit license/repository/lifecycle/build metadata, and conservative permission/compatibility evidence alongside each path.
+- **Output**: source, package contract, tests, preliminary marketplace-readiness record, and updated decision records for deviations.
 - **Gate**: source implements only declared permissions and contains no hard blocker.
 - **Stop**: required core/official mutation, hidden shell string, secret exposure, or unreviewed scope increase.
 
@@ -102,8 +102,8 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: fast regression feedback and safe concurrency/rollback testing.
 - **Costs**: fixture and fault-injection maintenance.
 - **Inputs**: implementation and contracts.
-- **Actions**: run syntax/type/lint, unit, contract, negative, security, transaction fault, source consistency, and pack-content checks in disposable paths; run static audit.
-- **Output**: test matrix and static `/80` report.
+- **Actions**: run syntax/type/lint, unit, contract, negative, security, transaction fault, source consistency, and pack-content checks in disposable paths; run static audit; for reusable/STORE-targeted work generate a catalog candidate and run marketplace preflight against the current Registry catalog.
+- **Output**: test matrix, static `/80` report, and marketplace route/gap report where applicable.
 - **Gate**: no blocker, all required tests pass, and score is at least 75 for isolated acceptance; lower scores return to implementation.
 - **Stop**: any test touches real `~/.dsh`, missing dependencies make results partial, or artifacts contain secrets/private paths.
 
@@ -126,10 +126,10 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: reproducible installs and supportable rollback.
 - **Costs**: coordinated versioning, checks, public verification, and immutable anchors.
 - **Inputs**: E3-ready source and approved release scope.
-- **Actions**: synchronize package/README/INSTALL/catalog/tests; pin full commit/tag; disclose lifecycle/allowBuilds; for public artifacts synchronize release manifest, ZIP, SHA-256 sidecar, embedded license, source link, and asset URLs; run repository checks, source verification, pack/extraction dry-run, consistency verifier, and secret scan; merge/publish; read back remote commit, checks, catalog, release API, tagged manifest, and assets.
-- **Output**: repository release report with immutable identity.
-- **Gate**: public/remote source, license, artifact, manifest, checksum, and metadata match; real Profile remains explicitly unchanged.
-- **Stop**: mutable source, missing redistribution authority/license, inconsistent version/hash/file count, missing embedded license or artifact, failed checks, or unverifiable public data.
+- **Actions**: synchronize package/README/INSTALL/tests; pin full commit/tag; disclose lifecycle/allowBuilds; for STORE-targeted work synchronize the proposed catalog entry with that exact Commit and rerun the current Registry schema/source checks in a separate STORE contribution scope; for public artifacts synchronize release manifest, ZIP, SHA-256 sidecar, embedded license, source link, and asset URLs; run repository checks, source verification, pack/extraction dry-run, consistency verifier, and secret scan; merge/publish the plugin source; read back remote commit/checks/assets. Do not infer or silently perform the separate STORE catalog merge.
+- **Output**: repository release report with immutable identity plus catalog-candidate/Registry-check report when applicable.
+- **Gate**: public/remote source, license, artifact, manifest, checksum, package metadata, and proposed catalog metadata match; real Profile and actual marketplace listing remain explicitly separate.
+- **Stop**: mutable source, missing redistribution authority/license, inconsistent version/hash/file count, mismatched manifest/Patch/entry/lifecycle data, missing embedded license or artifact, failed checks, or unverifiable public data.
 
 ## 11. Phase 9 - real Profile acceptance
 
@@ -150,7 +150,7 @@ Each phase report must state objective, rationale, benefits, costs, inputs, acti
 - **Benefits**: E5 confidence for the claimed surface.
 - **Costs**: devices, accounts, network variability, publication controls, and potentially disruptive failure tests.
 - **Inputs**: E4 where relevant plus external acceptance plan.
-- **Actions**: test authorized real device/account/public endpoint; for a download page verify visible license/source/version/SHA, fixed-tag manifest resolution, fail-closed mismatch behavior, direct ZIP/SHA links, and a recomputed unauthenticated download hash; cover foreground/background, reconnect, network switch, tamper/replay, failure recovery, and rollback as applicable; redact evidence.
+- **Actions**: test authorized real device/account/public endpoint; for DSH STORE verify the merged remote `catalog.json` contains the exact Commit/status and the public marketplace renders the intended visible/blocked/unlisted behavior; for a download page verify visible license/source/version/SHA, fixed-tag manifest resolution, fail-closed mismatch behavior, direct ZIP/SHA links, and a recomputed unauthenticated download hash; cover foreground/background, reconnect, network switch, tamper/replay, failure recovery, and rollback as applicable; redact evidence.
 - **Output**: per-surface E5 report.
 - **Gate**: every public claim has direct readback and recovery evidence.
 - **Stop**: missing authorization/credentials/device, unsafe exposure, or no recovery path; mark partial rather than simulate completion.
@@ -182,4 +182,6 @@ Track these across projects:
 | Fault cases covered | Measure recoverability | All credible faults | Cannot exhaust real-world failures |
 | Rollback time/result | Measure operational recovery | Short and successful | Requires safe environment to test |
 | Unpinned sources | Detect supply-chain ambiguity | `0` for releases | Dev links may remain intentionally mutable |
+| Marketplace contract errors | Detect late listing rejection | `0` before Registry PR | Requires refreshing the current STORE schema/categories |
+| Marketplace evidence state | Prevent candidate/CI/merge/public-page overclaim | Matches direct proof | A passing local audit does not prove catalog merge |
 | Status contradictions | Detect reporting drift | `0` | Requires review across artifacts |

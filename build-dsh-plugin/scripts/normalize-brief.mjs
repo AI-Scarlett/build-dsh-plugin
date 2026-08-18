@@ -36,6 +36,16 @@ function hasOwn(object, key) {
   return isObject(object) && Object.prototype.hasOwnProperty.call(object, key)
 }
 
+function isCanonicalGithubRepository(value) {
+  return /^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/.test(string(value))
+}
+
+function isSafeRepositoryPath(value, { allowEmpty = false } = {}) {
+  const candidate = string(value)
+  if (!candidate) return allowEmpty
+  return !candidate.startsWith('/') && !candidate.includes('..') && !candidate.includes('\\')
+}
+
 function secretLikePaths(value, path = []) {
   if (Array.isArray(value)) return value.flatMap((item, index) => secretLikePaths(item, [...path, String(index)]))
   if (!isObject(value)) return []
@@ -121,6 +131,7 @@ function normalize(raw) {
   const security = isObject(raw.security) ? raw.security : {}
   const constraints = isObject(raw.constraints) ? raw.constraints : {}
   const delivery = isObject(raw.delivery) ? raw.delivery : {}
+  const marketplace = isObject(delivery.marketplace) ? delivery.marketplace : {}
   const acceptance = isObject(raw.acceptance) ? raw.acceptance : {}
 
   const mode = safeEnum(raw.mode, ['plan', 'build-source', 'audit', 'release-plan', 'acceptance-plan'], 'build-source', errors, 'mode')
@@ -130,6 +141,21 @@ function normalize(raw) {
   if (!trigger) assumptions.push('trigger defaults to explicit manual user action')
   const capabilities = array(raw.capabilities).filter(item => typeof item === 'string' || isObject(item))
   if (capabilities.length === 0) assumptions.push('capabilities will be derived from the problem, outcome, and acceptance criteria')
+  const releaseTarget = safeEnum(delivery.releaseTarget, ['none', 'local', 'github', 'marketplace', 'website'], 'none', errors, 'delivery.releaseTarget')
+  const marketplaceTarget = safeEnum(
+    marketplace.target,
+    ['none', 'dsh-store'],
+    releaseTarget === 'marketplace' ? 'dsh-store' : 'none',
+    errors,
+    'delivery.marketplace.target',
+  )
+  const marketplaceListingIntent = safeEnum(
+    marketplace.listingIntent,
+    ['none', 'assess', 'approved', 'blocked', 'unlisted'],
+    marketplaceTarget === 'dsh-store' ? 'assess' : 'none',
+    errors,
+    'delivery.marketplace.listingIntent',
+  )
 
   const normalized = {
     schemaVersion: 1,
@@ -189,12 +215,21 @@ function normalize(raw) {
       workspace: string(delivery.workspace),
       repository: string(delivery.repository),
       license: string(delivery.license),
-      releaseTarget: safeEnum(delivery.releaseTarget, ['none', 'local', 'github', 'marketplace', 'website'], 'none', errors, 'delivery.releaseTarget'),
+      releaseTarget,
       artifactType: safeEnum(delivery.artifactType, ['source', 'dsh-bundle', 'agent-skill', 'adapter'], 'dsh-bundle', errors, 'delivery.artifactType'),
       publicDownload: delivery.publicDownload === true,
       metadataAuthority: safeEnum(delivery.metadataAuthority, ['manifest', 'catalog', 'release-manifest'], 'release-manifest', errors, 'delivery.metadataAuthority'),
       sourceLinkRequired: delivery.sourceLinkRequired !== false,
       licenseNoticeRequired: delivery.licenseNoticeRequired !== false,
+      marketplace: {
+        target: marketplaceTarget,
+        listingIntent: marketplaceListingIntent,
+        repositoryUrl: string(marketplace.repositoryUrl) || string(delivery.repository),
+        manifestPath: string(marketplace.manifestPath) || 'package.json',
+        installPath: string(marketplace.installPath),
+        immutableCommit: string(marketplace.immutableCommit),
+        categories: stringArray(marketplace.categories),
+      },
     },
     acceptance: {
       targetEvidence: safeEnum(acceptance.targetEvidence, ['E3', 'E4', 'E5'], 'E3', errors, 'acceptance.targetEvidence'),
@@ -209,6 +244,7 @@ function normalize(raw) {
   if (!hasOwn(raw, 'profile')) assumptions.push('Profile mutation and restart default to none')
   if (!hasOwn(raw, 'security')) assumptions.push('security defaults to local-only, no credentials, and no real-state mutation')
   if (!hasOwn(raw, 'delivery')) assumptions.push('delivery defaults to source only with no publication')
+  if (!hasOwn(delivery, 'marketplace')) assumptions.push('marketplace-ready package structure is generated for reusable DSH bundles, but no DSH STORE submission is authorized')
   if (!hasOwn(raw, 'acceptance')) assumptions.push('acceptance defaults to disposable E3 and no real Profile/device/public action')
 
   const generationBlockers = []
@@ -288,6 +324,33 @@ function normalize(raw) {
       realOperationBlockers.push('public redistribution license is missing or does not grant redistribution rights')
     }
   }
+  const marketplaceRequested = normalized.delivery.marketplace.target === 'dsh-store'
+    || normalized.delivery.marketplace.listingIntent !== 'none'
+    || normalized.delivery.releaseTarget === 'marketplace'
+  if (marketplaceRequested) {
+    const listing = normalized.delivery.marketplace
+    if (!['dsh-bundle', 'adapter'].includes(normalized.delivery.artifactType)) {
+      realOperationBlockers.push('DSH STORE listing requires a standard DSH Bundle or a separately packaged DSH adapter')
+    }
+    if (!isCanonicalGithubRepository(listing.repositoryUrl)) {
+      realOperationBlockers.push('DSH STORE listing requires a public canonical GitHub repository URL')
+    }
+    if (!isSafeRepositoryPath(listing.manifestPath)) {
+      realOperationBlockers.push('DSH STORE manifestPath must stay inside the repository')
+    }
+    if (!isSafeRepositoryPath(listing.installPath, { allowEmpty: true })) {
+      realOperationBlockers.push('DSH STORE installPath must stay inside the repository')
+    }
+    if (['approved', 'blocked', 'unlisted'].includes(listing.listingIntent) && !/^[0-9a-f]{40}$/.test(listing.immutableCommit)) {
+      realOperationBlockers.push('DSH STORE catalog submission requires one immutable 40-character Git Commit')
+    }
+    if (['approved', 'blocked', 'unlisted'].includes(listing.listingIntent) && listing.categories.length === 0) {
+      realOperationBlockers.push('DSH STORE catalog submission requires at least one current Registry category')
+    }
+    if (listing.listingIntent === 'approved' && (!normalized.delivery.license || ['UNLICENSED', 'UNKNOWN'].includes(normalized.delivery.license.toUpperCase()))) {
+      realOperationBlockers.push('approved DSH STORE listing requires explicit usable license authority; keep it blocked while unresolved')
+    }
+  }
 
   const completeness = calculateCompleteness(raw, normalized)
   const generationReady = generationBlockers.length === 0
@@ -313,6 +376,8 @@ function normalize(raw) {
       architectureReasons,
       suggestedPackageName,
       suggestedEntryId,
+      marketplaceRequested,
+      marketplacePreflightRequired: marketplaceRequested,
       realOperationBlocked: realOperationBlockers.length > 0,
       realOperationBlockers,
       nextAction: generationReady

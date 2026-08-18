@@ -1,0 +1,39 @@
+{
+  "id": "replace-with-unique-catalog-id",
+  "name": "Replace with plugin display name",
+  "packageName": "dsh-example-plugin",
+  "description": "Replace with a bounded user-facing description.",
+  "repositoryUrl": "https://github.com/owner/repository",
+  "defaultBranch": "main",
+  "manifestPath": "package.json",
+  "commit": "replace-with-40-character-lowercase-commit-sha",
+  "version": "0.1.0",
+  "categories": ["replace-with-current-registry-category"],
+  "featured": false,
+  "entryIds": ["dsh-example-plugin"],
+  "status": "approved",
+  "compatibility": {
+    "dsh": null,
+    "node": null,
+    "systems": [],
+    "profiles": []
+  },
+  "details": {
+    "pluginType": "unknown",
+    "installSource": "github",
+    "license": "MIT",
+    "permissions": {
+      "level": "unknown",
+      "files": "unknown",
+      "network": "unknown",
+      "commands": "unknown",
+      "credentials": ["unknown"]
+    },
+    "externalDependencies": [],
+    "reviewStatus": "unreviewed"
+  },
+  "risk": {
+    "installScripts": [],
+    "review": "curated-not-security-audited"
+  }
+}

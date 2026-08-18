@@ -20,6 +20,7 @@
 16. Immutable source and catalog authority
 17. External runtime and ApiProxy bridges
 18. Licensed public artifact distribution
+19. Marketplace-ready package and listing route
 
 ## 1. How to use a decision card
 
@@ -239,3 +240,15 @@ For each card, record:
 - **Procedure**: classify the artifact; choose license; create immutable Release; include ZIP, SHA sidecar, manifest, INSTALL, and embedded license; make manifest authoritative; have the page resolve latest Release then tagged manifest; compare release assets/URLs; show source and license; fail closed on mismatch; read back and hash the public ZIP.
 - **Evidence / stop**: consistency verifier and CI pass, tag/Release/assets are public, downloaded hash matches, archive contains license, page displays matching dynamic facts and disables download on invalid data. Stop on `UNLICENSED`, moving sources, stale duplicated runtime metadata, or any mismatch.
 - **Reconsider when**: scale, API limits, signatures, availability, or governance justify a first-party signed registry/artifact host.
+
+## 19. Marketplace-ready package and listing route
+
+- **Objective**: make third-party plugins listable without weakening DSH safety or discovering structural incompatibility only at submission time.
+- **Why**: DSH STORE binds one public GitHub repository/Commit to a package manifest, Bundle Patch, entry IDs, lifecycle scripts, license, permissions, compatibility, and catalog identity. A plugin can work from a local checkout yet fail this reproducibility contract.
+- **Benefits**: fewer rejected submissions, less late refactoring, self-contained Git installs, truthful risk metadata, repeatable review, and a clear adapter path for non-DSH projects.
+- **Costs**: more package/release metadata, unique-ID coordination, conservative unknown states, disposable install work, and periodic refresh against the current Registry schema/categories.
+- **Use when**: any reusable DSH Bundle, existing third-party listing assessment, monorepo package, catalog candidate, or DSH STORE submission.
+- **Avoid when**: a private/local experiment may defer publication metadata, but it must remain labeled local/unpublished and cannot claim STORE readiness.
+- **Procedure**: reread the current STORE policy/schema/validator/catalog; run host fit; choose `direct`, `monorepo`, `adapter-required`, or `blocked`; standardize manifest/Patch/build/license/lifecycle/IDs; generate conservative catalog metadata; run general and marketplace audits; complete disposable install; pin a full Commit; verify remote manifest/Patch; run Registry checks in a separate STORE contribution scope; verify merge and public page separately.
+- **Evidence / stop**: local audit and catalog candidate, pinned-source readback, Registry CI, merged catalog, and public page are separate gates. Stop approved listing on floating/non-GitHub source, unsafe paths, mismatches, official shadowing, duplicate identity, invalid category, unlicensed copying, or guessed critical metadata.
+- **Reconsider when**: STORE adopts a signed registry, package registry, new schema/status model, or official submission API; update the reference and deterministic audit before the next listing.

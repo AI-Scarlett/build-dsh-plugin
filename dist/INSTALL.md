@@ -4,13 +4,13 @@
 
 ## 文件
 
-- `build-dsh-plugin-20260818.1.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
-- `build-dsh-plugin-20260818.1.sha256`：ZIP 完整性校验。
+- `build-dsh-plugin-20260818.2.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
+- `build-dsh-plugin-20260818.2.sha256`：ZIP 完整性校验。
 - `manifest.json`：版本、入口、依赖、校验状态和明确排除项。
 
-固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.1>
+固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.2>
 
-发行版本：`2026.08.18.1`
+发行版本：`2026.08.18.2`
 
 `manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。分发页面应先解析最新 GitHub Release，再读取该标签下的 manifest；不要从 README 或 INSTALL 抽取运行时元数据。
 
@@ -19,14 +19,14 @@
 在本目录运行：
 
 ```bash
-shasum -a 256 -c build-dsh-plugin-20260818.1.sha256
-unzip -l build-dsh-plugin-20260818.1.zip
+shasum -a 256 -c build-dsh-plugin-20260818.2.sha256
+unzip -l build-dsh-plugin-20260818.2.zip
 ```
 
 期望 SHA-256：
 
 ```text
-2a6303b9c624ea6433855800ef33292b04bce64c6c8d2ac5bbd72da525d12b33
+0c80d71fb0490df4f83bf5f774083bf8ce81514db5857d4ac6b4f45bd52e46bb
 ```
 
 ## 安装到另一套 Codex
@@ -42,7 +42,7 @@ unzip -l build-dsh-plugin-20260818.1.zip
 例如目标使用默认目录时，可以在确认同名目录不存在后执行：
 
 ```bash
-unzip build-dsh-plugin-20260818.1.zip -d ~/.codex/skills
+unzip build-dsh-plugin-20260818.2.zip -d ~/.codex/skills
 ```
 
 重新打开任务或让 Agent 重新加载 Skills，然后用下面的方式触发：
@@ -70,6 +70,7 @@ unzip build-dsh-plugin-20260818.1.zip -d ~/.codex/skills
 
 ```bash
 node scripts/test-normalize-brief.mjs
+node scripts/test-marketplace-entry.mjs
 node scripts/normalize-brief.mjs assets/plugin-brief.readonly-example.json
 node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 ```
@@ -77,6 +78,7 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 期望结果：
 
 - 测试输出 `BRIEF_TEST_OK`；
+- 商城夹具输出 `MARKETPLACE_TEST_OK`，覆盖 direct、monorepo、adapter-required、blocked 和不一致候选；
 - 只读示例为 `READY / R0 / host-client`；
 - 生命周期示例为 `READY / R3 / lifecycle-manager`，同时保持真实 Profile 操作阻断。
 

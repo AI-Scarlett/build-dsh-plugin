@@ -31,6 +31,8 @@ Run the blockers in [boundaries.md](boundaries.md) first. Any blocker sets statu
 - **Cost**: one blocker can stop an otherwise mature release; false positives require manual review.
 - **Evidence**: name the exact blocker, source location, impact, and smallest safe remediation. Never silently subtract points instead.
 
+For a DSH STORE target, marketplace hard blockers include non-GitHub/floating source, missing standard Bundle/adapter contract, unsafe package paths, manifest/version/license/Patch/entry/lifecycle mismatch, official shadowing, duplicate catalog identity, invalid category, or unauthorized third-party copying. A local candidate never overrides these blockers.
+
 ## 3. Readiness score
 
 The static audit covers 80 points; traceable runtime evidence covers 20.
@@ -40,7 +42,7 @@ The static audit covers 80 points; traceable runtime evidence covers 20.
 | Host contract | 16 | Prove DSH can resolve the package through supported seams | Prevents wrong-host work and cold-start surprises | Rewards structure, not feature quality | Standard bundle/patch, resolvable entries, correct optional Web and Client boundaries |
 | Non-destructive safety | 16 | Preserve core, official inventory, secrets, and command integrity | Small blast radius and upgrade safety | Restricts shortcuts and broad integrations | No core/official/Loader mutation, shell string, secret projection, or Client Host imports |
 | Mutation discipline | 16 | Make real-state writes intentional and recoverable | Concurrency safety and rollback | More code and confirmation friction | Read-only, or complete typed plan/confirmation/hash/backup/atomic/health/rollback protocol |
-| Packaging/source | 12 | Make installed or downloaded code reproducible and complete | Reliable Git/marketplace install, public download, and rollback | Coordinated metadata/build work | Synchronized name/version/files/build/license/provenance, release manifest/checksum when distributed, and immutable source |
+| Packaging/source | 12 | Make installed or downloaded code reproducible and complete | Reliable Git/marketplace install, public download, and rollback | Coordinated metadata/build work | Synchronized name/version/files/build/license/provenance, release manifest/checksum when distributed, immutable source, and matching catalog candidate when STORE-targeted |
 | Tests | 12 | Prove logic and failures without real-state risk | Fast regressions and safe fault injection | Fixtures can drift from real Profiles | Test script, fixtures, disposable home, safety/fault contracts |
 | Documentation/status | 8 | Preserve boundaries and prevent evidence overclaim | Better operations and future reuse | Documentation can become stale | Boundaries, permissions, evidence distinctions, and next gates are explicit |
 | Runtime evidence | 20 | Reward current observation beyond source/tests | Detects integration and environment failures | Expensive and can expire quickly | Current command/readback evidence as listed below |
@@ -141,6 +143,8 @@ The script validates only the presence of traceable evidence text; it does not i
 | <60 | Re-scope | Revisit host contract and architecture |
 
 For `R3`, require at least 90, no blockers, complete transaction fault tests, and explicit user confirmation before a real Profile operation. For public/device claims require the relevant E5 evidence even when the numeric score is high.
+
+For DSH STORE, the `/100` plugin score is necessary engineering evidence but not listing approval. Also require marketplace audit with no blocker, pinned-source verification, current Registry CI, merged catalog readback, and public marketplace readback for the claimed state.
 
 ## 7. Score interpretation and limitations
 

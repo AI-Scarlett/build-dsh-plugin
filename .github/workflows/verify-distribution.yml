@@ -18,3 +18,4 @@ jobs:
           node-version: 20
       - run: node scripts/verify-distribution.mjs
       - run: node build-dsh-plugin/scripts/test-normalize-brief.mjs
+      - run: node build-dsh-plugin/scripts/test-marketplace-entry.mjs
