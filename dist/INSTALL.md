@@ -20,7 +20,7 @@ unzip -l build-dsh-plugin-20260818.zip
 期望 SHA-256：
 
 ```text
-90713e73587a9bf5fb1b4ef3e46f94e817397a08631dcd0afff98e384fe28a96
+f19ae506d79e55ca1fdd86a6eadecb7a0aefeaae7061c8f0cdc758f0404127fc
 ```
 
 ## 安装到另一套 Codex
@@ -94,3 +94,7 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 3. 说明方案的目的、原因、优势、劣势和证据；
 4. 直接进入源码与测试，而不是重新提出宽泛问卷；
 5. 停在真实 Profile、发布和外部操作授权门之前。
+
+## 开源许可证
+
+本 Skill 使用 MIT License。发行 ZIP 内包含 `build-dsh-plugin/LICENSE`；复制、修改或再分发时必须保留该版权与许可声明。

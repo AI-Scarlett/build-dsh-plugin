@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
   "distributionVersion": "2026.08.18",
-  "createdAt": "2026-08-18T09:24:54+08:00",
+  "createdAt": "2026-08-18T10:17:23+08:00",
   "artifact": {
     "file": "build-dsh-plugin-20260818.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 54999,
-    "regularFileCount": 15,
-    "sha256": "90713e73587a9bf5fb1b4ef3e46f94e817397a08631dcd0afff98e384fe28a96"
+    "bytes": 55753,
+    "regularFileCount": 16,
+    "sha256": "f19ae506d79e55ca1fdd86a6eadecb7a0aefeaae7061c8f0cdc758f0404127fc"
   },
   "entrypoints": {
     "skill": "build-dsh-plugin/SKILL.md",
@@ -40,6 +40,7 @@
   ],
   "notes": [
     "This artifact is an Agent Skill bundle, not a DSH plugin package.",
-    "No public redistribution license is asserted by this packaging step."
+    "The repository and the distributed Skill are licensed under the MIT License.",
+    "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies."
   ]
 }
