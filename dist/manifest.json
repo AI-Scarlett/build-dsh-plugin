@@ -8,7 +8,22 @@
     "archiveRoot": "build-dsh-plugin/",
     "bytes": 55753,
     "regularFileCount": 16,
-    "sha256": "f19ae506d79e55ca1fdd86a6eadecb7a0aefeaae7061c8f0cdc758f0404127fc"
+    "sha256": "f19ae506d79e55ca1fdd86a6eadecb7a0aefeaae7061c8f0cdc758f0404127fc",
+    "sha256File": "build-dsh-plugin-20260818.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18/build-dsh-plugin-20260818.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18/build-dsh-plugin-20260818.sha256"
+  },
+  "release": {
+    "tag": "v2026.08.18",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.08.18",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.08.18/dist/manifest.json"
+  },
+  "license": {
+    "spdxId": "MIT",
+    "file": "build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.08.18/build-dsh-plugin/LICENSE",
+    "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
     "skill": "build-dsh-plugin/SKILL.md",
