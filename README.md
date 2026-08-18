@@ -76,10 +76,10 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 ## 发行完整性
 
 - 发行版本：`2026.08.18`
-- ZIP SHA-256：`90713e73587a9bf5fb1b4ef3e46f94e817397a08631dcd0afff98e384fe28a96`
-- ZIP 内常规文件数：15
+- ZIP SHA-256：`f19ae506d79e55ca1fdd86a6eadecb7a0aefeaae7061c8f0cdc758f0404127fc`
+- ZIP 内常规文件数：16（包含独立的 `LICENSE`）
 - 已通过 Skill 结构、Node 语法、Brief 测试、个人绝对路径、敏感模式和一次性解压复测
 
-## 许可说明
+## 开源许可证
 
-当前仓库未声明开源许可证。公开可见不等于授予复制、修改或再分发许可；如需对外开源，请由仓库所有者另行选择并添加许可证。
+本项目采用 [MIT License](LICENSE)。你可以使用、复制、修改、合并、发布、分发、再许可或销售本项目的副本，但必须在副本或主要部分中保留原版权声明和许可声明。发行 ZIP 内也包含相同许可证，解压后仍能保留授权信息。
