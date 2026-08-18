@@ -1,0 +1,13 @@
+- insert:
+    - id: dsh-build-plugin-skill-provider
+      name: '@deepseek-ai/dsh-skill-filesystem'
+      config:
+        providerName: build-dsh-plugin
+        includeDefaultRoots: false
+        customSkillDirs:
+          - !!js >-
+              process.getBuiltinModule('node:path').dirname(
+                process.getBuiltinModule('node:module').createRequire(baseUrl)
+                  .resolve('dsh-build-plugin/package.json')
+              )
+        watch: false

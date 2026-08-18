@@ -1,16 +1,16 @@
 # build-dsh-plugin 分发包
 
-这个 ZIP 是给 Agent 使用的 Skill，不是要安装进 DSH Profile 的插件包。它负责把标准需求 Brief 转换成 DSH 插件方案、源码、审计和验收流程。
+这个 ZIP 是给 Agent 使用的 Skill，不是要安装进 DSH Profile 的插件包。它负责把标准需求 Brief 转换成 DSH 插件方案、源码、Tool 卡片契约、审计和验收流程。仓库根目录另外提供标准 DSH Skill Provider Bundle；DSH 用户应安装仓库 Bundle，而不是把 ZIP 当成 Profile 插件包。
 
 ## 文件
 
-- `build-dsh-plugin-20260818.2.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
-- `build-dsh-plugin-20260818.2.sha256`：ZIP 完整性校验。
+- `build-dsh-plugin-20260818.3.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
+- `build-dsh-plugin-20260818.3.sha256`：ZIP 完整性校验。
 - `manifest.json`：版本、入口、依赖、校验状态和明确排除项。
 
-固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.2>
+固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.3>
 
-发行版本：`2026.08.18.2`
+发行版本：`2026.08.18.3`
 
 `manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。分发页面应先解析最新 GitHub Release，再读取该标签下的 manifest；不要从 README 或 INSTALL 抽取运行时元数据。
 
@@ -19,14 +19,14 @@
 在本目录运行：
 
 ```bash
-shasum -a 256 -c build-dsh-plugin-20260818.2.sha256
-unzip -l build-dsh-plugin-20260818.2.zip
+shasum -a 256 -c build-dsh-plugin-20260818.3.sha256
+unzip -l build-dsh-plugin-20260818.3.zip
 ```
 
 期望 SHA-256：
 
 ```text
-0c80d71fb0490df4f83bf5f774083bf8ce81514db5857d4ac6b4f45bd52e46bb
+eb4935901e8958b5ac888fff8100d44c47c5b102a95eb0c42d9e78e16c191c52
 ```
 
 ## 安装到另一套 Codex
@@ -42,7 +42,7 @@ unzip -l build-dsh-plugin-20260818.2.zip
 例如目标使用默认目录时，可以在确认同名目录不存在后执行：
 
 ```bash
-unzip build-dsh-plugin-20260818.2.zip -d ~/.codex/skills
+unzip build-dsh-plugin-20260818.3.zip -d ~/.codex/skills
 ```
 
 重新打开任务或让 Agent 重新加载 Skills，然后用下面的方式触发：
@@ -56,6 +56,12 @@ unzip build-dsh-plugin-20260818.2.zip -d ~/.codex/skills
 保持 ZIP 内相对目录不变，把 `build-dsh-plugin/` 放入该 Agent 的技能目录，并将 `SKILL.md` 设置为技能入口。`agents/openai.yaml` 是 Codex UI 元数据；不识别它的 Agent 可以忽略，但不能忽略 `SKILL.md`、`references/`、`assets/` 和 `scripts/`。
 
 如果 Agent 没有原生 Skill 机制，可以把 `SKILL.md` 作为任务级系统/工作流指令加载，并允许它按相对路径读取 `references/`。这种方式能复用方法论，但自动触发和 UI 元数据取决于目标 Agent。
+
+## DSH 原生入口
+
+DSH `0.1.0-rc.7+` 可安装仓库根目录的 `dsh-build-plugin` Bundle。它通过唯一条目 `dsh-build-plugin-skill-provider` 隔离挂载同一份 Skill，不安装 Codex、Claude 或 Grok Runtime，也不覆盖官方 Skill Provider。固定 GitHub Commit 的远程/商城入口需要在对应 Commit 合并并通过独立 Registry 校验后使用。
+
+真实 Profile 安装仍属于单独操作，需要计划、确认、备份、健康检查和回滚。E3 验收必须在首次 CLI 调用前设置临时 `DSH_HOME`；不要在真实 DSH home 下对不存在的 Profile 运行 `dsh plugin --profile <name> --help`，因为 CLI 可能先创建 Profile 再显示帮助。
 
 ## 目标环境要求
 

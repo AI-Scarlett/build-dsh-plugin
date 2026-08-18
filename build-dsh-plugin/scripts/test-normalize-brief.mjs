@@ -51,6 +51,30 @@ try {
   assert.equal(minimal.body.analysis.generationReady, true)
   assert.equal(minimal.body.analysis.riskClass, 'R0')
   assert.ok(minimal.body.analysis.assumptions.length >= 5)
+  assert.equal(minimal.body.normalized.presentation.defaultCard, 'derive')
+  assert.equal(minimal.body.normalized.presentation.customClientCards, false)
+  assert.equal(minimal.body.normalized.presentation.replayRequired, true)
+
+  const cardPath = join(tempRoot, 'tool-card.json')
+  await writeFile(cardPath, JSON.stringify({
+    problem: 'A model Tool returns an opaque result row.',
+    outcome: {
+      expectedResult: 'Show a truthful replayable search card.',
+      acceptanceCriteria: ['Live and replay cards have matching retained results and totals.'],
+    },
+    capabilities: [{ name: 'search repository', kind: 'tool', mode: 'read' }],
+    presentation: {
+      tools: [{ name: 'repo_search', resultCard: 'search' }],
+      defaultCard: 'search',
+      customClientCards: false,
+      replayRequired: true,
+    },
+  }))
+  const card = run(cardPath)
+  assert.equal(card.status, 0)
+  assert.equal(card.body.analysis.toolCardContractRequired, true)
+  assert.ok(card.body.analysis.architectureCandidates.includes('tool-card'))
+  assert.equal(card.body.normalized.presentation.defaultCard, 'search')
 
   const incompletePath = join(tempRoot, 'incomplete.json')
   await writeFile(incompletePath, JSON.stringify({

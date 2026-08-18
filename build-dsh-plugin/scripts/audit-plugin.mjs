@@ -156,6 +156,28 @@ async function main() {
     return record.text.split(/\r?\n/).flatMap((line, index) => bad.test(line) ? [`${record.rel}:${index + 1}`] : [])
   })
 
+  const allowedCardDiscriminants = new Set(['generic', 'terminal', 'diff', 'search', 'read', 'web'])
+  const cardDiscriminants = codeRecords.flatMap(record => [...record.text.matchAll(/\bcard\s*:\s*['"]([^'"]+)['"]/g)]
+    .map(match => ({ value: match[1], file: record.rel })))
+  const unsupportedCardDiscriminants = cardDiscriminants.filter(item => !allowedCardDiscriminants.has(item.value))
+  const presenterRecords = codeRecords.filter(record => /\bpresent(?:Call|Result)\s*(?::|\()/.test(record.text))
+  const presenterUiImports = presenterRecords.flatMap(record => {
+    const bad = /from\s+['"](?:react|@deepseek-ai\/dsh-client|[^'"]*\/client(?:\/|['"]))/
+    return record.text.split(/\r?\n/).flatMap((line, index) => bad.test(line) ? [`${record.rel}:${index + 1}`] : [])
+  })
+  const presenterSideEffects = linesMatching(presenterRecords, /\bpresent(?:Call|Result)\b[^\n]*(?:Date\.now|new\s+Date|Math\.random|readFile|writeFile|fetch\s*\(|process\.env|ctx\.(?:session|agent|fs|webServer))/, { codeOnly: true })
+  const officialToolCardReplacement = linesMatching(records, /name\s*:\s*['"]tool\.call\.toolview['"][^\n]{0,240}key\s*:\s*['"](?:bash|read|write|edit|grep|glob|web_search|web_fetch|skill|run_code)['"]/, { codeOnly: true })
+  const fullArgsRawInput = linesMatching(presenterRecords, /rawInput\s*:\s*args\b/, { codeOnly: true })
+  const hasToolPresenters = presenterRecords.length > 0
+  const usesPresentationMeta = /\bpresentationMeta\b/.test(codeText)
+  const cardTestCoverage = !hasToolPresenters || [
+    /presentCall/i,
+    /presentResult/i,
+    /replay/i,
+    /fallback|undefined|malformed/i,
+    /serializ|JSON|bound|limit|truncat/i,
+  ].every(pattern => pattern.test(testText))
+
   const loaderFiberMutations = linesMatching(records, /(?:ctx\.(?:loader|fiber)|\b(?:Loader|Fiber))\.(?:insert|remove|patch|enable|disable|write|mutate)\s*\(/, { codeOnly: true })
   const coreWriteTargets = linesMatching(records, /(?:writeFile|appendFile|rename|unlink|rm|copyFile)\s*\([^\n]*?(?:deepseek-harness|@deepseek-ai|profiles\/node_modules)/i, { codeOnly: true })
   const officialShadow = /(?:remove|disable|patch):[\s\S]{0,240}(?:@deepseek-ai\/|dsh-base|dsh-web-app|dsh-headless)/i.test(patchText)
@@ -202,7 +224,7 @@ async function main() {
   addCheck(host, 'standard dsh.bundle patch exists', Boolean(patchRel && patchExists), 5, patchRel ?? 'dsh.bundle.patch missing')
   addCheck(host, 'runtime entry points exist', runtimeEntryContract, 3, entryExistence.length ? entryExistence : patchOnlyAdapter ? 'patch-only provider adapter' : 'no main/exports/browser entry')
   addCheck(host, 'optional webServer is delayed', !hasWebRegistration || hasOptionalWebInjection, 2, hasWebRegistration ? 'web route detected' : 'no web route')
-  addCheck(host, 'client is separated and registered', !hasClient || clientHostImports.length === 0, 3, hasClient ? `client detected; host import findings=${clientHostImports.length}` : 'no client bundle')
+  addCheck(host, 'client/card presentation is separated and registered', (!hasClient || clientHostImports.length === 0) && presenterUiImports.length === 0 && officialToolCardReplacement.length === 0, 3, { hasClient, clientHostImports, presenterUiImports, officialToolCardReplacement })
   categories.push(host)
 
   const safety = makeCategory('Non-destructive safety', 16)
@@ -210,7 +232,7 @@ async function main() {
   addCheck(safety, 'no DSH core/official write targets', coreWriteTargets.length === 0, 4, coreWriteTargets)
   addCheck(safety, 'no official inventory shadow', !officialShadow, 3, officialShadow ? 'official remove/disable/patch pattern in bundle patch' : 'none')
   addCheck(safety, 'no shell-string execution', shellStrings.length === 0, 2, shellStrings)
-  addCheck(safety, 'no secret logging or Client Host imports', secretLogs.length === 0 && clientHostImports.length === 0, 3, { secretLogs, clientHostImports })
+  addCheck(safety, 'no secret logging, Client Host imports, or invalid card effects', secretLogs.length === 0 && clientHostImports.length === 0 && presenterSideEffects.length === 0 && unsupportedCardDiscriminants.length === 0, 3, { secretLogs, clientHostImports, presenterSideEffects, unsupportedCardDiscriminants, fullArgsRawInput })
   categories.push(safety)
 
   const mutation = makeCategory('Mutation discipline', 16)
@@ -239,7 +261,7 @@ async function main() {
   addCheck(tests, 'test/check script declared', hasTestScript, 3, pkg?.scripts ?? {})
   addCheck(tests, 'test files exist', testFiles.length > 0, 3, `${testFiles.length} text test files`)
   addCheck(tests, 'tests avoid real ~/.dsh writes', realHomeTestWrites.length === 0, 3, realHomeTestWrites)
-  addCheck(tests, 'safety/fault boundary tests present', safetyTestMarkers, 3, safetyTestMarkers ? 'boundary markers found' : 'no boundary/fault markers found')
+  addCheck(tests, 'safety/fault/card replay boundary tests present', safetyTestMarkers && cardTestCoverage, 3, { safetyTestMarkers, hasToolPresenters, usesPresentationMeta, cardTestCoverage })
   categories.push(tests)
 
   const docs = makeCategory('Documentation and status', 8)
@@ -264,6 +286,11 @@ async function main() {
   if (officialShadow) blockers.push('official inventory remove/disable/patch pattern detected')
   if (shellStrings.length) blockers.push('shell-string execution detected')
   if (secretLogs.length || clientHostImports.length) blockers.push('secret logging or Browser Client Host import detected')
+  if (presenterUiImports.length) blockers.push('Tool presenter imports Client/UI code instead of using provider-neutral card intents')
+  if (presenterSideEffects.length) blockers.push('Tool presenter may depend on I/O, current state, time, randomness, or environment')
+  if (unsupportedCardDiscriminants.length) blockers.push('unsupported DSH Tool card discriminant detected')
+  if (officialToolCardReplacement.length) blockers.push('Client may replace an official DSH Tool card key')
+  if (!cardTestCoverage) blockers.push('Tool card presenters lack deterministic replay/fallback/bounds contract tests')
   if (realHomeTestWrites.length) blockers.push('test may write to real ~/.dsh')
   if (profileMutation && Object.values(mutationMarkers).some(value => !value)) blockers.push('Profile mutation lacks one or more required transaction markers')
 
@@ -289,6 +316,19 @@ async function main() {
     status,
     blockers,
     categories,
+    cardContract: {
+      detected: hasToolPresenters,
+      discriminants: [...new Set(cardDiscriminants.map(item => item.value))],
+      usesPresentationMeta,
+      testCoverage: cardTestCoverage,
+      findings: {
+        unsupportedCardDiscriminants,
+        presenterUiImports,
+        presenterSideEffects,
+        officialToolCardReplacement,
+        fullArgsRawInput,
+      },
+    },
     runtimeEvidence: runtime,
     note: 'This is a read-only static/evidence audit. It does not prove DSH runtime, UI, device, public deployment, or rollback behavior.',
   }

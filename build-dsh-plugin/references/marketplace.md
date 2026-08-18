@@ -91,6 +91,7 @@ Before an `approved` catalog candidate, require all of the following:
 - catalog `entryIds` exactly describe the package's inserted rows;
 - the Patch does not disable, replace, or shadow protected/official components;
 - runtime/build files required by the manifest are present in Git installs.
+- model Tools use only card discriminants exported by the declared DSH compatibility range; provider-neutral presenter/replay/fallback tests ship with the source, and no Client contribution replaces an official Tool card key.
 
 ### Lifecycle and build
 
@@ -165,11 +166,12 @@ node scripts/audit-marketplace-entry.mjs /absolute/path/to/plugin \
 ```
 
 7. run package tests, pack/extraction checks, and a disposable official-CLI install;
-8. release or identify one immutable Commit, then reread manifest/Patch from that exact Commit;
-9. in a separate STORE contribution worktree, change only the catalog entry and required submission artifacts;
-10. run the STORE's current `validate:registry` and `verify:registry-sources` checks;
-11. submit a PR and wait for Registry CI/review;
-12. after merge, read the GitHub catalog and public marketplace page independently.
+8. for model Tools, compare live and persisted replay cards, generic fallback, metadata bounds/redaction, and the oldest supported DSH card union;
+9. release or identify one immutable Commit, then reread manifest/Patch from that exact Commit;
+10. in a separate STORE contribution worktree, change only the catalog entry and required submission artifacts;
+11. run the STORE's current `validate:registry` and `verify:registry-sources` checks;
+12. submit a PR and wait for Registry CI/review;
+13. after merge, read the GitHub catalog and public marketplace page independently.
 
 The Skill may generate the candidate entry and contribution instructions. It must not silently modify or deploy DSH STORE; that repository is a separate target and authority.
 
@@ -199,6 +201,7 @@ Track these separately:
 | Plugin structure | General audit plus marketplace audit, no hard blocker |
 | Package | tests, pack/extraction, runtime files, license, lifecycle disclosure |
 | DSH compatibility | disposable official-CLI install, dump-config, cold start, relevant API/UI smoke |
+| Tool card compatibility | supported discriminants, presenter purity, bounded durable metadata, generic fallback, and live/replay parity for each Tool |
 | Pinned source | unauthenticated fixed-Commit manifest/Patch readback and exact metadata match |
 | Catalog candidate | current schema/categories/duplicates pass locally |
 | Registry contribution | STORE `validate:registry` and `verify:registry-sources` pass in the contribution branch |

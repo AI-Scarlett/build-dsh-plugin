@@ -1,6 +1,6 @@
 ---
 name: build-dsh-plugin
-description: Convert natural-language or structured product briefs into plans, source projects, audits, packages, releases, DSH STORE-ready catalog candidates, public download artifacts, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for new DSH plugin ideas, DSH/Cordis Host plugins, Browser Client bundles, Skill adapters, ApiProxy bridges, plugin marketplaces, third-party DSH STORE listing failures, catalog entries/submissions, Profile lifecycle managers, fixed-commit releases, GitHub Release/website distribution, and third-party compatibility/install requests. Normalize goals, problems, capabilities, data, mutations, UI, external dependencies, constraints, delivery, marketplace intent, and acceptance criteria; apply safe defaults; enforce host and marketplace preflight, quantified gates, disposable tests, official CLI-only package changes, licensed fixed-release distribution, separate repository/catalog/Profile acceptance, and evidence-based status.
+description: Convert natural-language or structured briefs into plans, source, audits, packages, releases, DSH STORE catalog candidates, public artifacts, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for DSH/Cordis Host plugins, model Tools and card contracts, Browser Clients, Skill adapters, ApiProxy bridges, marketplace listing failures/submissions, Profile lifecycle managers, fixed releases, public distribution, and third-party compatibility requests. Normalize goals, problems, capabilities, data, mutations, Tool presentation, UI, external dependencies, constraints, delivery, marketplace intent, and acceptance; apply safe defaults; enforce host, card, and marketplace preflight, quantified gates, disposable tests, official CLI-only package changes, licensed immutable distribution, separate repository/catalog/Profile acceptance, and evidence-based status.
 ---
 
 # Build DSH Plugin
@@ -47,8 +47,10 @@ Always enforce these rules:
 - Do not expose credentials, full user files, injected system/plugin context, model reasoning, or private paths through logs or clients.
 - Keep planning, code completion, package release, Profile installation, runtime acceptance, and external/device acceptance as separate states.
 - Keep plugin readiness, catalog-candidate readiness, Registry PR/CI, merged catalog, public marketplace visibility, and Profile installation as separate states.
+- Keep canonical Tool output, model-facing rendering, provider-neutral card intent, and optional custom Client rendering as separate contracts.
 
 Read [boundaries.md](references/boundaries.md) before implementation or installation. Hard blockers in that file override every score.
+Read [card-contract.md](references/card-contract.md) before implementing a model Tool, `presentCall`, `presentResult`, `presentationMeta`, or a custom Tool card.
 
 ## Explain every consequential decision
 
@@ -98,6 +100,7 @@ Produce a risk register that names assets, actors, trust boundaries, write surfa
 - **Skill adapter**: mount isolated Skill files; do not silently install the external runtime, extension, or credentials.
 - **ApiProxy bridge**: adapt the narrow public remote surface with an allowlist, redaction, authentication, bounded parsing, and fail-closed transport security.
 - **Lifecycle manager**: treat every Profile change as an `R3` transaction and use the mutation protocol below.
+- **Tool card contract**: prefer provider-neutral `presentCall`/`presentResult` render intents; use a custom Client Slot card only for a plugin-owned Tool when the inspected built-in vocabulary cannot express the outcome.
 
 Create a bundle manifest with `dsh.bundle.patch`, a package-resolvable `cordis.patch.yml`, unique entry IDs, explicit files, version, license, and build contract. Remember that later patch layers replace a row's complete `config`; they do not deep-merge it.
 
@@ -108,6 +111,8 @@ Compare at least two plausible patterns when the choice affects permissions, pro
 Use public services already provided by the inspected DSH version. If the required seam is absent, stop and propose an adapter or upstream change instead of patching core.
 
 Prefer read-only discovery and dry-run/preview APIs. Make write features separately enabled. Validate schemas and size limits before business logic. Reject malformed profiles, ambiguous paths, unknown official components, stale state, replay, concurrent changes, and missing evidence.
+
+For every model Tool, record the canonical output, model-facing renderer, pending card, completed card, durable presentation metadata, bounds/redaction, generic fallback, and live/replay evidence. Presenters must be deterministic and perform no I/O, clock/random access, session reads, or extra permission-bearing work. Never put credentials, full private files, model reasoning, or unbounded arguments into a card.
 
 For recurring failure patterns, read [problem-playbook.md](references/problem-playbook.md).
 
@@ -142,6 +147,8 @@ Advance only with current evidence:
 - `E5`: external/public/device acceptance plus failure recovery or rollback evidence.
 
 Never infer a higher level from a lower one. UI screenshots do not prove rollback; HTTP 200 does not prove visible UI; install success does not prove restart health; simulator output does not prove a real device.
+
+For Tool cards, E2 includes deterministic presenter, malformed replay, redaction, bound, truncation, and generic-fallback tests. E3 includes live plus persisted replay parity in an isolated DSH runtime. Visible card behavior in the user's Profile remains E4.
 
 Produce an evidence matrix per capability. Include negative and recovery evidence, not only the happy path. A score ranks readiness; it never grants authority or replaces a hard gate.
 
@@ -216,6 +223,7 @@ Use [templates.md](references/templates.md). Always report:
 - exact changed files and source identity;
 - release tag, manifest authority, public artifact hash, and license when distributed;
 - DSH STORE route, catalog candidate identity, pinned source, Registry check state, merged-listing state, and public marketplace readback when requested;
+- Tool card decision, durable metadata, generic fallback, and live/replay evidence for every registered model Tool;
 - tests and disposable/runtime evidence;
 - real Profile/public/device state as a separate line;
 - rollback/recovery state;

@@ -130,6 +130,7 @@ function normalize(raw) {
   const profile = isObject(raw.profile) ? raw.profile : {}
   const security = isObject(raw.security) ? raw.security : {}
   const constraints = isObject(raw.constraints) ? raw.constraints : {}
+  const presentation = isObject(raw.presentation) ? raw.presentation : {}
   const delivery = isObject(raw.delivery) ? raw.delivery : {}
   const marketplace = isObject(delivery.marketplace) ? delivery.marketplace : {}
   const acceptance = isObject(raw.acceptance) ? raw.acceptance : {}
@@ -174,6 +175,12 @@ function normalize(raw) {
       nonGoals: stringArray(outcome.nonGoals),
     },
     capabilities,
+    presentation: {
+      tools: array(presentation.tools).filter(item => typeof item === 'string' || isObject(item)),
+      defaultCard: safeEnum(presentation.defaultCard, ['derive', 'none', 'generic', 'terminal', 'diff', 'search', 'read', 'web'], 'derive', errors, 'presentation.defaultCard'),
+      customClientCards: presentation.customClientCards === true,
+      replayRequired: presentation.replayRequired !== false,
+    },
     data: {
       read: stringArray(data.read),
       write: stringArray(data.write),
@@ -239,6 +246,7 @@ function normalize(raw) {
   }
 
   if (!hasOwn(raw, 'data')) assumptions.push('data boundary defaults to no reads and no writes')
+  if (!hasOwn(raw, 'presentation')) assumptions.push('Tool cards default to semantic derivation, generic fallback, replay-safe presenters, and no custom Client card')
   if (!hasOwn(raw, 'ui')) assumptions.push('UI defaults to Host-only with no Browser Client')
   if (!hasOwn(raw, 'external')) assumptions.push('external dependencies default to none')
   if (!hasOwn(raw, 'profile')) assumptions.push('Profile mutation and restart default to none')
@@ -282,6 +290,14 @@ function normalize(raw) {
     architectureReasons.push('Custom UI may require an optional Web route; verify the inspected DSH seam')
   }
   const searchableCapabilities = capabilityText(capabilities)
+  const toolCardContractRequired = normalized.presentation.tools.length > 0
+    || normalized.presentation.defaultCard !== 'derive'
+    || normalized.presentation.customClientCards
+    || /\btool\b|工具/.test(searchableCapabilities)
+  if (toolCardContractRequired) {
+    architectures.push('tool-card')
+    architectureReasons.push('A model Tool or explicit presentation request requires the DSH Tool card contract')
+  }
   if (/skill|adapter|适配|技能/.test(searchableCapabilities)) {
     architectures.push('skill-adapter')
     architectureReasons.push('Capability text indicates a Skill or external adapter')
@@ -374,6 +390,7 @@ function normalize(raw) {
       riskClass,
       architectureCandidates: [...new Set(architectures)],
       architectureReasons,
+      toolCardContractRequired,
       suggestedPackageName,
       suggestedEntryId,
       marketplaceRequested,

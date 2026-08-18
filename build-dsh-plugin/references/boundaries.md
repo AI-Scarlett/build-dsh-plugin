@@ -6,11 +6,12 @@
 2. Standard bundle contract
 3. Profile and patch semantics
 4. Host/Client boundary
-5. External runtime and bridge boundary
-6. Mutation boundary
-7. Test and evidence boundary
-8. Marketplace listing boundary
-9. Hard blockers
+5. Tool card boundary
+6. External runtime and bridge boundary
+7. Mutation boundary
+8. Test and evidence boundary
+9. Marketplace listing boundary
+10. Hard blockers
 
 ## 1. Host-fit gate
 
@@ -63,6 +64,8 @@ Create a unique patch row:
 
 The patch references the installed package name, not a source-tree-relative Host path. Keep entry IDs globally unique; a duplicate across bundle/Profile layers can make cold start fail.
 
+When a Patch config needs a package-owned resource directory, do not assume expression `baseUrl` is the Bundle source directory after Profile composition. Resolve the installed package identity from the Profile with a fixed package name, or compute the path inside a Host entry from its own `import.meta.url`; prove the exact resulting directory and Skill/resource discovery at E3.
+
 ## 3. Profile and patch semantics
 
 Effective configuration applies in this order:
@@ -106,7 +109,22 @@ ctx.inject(['webServer'], webCtx => {
 
 Headless/no-Web profiles must not fail because the UI service is absent.
 
-## 5. External runtime and bridge boundary
+## 5. Tool card boundary
+
+For model Tools, keep four contracts separate:
+
+1. canonical JSON output for programmatic callers;
+2. `output.render` content visible to the model;
+3. provider-neutral `presentCall`/`presentResult` card intent;
+4. optional Browser Client rendering for a plugin-owned Tool.
+
+Presenters run on live and replay paths. They must be deterministic pure functions of validated args and durable result fields: no I/O, current session/Profile reads, clock, randomness, mutable globals, or extra permissions. Use bounded JSON `output.presentationMeta` only when a completed card needs facts that model-facing text cannot reconstruct.
+
+Use only card discriminants exported by the inspected DSH version. For `0.1.0-rc.7`, pending calls support `generic`, `terminal`, and `diff`; completed results support `generic`, `terminal`, `diff`, `search`, `read`, and `web`. Preserve a meaningful generic fallback, truthful truncation/total/status fields, and soft degradation for malformed old records or incapable clients.
+
+Do not put secrets, full private files, unbounded args, system/plugin context, or model reasoning in `rawInput`, content, diffs, sources, or durable metadata. Do not register a Client `tool.call.toolview` key that replaces an official Tool card. Read [card-contract.md](card-contract.md) for the selection matrix, decision analysis, and evidence gates.
+
+## 6. External runtime and bridge boundary
 
 For Skill adapters:
 
@@ -125,7 +143,7 @@ For ApiProxy/mobile/network bridges:
 - keep LAN listeners off public interfaces by default and never expose a raw control port to the Internet;
 - defer a cloud relay until real demand and give it its own threat model.
 
-## 6. Mutation boundary
+## 7. Mutation boundary
 
 Read-only inspection and planning are the default. A write requires a fresh single-use plan and exact confirmation.
 
@@ -142,7 +160,7 @@ Every Profile mutation needs:
 
 Restart is a separate mutation. If the Host process must restart itself, use an approved external supervisor/guardian. Do not report success when a port appears briefly; require a stable boot identity, sustained heartbeat, health checks, and bounded retry/circuit breaking.
 
-## 7. Test and evidence boundary
+## 8. Test and evidence boundary
 
 Tests use disposable directories and explicit temporary `DSH_HOME`/Profile roots. They must never write to real `~/.dsh`.
 
@@ -154,12 +172,13 @@ Required test families scale with risk:
 - transaction fault injection for command failure, config failure, concurrent change, and rollback;
 - disposable official-CLI install plus `--dump-config`;
 - isolated startup/API/UI smoke;
+- live/replay Tool card parity, malformed-record fallback, metadata bounds, and redaction tests when a Tool presenter exists;
 - separately approved real Profile readback;
 - device/public/rollback tests when those surfaces exist.
 
 Keep evidence levels distinct. A result is only as strong as its highest directly observed gate.
 
-## 8. Marketplace listing boundary
+## 9. Marketplace listing boundary
 
 Build reusable packages with marketplace-compatible structure, but keep the DSH STORE repository outside the plugin's write scope unless a separate contribution is explicitly requested.
 
@@ -169,7 +188,7 @@ Use `manifestPath` plus `installPath` for a self-contained monorepo package. Use
 
 Unknown permission or compatibility evidence stays unknown and may justify a `blocked` discovery entry; it must never be guessed into an approved claim. Keep these evidence states separate: local candidate, pinned-source verified, Registry CI passed, PR merged, public page visible, and Profile installed.
 
-## 9. Hard blockers
+## 10. Hard blockers
 
 Stop mutation, installation, or release when any blocker exists:
 
@@ -178,6 +197,9 @@ Stop mutation, installation, or release when any blocker exists:
 - plugin disables, replaces, or shadows official inventory;
 - Host calls Loader/Fiber mutation APIs;
 - Browser bundle imports Host/Node modules or receives secrets/full files;
+- Tool presenters perform I/O or depend on current session/Profile state, time, randomness, or mutable globals;
+- card data leaks secrets/private files, persists unbounded values, invents an unsupported discriminant, lacks generic fallback, or disagrees with canonical success/truncation state;
+- a Client contribution replaces an official Tool card key;
 - Profile/package operation uses shell strings instead of fixed argv;
 - Profile write lacks a typed single-use plan, confirmation, hashes, backup, health check, or rollback;
 - tests target real `~/.dsh`;
