@@ -77,6 +77,55 @@ try {
   assert.equal(secret.body.analysis.generationReady, false)
   assert.ok(secret.body.analysis.schemaErrors.some(item => item.includes('secret-like fields')))
   assert.equal(JSON.stringify(secret.body).includes('must-not-be-echoed'), false)
+
+  const distributionPath = join(tempRoot, 'distribution.json')
+  await writeFile(distributionPath, JSON.stringify({
+    mode: 'release-plan',
+    problem: 'A reusable Agent Skill has no stable public download contract.',
+    outcome: {
+      expectedResult: 'Publish a fixed MIT-licensed ZIP with dynamic version and checksum metadata.',
+      acceptanceCriteria: ['The public ZIP hash matches the fixed release manifest.'],
+    },
+    delivery: {
+      repository: 'https://github.com/example/build-dsh-plugin',
+      license: 'MIT',
+      releaseTarget: 'website',
+      artifactType: 'agent-skill',
+      publicDownload: true,
+      metadataAuthority: 'release-manifest',
+      sourceLinkRequired: true,
+      licenseNoticeRequired: true,
+    },
+  }))
+  const distribution = run(distributionPath)
+  assert.equal(distribution.status, 0)
+  assert.equal(distribution.body.normalized.delivery.artifactType, 'agent-skill')
+  assert.equal(distribution.body.normalized.delivery.publicDownload, true)
+  assert.equal(distribution.body.analysis.realOperationBlocked, false)
+
+  const unsafeDistributionPath = join(tempRoot, 'unsafe-distribution.json')
+  await writeFile(unsafeDistributionPath, JSON.stringify({
+    problem: 'A package needs a public download.',
+    outcome: {
+      expectedResult: 'Show a download button.',
+      acceptanceCriteria: ['A download link is visible.'],
+    },
+    delivery: {
+      releaseTarget: 'website',
+      artifactType: 'agent-skill',
+      publicDownload: true,
+      metadataAuthority: 'manifest',
+      sourceLinkRequired: false,
+      licenseNoticeRequired: false,
+    },
+  }))
+  const unsafeDistribution = run(unsafeDistributionPath)
+  assert.equal(unsafeDistribution.status, 0)
+  assert.equal(unsafeDistribution.body.analysis.generationReady, true)
+  assert.equal(unsafeDistribution.body.analysis.realOperationBlocked, true)
+  for (const expected of ['repository', 'license', 'release manifest', 'source repository link', 'license notice']) {
+    assert.ok(unsafeDistribution.body.analysis.realOperationBlockers.some(item => item.includes(expected)), expected)
+  }
 } finally {
   await rm(tempRoot, { recursive: true, force: true })
 }

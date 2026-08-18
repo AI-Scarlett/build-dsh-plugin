@@ -65,7 +65,12 @@
     "workspace": "",
     "repository": "",
     "license": "MIT",
-    "releaseTarget": "none"
+    "releaseTarget": "none",
+    "artifactType": "dsh-bundle",
+    "publicDownload": false,
+    "metadataAuthority": "release-manifest",
+    "sourceLinkRequired": true,
+    "licenseNoticeRequired": true
   },
   "acceptance": {
     "targetEvidence": "E3",

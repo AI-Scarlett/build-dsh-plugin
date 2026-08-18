@@ -173,7 +173,7 @@ Stop mutation, installation, or release when any blocker exists:
 - official component identity, path, Profile, or source is ambiguous;
 - secrets may be logged, returned, committed, or uploaded;
 - release/version/source metadata is inconsistent;
+- public download lacks license authority, immutable release identity, matching manifest/ZIP/SHA, an embedded license notice where redistribution requires it, or a retained source link;
 - a lower evidence level is being presented as runtime/device/public acceptance.
 
 Hard blockers override the readiness score. Report `BLOCKED` and the smallest safe next action.
-

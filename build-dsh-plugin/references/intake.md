@@ -63,7 +63,7 @@ Use [plugin-brief.template.json](../assets/plugin-brief.template.json) for compl
 | `profile` | List Profile lifecycle changes/restart | Explicit none defaults | Exact target/scope for R3 |
 | `security` | Sensitive data, exposure, auth/encryption, forbidden actions | Safe local defaults | Exact for LAN/Internet/credentials |
 | `constraints` | Record must-use, must-not, privacy, compatibility | Defaults to DSH hard boundaries | Exact when product/legal constraint exists |
-| `delivery` | Workspace, repository, license, release target | May be proposed | Exact before publishing |
+| `delivery` | Workspace, repository, license, release target, artifact type, direct-download and metadata authority | May be proposed | Exact before publishing |
 | `acceptance` | Target E-level and real-environment permission | Defaults E3/no real state | Exact before E4/E5 |
 
 Never put actual secrets, tokens, cookies, passwords, or private file contents in the brief. Record only ownership and delivery mechanism.
@@ -85,7 +85,7 @@ Apply and disclose these defaults when fields are absent:
 | External dependencies | None | Smaller supply-chain/trust surface | Cannot use external channels yet |
 | Credentials | None | Prevents secret handling | Account integrations remain abstract |
 | Exposure | Local only | Safer default | No LAN/Internet access |
-| Publication | None | Prevents accidental release | Repository/marketplace step remains pending |
+| Publication | None; public download false; release manifest authority proposed | Prevents accidental release while preserving a standard publication path | Repository/website step remains pending until authorized |
 | Evidence target | E3 disposable | Proves integration safely | Does not prove real Profile/device/public state |
 
 Defaults are assumptions, not hidden requirements. If a default conflicts with the stated outcome, mark the conflict and ask only the deciding question.
@@ -102,6 +102,7 @@ The user should supply:
 - explicit prohibitions, privacy, compliance, or compatibility constraints;
 - observable acceptance criteria;
 - authorization only when a later real mutation/release is wanted.
+- for public distribution: artifact type, repository authority, chosen license/copyright holder, direct-download intent, and observable public readback.
 
 The agent derives and explains:
 
@@ -133,6 +134,7 @@ Allow source generation with assumptions, but block the corresponding real actio
 - LAN/Internet exposure is requested without authentication, encryption/transport, listener, and threat boundary;
 - device/account/public acceptance is requested without an authorized real target;
 - publication is requested without repository/license/source authority;
+- public download is requested without an immutable release manifest, embedded/preserved license notice, source link, ZIP checksum, or matching release assets;
 - restart is requested without process owner, approved supervisor/manual mechanism, health, and rollback.
 
 Ask the smallest set of questions, preferably one grouped question and never a generic discovery questionnaire after a usable brief is present.
