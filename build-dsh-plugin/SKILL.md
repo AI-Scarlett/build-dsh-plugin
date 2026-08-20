@@ -164,7 +164,11 @@ Produce two separate reports: repository release evidence and Profile/runtime ac
 
 Read [marketplace.md](references/marketplace.md) whenever building a reusable third-party DSH plugin, assessing an existing repository for DSH STORE, or preparing a catalog entry.
 
-Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. For the current rc.8 baseline, keep an explicit `compatibility.dshReleases` matrix for rc.5 through rc.8 and preserve unknown metadata as unknown instead of guessing.
+Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. For the current rc.8 baseline, keep an explicit `compatibility.dshReleases` matrix for rc.5 through rc.8 plus `compatibility.dshOperations` evidence for install, start, uninstall, and rollback on every release. Preserve unknown metadata as unknown instead of guessing.
+
+Keep STORE discovery and trusted installation physically and logically separate. A record in `registry/candidates.json` is discovery-only, carries no package/install/permission contract, and must normalize to `installable: false` with no allowed actions. It can move to `registry/catalog.json` only after a separate fixed-source, Bundle, license, permission, compatibility, and evidence review. Promotion, recommendation, sponsorship, Stars, or screenshots never upgrade verification.
+
+Track four independent assurance records for trusted entries: discovery evidence, installability evidence, runtime evidence, and security-review evidence. Never infer one from another. A verified record requires a method, time, and HTTPS evidence URL; missing proof remains `unknown`.
 
 Route each third-party repository to exactly one result:
 
@@ -191,7 +195,19 @@ node scripts/audit-marketplace-entry.mjs /absolute/path/to/plugin \
   --json
 ```
 
-Use [catalog-entry.template.json](assets/catalog-entry.template.json), but derive its values from the pinned repository and current Registry contract. A local candidate can be `READY_FOR_PINNED_SOURCE_VERIFICATION`; only current STORE validation plus fixed-Commit source verification can make it PR-ready. Only a merged remote catalog and public page readback prove actual listing.
+For large ecosystem discovery, create only discovery records first and run the candidate audit before touching the trusted catalog:
+
+```bash
+node scripts/audit-candidate-entry.mjs \
+  --entry /absolute/path/to/candidate.json \
+  --candidates /absolute/path/to/current/candidates.json \
+  --catalog /absolute/path/to/current/catalog.json \
+  --json
+```
+
+Use [candidate-entry.template.json](assets/candidate-entry.template.json). Candidate output never contains `packageName`, install paths, entry IDs, compatibility, permissions, risk, update policy, `installable`, or allowed actions.
+
+Use [catalog-entry.template.json](assets/catalog-entry.template.json), but derive its values from the pinned repository and current Registry contract. Include fixed-source freshness, four assurance levels, and rc.5–rc.8 operation evidence. A local trusted candidate can be `READY_FOR_PINNED_SOURCE_VERIFICATION`; only current STORE validation plus fixed-Commit source verification can make it PR-ready. Only a merged remote catalog and public page readback prove actual listing.
 
 Never silently edit or deploy DSH STORE while building the plugin. Prepare the candidate and evidence in the plugin work; make any STORE contribution a separate repository scope/branch with its own checks and authorization. Marketplace listing never authorizes real Profile installation.
 

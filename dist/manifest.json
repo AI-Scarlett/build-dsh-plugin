@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "2026.08.18.3",
-  "createdAt": "2026-08-18T13:57:49+08:00",
+  "distributionVersion": "2026.08.20.1",
+  "createdAt": "2026-08-20T23:30:00+08:00",
   "artifact": {
-    "file": "build-dsh-plugin-20260818.3.zip",
+    "file": "build-dsh-plugin-20260820.1.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 96649,
-    "regularFileCount": 22,
-    "sha256": "eb4935901e8958b5ac888fff8100d44c47c5b102a95eb0c42d9e78e16c191c52",
-    "sha256File": "build-dsh-plugin-20260818.3.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.3/build-dsh-plugin-20260818.3.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.3/build-dsh-plugin-20260818.3.sha256"
+    "bytes": 106482,
+    "regularFileCount": 25,
+    "sha256": "93f064d910313eb9c1d02ed383a614b3f9aa0a3622aa6ed493f078e35054fe85",
+    "sha256File": "build-dsh-plugin-20260820.1.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.20.1/build-dsh-plugin-20260820.1.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.20.1/build-dsh-plugin-20260820.1.sha256"
   },
   "release": {
-    "tag": "v2026.08.18.3",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.3",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.08.18.3",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.08.18.3/dist/manifest.json"
+    "tag": "v2026.08.20.1",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.20.1",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.08.20.1",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.08.20.1/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.08.18.3/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.08.20.1/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -33,13 +33,16 @@
     "pluginAudit": "build-dsh-plugin/scripts/audit-plugin.mjs",
     "marketplaceAudit": "build-dsh-plugin/scripts/audit-marketplace-entry.mjs",
     "marketplaceTests": "build-dsh-plugin/scripts/test-marketplace-entry.mjs",
+    "candidateAudit": "build-dsh-plugin/scripts/audit-candidate-entry.mjs",
+    "candidateTests": "build-dsh-plugin/scripts/test-candidate-entry.mjs",
     "catalogEntryTemplate": "build-dsh-plugin/assets/catalog-entry.template.json",
+    "candidateEntryTemplate": "build-dsh-plugin/assets/candidate-entry.template.json",
     "cardContract": "build-dsh-plugin/references/card-contract.md",
     "dshBundleManifest": "package.json",
     "dshBundlePatch": "cordis.patch.yml"
   },
   "runtime": {
-    "required": ["Agent support for SKILL.md or equivalent instruction loading", "DSH 0.1.0-rc.7+ for the repository-root Bundle"],
+    "required": ["Agent support for SKILL.md or equivalent instruction loading", "DSH 0.1.0-rc.8 for the repository-root Bundle"],
     "scripts": ["Node.js 18 or newer"],
     "externalPackages": []
   },
@@ -48,6 +51,7 @@
     "nodeSyntax": "passed",
     "briefTests": "BRIEF_TEST_OK",
     "marketplaceTests": "MARKETPLACE_TEST_OK",
+    "candidateTests": "CANDIDATE_TEST_OK",
     "personalAbsolutePathScan": "passed",
     "secretPatternScan": "passed",
     "disposableExtractionRetest": "passed",
@@ -68,7 +72,7 @@
     "This ZIP artifact is an Agent Skill bundle, not a DSH plugin package; the repository root separately provides the standard DSH Bundle.",
     "The repository and the distributed Skill are licensed under the MIT License.",
     "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies.",
-    "The Skill prepares DSH STORE catalog candidates and evidence but does not silently modify or deploy the STORE repository.",
+    "The Skill keeps discovery candidates non-installable and separate from trust-evidenced catalog proposals; it does not silently modify or deploy the STORE repository.",
     "The repository-root DSH Bundle mounts the same Skill through an isolated dsh-skill-filesystem provider and does not modify a real Profile without a separate plan and confirmation."
   ]
 }

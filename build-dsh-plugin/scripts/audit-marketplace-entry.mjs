@@ -10,6 +10,8 @@ const PACKAGE_NAME = /^(?:@[A-Za-z0-9._-]+\/)?[A-Za-z0-9._-]+$/
 const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 const COMMIT = /^[0-9a-f]{40}$/
 const DSH_RC_RELEASES = ['rc.5', 'rc.6', 'rc.7', 'rc.8']
+const DSH_OPERATIONS = ['install', 'start', 'uninstall', 'rollback']
+const ASSURANCE_LEVELS = ['discovery', 'installability', 'runtime', 'securityReview']
 const ENUMS = {
   status: ['approved', 'blocked', 'unlisted'],
   updatePolicy: ['source-verified', 'user-reviewed', 'external-only'],
@@ -64,6 +66,15 @@ function isObject(value) {
 
 function strings(value) {
   return Array.isArray(value) ? value.filter(item => typeof item === 'string').map(item => item.trim()).filter(Boolean) : []
+}
+
+function isoDate(value) {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value) && !Number.isNaN(Date.parse(value))
+}
+
+function httpsUrl(value) {
+  try { return typeof value === 'string' && new URL(value).protocol === 'https:' }
+  catch { return false }
 }
 
 function safeRelative(value) {
@@ -125,7 +136,7 @@ function validateEntryShape(entry, report) {
     add(report, 'errors', 'MKT_SCHEMA', 'catalog entry must be an object')
     return
   }
-  for (const field of ['id', 'name', 'packageName', 'description', 'repositoryUrl', 'commit', 'version', 'entryIds', 'status', 'compatibility', 'details', 'risk']) {
+  for (const field of ['id', 'name', 'packageName', 'description', 'repositoryUrl', 'commit', 'version', 'source', 'assurance', 'entryIds', 'status', 'compatibility', 'details', 'risk']) {
     if (!Object.hasOwn(entry, field)) add(report, 'errors', 'MKT_SCHEMA', `catalog entry is missing ${field}`)
   }
   if (!SIMPLE_ID.test(entry.id ?? '')) add(report, 'errors', 'MKT_SCHEMA', 'catalog id is invalid', entry.id)
@@ -135,6 +146,26 @@ function validateEntryShape(entry, report) {
   if (!canonicalGithub(entry.repositoryUrl)) add(report, 'errors', 'MKT001', 'repositoryUrl must be a public canonical GitHub repository URL', entry.repositoryUrl)
   requireEnum(report, entry.status, ENUMS.status, 'status')
   if (entry.updatePolicy !== undefined) requireEnum(report, entry.updatePolicy, ENUMS.updatePolicy, 'updatePolicy')
+  if (!isObject(entry.source)) add(report, 'errors', 'MKT013', 'source metadata is required for the pinned Commit')
+  else {
+    if (!isoDate(entry.source.updatedAt)) add(report, 'errors', 'MKT013', 'source.updatedAt must be the pinned Commit ISO date-time', entry.source.updatedAt)
+    if (!isoDate(entry.source.observedAt)) add(report, 'errors', 'MKT013', 'source.observedAt must be an ISO observation date-time', entry.source.observedAt)
+    if (!['github-commit', 'github-repository', 'unknown'].includes(entry.source.provenance)) add(report, 'errors', 'MKT013', 'source.provenance is invalid', entry.source.provenance)
+  }
+  if (!isObject(entry.assurance)) add(report, 'errors', 'MKT014', 'assurance must explicitly separate discovery, installability, runtime, and security review')
+  else for (const level of ASSURANCE_LEVELS) {
+    const evidence = entry.assurance[level]
+    if (!isObject(evidence)) {
+      add(report, 'errors', 'MKT014', `assurance.${level} must be an evidence record`)
+      continue
+    }
+    if (!['verified', 'failed', 'unknown', 'not-applicable'].includes(evidence.status)) add(report, 'errors', 'MKT014', `assurance.${level}.status is invalid`, evidence.status)
+    if (evidence.status === 'verified' && (typeof evidence.method !== 'string' || evidence.method.trim() === '' || !isoDate(evidence.checkedAt) || !httpsUrl(evidence.evidenceUrl))) {
+      add(report, 'errors', 'MKT014', `assurance.${level} verified evidence requires method, checkedAt, and HTTPS evidenceUrl`)
+    }
+    if (evidence.dshRelease !== null && evidence.dshRelease !== undefined && !DSH_RC_RELEASES.includes(evidence.dshRelease)) add(report, 'errors', 'MKT014', `assurance.${level}.dshRelease is invalid`)
+    if (!Array.isArray(evidence.systems) || !Array.isArray(evidence.profiles)) add(report, 'errors', 'MKT014', `assurance.${level} systems/profiles must be arrays`)
+  }
   const declaredEntryIds = strings(entry.entryIds)
   if (!Array.isArray(entry.entryIds) || declaredEntryIds.some(value => !SIMPLE_ID.test(value))) add(report, 'errors', 'MKT005', 'entryIds must be an array of valid DSH identifiers')
   if (entry.status === 'approved' && declaredEntryIds.length === 0) add(report, 'errors', 'MKT005', 'approved entries must declare at least one DSH entry ID')
@@ -155,6 +186,15 @@ function validateEntryShape(entry, report) {
     else for (const release of DSH_RC_RELEASES) {
       if (!['compatible', 'incompatible', 'unknown'].includes(compatibility.dshReleases[release])) {
         add(report, 'errors', 'MKT_SCHEMA', `compatibility.dshReleases.${release} must be compatible, incompatible, or unknown`)
+      }
+    }
+    if (!isObject(compatibility.dshOperations)) add(report, 'errors', 'MKT015', 'compatibility.dshOperations must declare install/start/uninstall/rollback for rc.5 through rc.8')
+    else for (const release of DSH_RC_RELEASES) {
+      if (!isObject(compatibility.dshOperations[release])) add(report, 'errors', 'MKT015', `compatibility.dshOperations.${release} must be an object`)
+      else for (const operation of DSH_OPERATIONS) {
+        if (!['passed', 'failed', 'unknown'].includes(compatibility.dshOperations[release][operation])) {
+          add(report, 'errors', 'MKT015', `compatibility.dshOperations.${release}.${operation} must be passed, failed, or unknown`)
+        }
       }
     }
   }
@@ -197,6 +237,9 @@ function validateEntryShape(entry, report) {
     && installScripts.length === 0
   if (entry.updatePolicy === 'source-verified' && !sourceVerified) add(report, 'errors', 'MKT_UPDATE_POLICY', 'source-verified requires no file, network, command, credential, or install-lifecycle capability')
   if (entry.updatePolicy === 'external-only' && entry.status === 'approved') add(report, 'errors', 'MKT_UPDATE_POLICY', 'external-only entries cannot be presented as approved guarded installs')
+  if (entry.featured === true && ASSURANCE_LEVELS.some(level => entry.assurance?.[level]?.status !== 'verified')) {
+    add(report, 'warnings', 'MKT014', 'featured exposure does not upgrade or replace any verification level')
+  }
 }
 
 async function main() {
@@ -298,6 +341,10 @@ async function main() {
   if (registry) {
     if (!isObject(registry) || !Array.isArray(registry.entries) || !isObject(registry.registry)) add(report, 'errors', 'MKT_SCHEMA', 'registry catalog shape is invalid')
     else if (entry) {
+      const policy = registry.registry.trustPolicy
+      if (policy?.candidateInstallDisabled !== true || policy?.unknownIsNotVerified !== true || policy?.promotionIndependentOfVerification !== true) {
+        add(report, 'errors', 'MKT013', 'current Registry trustPolicy must keep candidates non-installable, unknown unverified, and promotion independent of verification')
+      }
       const categories = isObject(registry.registry.categories) ? registry.registry.categories : {}
       for (const category of strings(entry.categories)) if (!Object.hasOwn(categories, category)) add(report, 'errors', 'MKT010', `catalog category is unknown: ${category}`)
       if (strings(entry.categories).length === 0) add(report, 'errors', 'MKT010', 'catalog entry must declare at least one current category')

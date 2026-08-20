@@ -21,12 +21,16 @@ Use this reference whenever a plugin is intended for DSH STORE, an existing thir
 Do not modify the STORE implementation while building a plugin. Read its current public contract first because the schema, categories, protected IDs, and review policy can change. Treat these upstream files as authoritative for the current listing attempt:
 
 - `registry/README.md` for human policy;
+- `registry/candidates.schema.json` and `src/candidates.mjs` for the non-installable discovery contract;
+- `registry/candidates.json` for the candidate discovery layer, which is not an install authority;
 - `registry/catalog.schema.json` and `src/catalog.mjs` for the enforced data/source contract;
 - `registry/catalog.json` for current categories, duplicates, and runtime metadata;
 - `.github/ISSUE_TEMPLATE/plugin-submission.yml` for submission inputs;
 - the Registry validation workflow for required checks.
 
 The current runtime authority is the GitHub-hosted `registry/catalog.json`. A bundled copy may be an explicitly labeled read-only fallback, but it is not a second authority. Never infer acceptance from an old local catalog or from the public page alone.
+
+Candidate discovery is a physically separate registry. Candidate records never contain trusted install fields, never produce DSH operation plans, and normalize to `installable: false` plus an empty allowed-action list. Moving a repository from discovery to trusted catalog is a separate promotion transaction, not a field flip.
 
 ## 2. Listing outcomes
 
@@ -38,6 +42,8 @@ Keep four outcomes distinct:
 | `monorepo` | Standard DSH package lives in a repository subdirectory | Set both `manifestPath` and `installPath`, then verify the same pinned Commit |
 | `adapter-required` | Upstream is not a DSH Bundle but exposes a usable public seam | Build a separately owned standard DSH adapter; do not mislabel upstream as directly installable |
 | `blocked` | Core modification, official shadowing, unverifiable ownership/source, or another hard boundary exists | Stop approved listing; report the smallest safe remediation |
+
+Before those engineering outcomes, a repository may exist only as `candidate-discovery`. This means the repository was found and bounded discovery metadata was recorded; it does not mean installable, runtime verified, security reviewed, compatible, or approved.
 
 Catalog state is separate from engineering route:
 
@@ -117,7 +123,11 @@ Before an `approved` catalog candidate, require all of the following:
 - `blocked`/`unlisted` entries include a concrete `statusReason`;
 - metadata comes from the pinned repository and current acceptance evidence, not local guesses.
 - `compatibility.dshReleases` explicitly marks `rc.5`, `rc.6`, `rc.7`, and `rc.8` as `compatible`, `incompatible`, or `unknown`; derive it from the declared range and keep unknown evidence visible.
+- `compatibility.dshOperations` records `install`, `start`, `uninstall`, and `rollback` as `passed`, `failed`, or `unknown` for each rc.5–rc.8 release. Version-range compatibility does not substitute for operation evidence.
+- `source.updatedAt`, `source.observedAt`, and `source.provenance` bind freshness sorting to pinned source evidence; a recommendation flag never substitutes for freshness.
+- `assurance.discovery`, `assurance.installability`, `assurance.runtime`, and `assurance.securityReview` remain independent. Verified evidence requires a method, check time, and HTTPS evidence URL; missing proof stays `unknown`.
 - when the current schema supports `updatePolicy`, derive `source-verified`, `user-reviewed`, or `external-only` from the rules above; never label a permission-bearing plugin `source-verified`.
+- Registry trust policy must keep candidate installs disabled, unknown facts unverified, and promotion/sponsorship independent of verification state.
 
 Use [catalog-entry.template.json](../assets/catalog-entry.template.json) as a starting shape, then replace every placeholder from inspected evidence.
 
@@ -163,26 +173,32 @@ For an approved install path, unknown critical compatibility or permission behav
 
 Run this flow from the beginning of plugin development, not only before submission:
 
-1. inspect the current Registry contract and categories;
-2. run host-fit and choose direct, monorepo, adapter, upstream-change, or blocked route;
-3. generate the standard manifest/Patch and reserve globally unique package/catalog/entry IDs;
-4. make license, repository, permissions, dependencies, compatibility, and lifecycle scripts explicit;
-5. run the general plugin audit;
-6. generate a proposed catalog entry and run the marketplace audit:
+1. inspect the current candidate and trusted Registry contracts plus categories;
+2. for ecosystem-scale discovery, create only a record from [candidate-entry.template.json](../assets/candidate-entry.template.json) and run `audit-candidate-entry.mjs`; do not add install metadata or touch the trusted catalog;
+3. for a separately selected promotion candidate, run host-fit and choose direct, monorepo, adapter, upstream-change, or blocked route;
+4. generate the standard manifest/Patch and reserve globally unique package/catalog/entry IDs;
+5. make license, repository, permissions, dependencies, compatibility, lifecycle scripts, fixed-source freshness, and four assurance levels explicit;
+6. run the general plugin audit;
+7. generate a proposed trusted catalog entry and run the marketplace audit:
 
 ```bash
+node scripts/audit-candidate-entry.mjs \
+  --entry /absolute/path/to/candidate.json \
+  --candidates /absolute/path/to/current/candidates.json \
+  --catalog /absolute/path/to/current/catalog.json
+
 node scripts/audit-marketplace-entry.mjs /absolute/path/to/plugin \
   --entry /absolute/path/to/catalog-entry.json \
   --registry /absolute/path/to/current/catalog.json
 ```
 
-7. run package tests, pack/extraction checks, and a disposable official-CLI install;
-8. for model Tools, compare live and persisted replay cards, generic fallback, metadata bounds/redaction, and the oldest supported DSH card union;
-9. release or identify one immutable Commit, then reread manifest/Patch from that exact Commit;
-10. in a separate STORE contribution worktree, change only the catalog entry and required submission artifacts;
-11. run the STORE's current `validate:registry` and `verify:registry-sources` checks;
-12. submit a PR and wait for Registry CI/review;
-13. after merge, read the GitHub catalog and public marketplace page independently.
+8. run package tests, pack/extraction checks, and a disposable official-CLI install/start/uninstall/rollback matrix for every claimed release;
+9. for model Tools, compare live and persisted replay cards, generic fallback, metadata bounds/redaction, and the oldest supported DSH card union;
+10. release or identify one immutable Commit, then reread manifest/Patch from that exact Commit;
+11. in a separate STORE contribution worktree, promote the reviewed candidate by changing only the trusted catalog entry and required submission artifacts;
+12. run the STORE's current `validate:registry` and `verify:registry-sources` checks;
+13. submit a PR and wait for Registry CI/review;
+14. after merge, read the GitHub catalog and public marketplace page independently.
 
 For an already-listed plugin update, the normal path ends before a Registry contribution when the local marketplace can verify a newer immutable candidate under its declared policy. A Registry change remains necessary for identity, policy, metadata, status, repository, or compatibility changes—not merely because a high-risk plugin released a newer version.
 
@@ -204,6 +220,11 @@ The Skill may generate the candidate entry and contribution instructions. It mus
 | `MKT010` | Catalog ID/package/category conflict | Candidate was created without current Registry readback | Rebase on current catalog and choose a valid unique identity |
 | `MKT011` | No redistribution/modification authority | Repository license or ownership is insufficient | Ask owner to license/change upstream; do not fork-copy silently |
 | `MKT012` | Local checks pass but listing is absent | PR, remote catalog, or public page was not verified | Keep status partial; complete Registry CI, merge, and public readback |
+| `MKT013` | Source/trust policy is absent or weak | Freshness, candidate isolation, or promotion boundary cannot be proved | Refresh from current STORE and fail closed before promotion |
+| `MKT014` | Assurance levels are missing or conflated | Discovery, installability, runtime, and security review were treated as one claim | Record four independent evidence states; promotion does not upgrade them |
+| `MKT015` | rc.5–rc.8 operation evidence is incomplete | A version-range claim was mistaken for install/start/uninstall/rollback proof | Keep each operation unknown until independently tested |
+| `CANDIDATE_TRUST_BOUNDARY` | Candidate contains install fields or weak registry policy | Discovery data could leak into guarded operations | Remove trusted fields and keep the candidate in the separate registry |
+| `CANDIDATE_DUPLICATE_TRUSTED` | Candidate repository already exists in trusted catalog | One repository is represented in both layers | Update/review the trusted record instead of duplicating discovery |
 
 ## 10. Submission and evidence gates
 
@@ -211,12 +232,13 @@ Track these separately:
 
 | Gate | Required proof |
 | --- | --- |
+| Candidate discovery | Candidate audit, fail-closed boundary, no install fields/actions, no trusted duplicate |
 | Plugin structure | General audit plus marketplace audit, no hard blocker |
 | Package | tests, pack/extraction, runtime files, license, lifecycle disclosure |
-| DSH compatibility | disposable official-CLI install, dump-config, cold start, relevant API/UI smoke |
+| DSH compatibility | per-release install/start/uninstall/rollback evidence; disposable official-CLI dump-config, cold start, relevant API/UI smoke |
 | Tool card compatibility | supported discriminants, presenter purity, bounded durable metadata, generic fallback, and live/replay parity for each Tool |
 | Pinned source | unauthenticated fixed-Commit manifest/Patch readback and exact metadata match |
-| Catalog candidate | current schema/categories/duplicates pass locally |
+| Catalog candidate | current schema/categories/duplicates, fixed-source freshness, four assurance levels, and promotion boundary pass locally |
 | Registry contribution | STORE `validate:registry` and `verify:registry-sources` pass in the contribution branch |
 | Merged listing | merged GitHub `catalog.json` contains the exact Commit and status |
 | Public marketplace | plugin is visible/hidden/blocked exactly as intended and links resolve |

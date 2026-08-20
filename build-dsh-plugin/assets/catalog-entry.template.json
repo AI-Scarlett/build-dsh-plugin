@@ -11,11 +11,28 @@
   "version": "0.1.0",
   "categories": ["replace-with-current-registry-category"],
   "featured": false,
+  "source": {
+    "updatedAt": "replace-with-pinned-commit-ISO-date-time",
+    "observedAt": "replace-with-observation-ISO-date-time",
+    "provenance": "github-commit"
+  },
+  "assurance": {
+    "discovery": { "status": "unknown", "method": null, "checkedAt": null, "evidenceUrl": null, "dshRelease": null, "systems": [], "profiles": [], "summary": null },
+    "installability": { "status": "unknown", "method": null, "checkedAt": null, "evidenceUrl": null, "dshRelease": null, "systems": [], "profiles": [], "summary": null },
+    "runtime": { "status": "unknown", "method": null, "checkedAt": null, "evidenceUrl": null, "dshRelease": null, "systems": [], "profiles": [], "summary": null },
+    "securityReview": { "status": "unknown", "method": null, "checkedAt": null, "evidenceUrl": null, "dshRelease": null, "systems": [], "profiles": [], "summary": null }
+  },
   "entryIds": ["dsh-example-plugin"],
   "status": "approved",
   "compatibility": {
     "dsh": null,
     "dshReleases": { "rc.5": "unknown", "rc.6": "unknown", "rc.7": "unknown", "rc.8": "unknown" },
+    "dshOperations": {
+      "rc.5": { "install": "unknown", "start": "unknown", "uninstall": "unknown", "rollback": "unknown" },
+      "rc.6": { "install": "unknown", "start": "unknown", "uninstall": "unknown", "rollback": "unknown" },
+      "rc.7": { "install": "unknown", "start": "unknown", "uninstall": "unknown", "rollback": "unknown" },
+      "rc.8": { "install": "unknown", "start": "unknown", "uninstall": "unknown", "rollback": "unknown" }
+    },
     "node": null,
     "systems": [],
     "profiles": []

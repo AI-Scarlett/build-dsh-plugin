@@ -21,7 +21,7 @@ Skill 会补齐安全默认值，判断 DSH 宿主兼容性与 R0–R3 风险，
 
 对于注册模型 Tool 的插件，Skill 会同时设计 DSH 卡片契约：把规范 JSON 输出、模型可见渲染、`presentCall`/`presentResult` 卡片意图、`presentationMeta` 持久化投影和可选 Client 自定义卡片分开；要求 live/replay 一致、通用降级、字段限额、截断状态真实且不泄露凭据、完整私有文件或模型推理。
 
-对于准备进入 DSH STORE 的插件，Skill 会从开发第一天保持商城兼容结构，并把第三方仓库分流为 `direct`、`monorepo`、`adapter-required` 或 `blocked`。它能生成 Catalog 候选并做只读预检，但不会把本地候选误报为已经上架，也不会静默修改 DSH STORE。
+对于准备进入 DSH STORE 的插件，Skill 会从开发第一天保持商城兼容结构，并把第三方仓库分流为 `direct`、`monorepo`、`adapter-required` 或 `blocked`。0.2.0 起先生成与可信安装库物理分离的发现候选：候选没有包名、安装路径、Entry ID、权限、兼容性或安装操作；只有完成独立晋级审查后才生成 Catalog 提案。可信提案会显式记录固定源更新时间、发现/可安装/运行/安全审查四级证据，以及 rc.5–rc.8 的安装/启动/卸载/回滚证据。推荐、推广或赞助不会改变验证等级。
 
 对于已上架插件的源更新，Skill 遵循 DSH-Store 的本机决策模型：低风险候选使用 `source-verified` 生成固定 SHA 计划；具备文件、网络、命令、凭据或生命周期能力的合法插件使用 `user-reviewed`，由商城展示实际变化并让用户逐次确认；只有修改 DSH 原生代码、冒用官方命名空间、干预受保护组件等硬边界才使用 `external-only`。版本发现来自用户本机对 canonical GitHub 的有限检查，不要求服务端巡检，也不安装浮动 `main`。
 
@@ -34,6 +34,8 @@ Skill 会补齐安全默认值，判断 DSH 宿主兼容性与 R0–R3 风险，
 - 区分规划、源码、自动化测试、发行、真实安装、运行时与外部验收，不用低层证据替代高层验收。
 - Profile/package 变更采用单次计划、精确确认、前置哈希、备份、原子提交、健康检查和回滚。
 - 商城上架要求公开 GitHub、40 位固定 Commit、匹配的 manifest/Patch/Entry ID/生命周期/许可证和保守权限元数据；候选、Registry CI、合并与公开页面分别验收。
+- 候选发现库与可信安装库严格分离；候选永远 `installable: false` 且没有允许操作，晋级必须重新审核。
+- `compatibility.dshReleases` 只表示版本声明，不能替代每个版本的安装、启动、卸载和回滚证据。
 - Tool 展示优先使用 DSH 的 provider-neutral 卡片契约；Presenter 不做 I/O、不读当前会话/Profile、不依赖时钟或随机数，也不覆盖官方 Tool 卡片 key。
 
 ## 仓库结构
@@ -51,17 +53,17 @@ Skill 入口是 [`build-dsh-plugin/SKILL.md`](build-dsh-plugin/SKILL.md)。完�
 
 ## 安装到通用 Agent
 
-从固定发行页下载 [`build-dsh-plugin-20260818.3.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.3/build-dsh-plugin-20260818.3.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.18.3/build-dsh-plugin-20260818.3.sha256)，然后验证完整性：
+从固定发行页下载 [`build-dsh-plugin-20260820.1.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.20.1/build-dsh-plugin-20260820.1.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.20.1/build-dsh-plugin-20260820.1.sha256)，然后验证完整性：
 
 ```bash
 cd dist
-shasum -a 256 -c build-dsh-plugin-20260818.3.sha256
+shasum -a 256 -c build-dsh-plugin-20260820.1.sha256
 ```
 
 确认目标 Skills 目录不存在同名文件夹，或已单独备份已有版本，然后解压：
 
 ```bash
-unzip build-dsh-plugin-20260818.3.zip -d ~/.codex/skills
+unzip build-dsh-plugin-20260820.1.zip -d ~/.codex/skills
 ```
 
 最终入口应为：
@@ -94,12 +96,14 @@ node scripts/verify-distribution.mjs
 cd build-dsh-plugin
 node scripts/test-normalize-brief.mjs
 node scripts/test-marketplace-entry.mjs
+node scripts/test-candidate-entry.mjs
 node scripts/normalize-brief.mjs assets/plugin-brief.readonly-example.json
 node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 node scripts/audit-marketplace-entry.mjs /path/to/plugin --entry /path/to/entry.json --registry /path/to/catalog.json
+node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candidates /path/to/candidates.json --catalog /path/to/catalog.json
 ```
 
-通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 要求 DSH `0.1.0-rc.8 <0.2.0` 及其 Node.js 运行时。预期测试输出包含 `BRIEF_TEST_OK` 和 `MARKETPLACE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
+通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 0.2.0 要求 DSH `0.1.0-rc.8 <0.2.0` 及其 Node.js 运行时。预期测试输出包含 `BRIEF_TEST_OK`、`MARKETPLACE_TEST_OK` 和 `CANDIDATE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
 
 `npm test` 还会验证根目录 DSH Bundle、隔离 Provider、无生命周期脚本、卡片契约文档，以及审计器对不支持的卡片 discriminant、缺失 replay/fallback/bounds 测试的 fail-closed 行为。
 
@@ -115,10 +119,10 @@ node scripts/audit-marketplace-entry.mjs /path/to/plugin --entry /path/to/entry.
 
 ## 发行完整性
 
-- 发行版本：`2026.08.18.3`
-- 固定发行标签：[`v2026.08.18.3`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.18.3)
-- ZIP SHA-256：`eb4935901e8958b5ac888fff8100d44c47c5b102a95eb0c42d9e78e16c191c52`
-- ZIP 内常规文件数：22（新增 DSH Tool 卡片契约，保留独立 `LICENSE`、商城规范、Catalog 模板和预检器）
+- 发行版本：`2026.08.20.1`
+- 固定发行标签：[`v2026.08.20.1`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.20.1)
+- ZIP SHA-256：`93f064d910313eb9c1d02ed383a614b3f9aa0a3622aa6ed493f078e35054fe85`
+- ZIP 内常规文件数：25（新增候选发现模板、候选审计器和候选负向测试；保留 Tool 卡片契约、可信 Catalog 模板与独立 `LICENSE`）
 - 已通过 Skill 结构、Node 语法、Brief/商城/卡片审计测试、DSH Bundle 契约、一次性 CLI 安装、配置合成、运行时 Skill 发现和 ZIP 解压复测
 
 `dist/manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。README 与 INSTALL 只负责说明；DSH STORE 等分发页面必须读取“最新 GitHub Release → 对应标签下的 manifest”，不能把这些字段复制成另一份运行时数据。这样即使网页缓存暂时未刷新，下载页仍会把同一固定标签的 manifest、ZIP 和校验值绑定在一起。

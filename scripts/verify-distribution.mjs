@@ -51,7 +51,7 @@ if (!archivedFiles.includes(manifest.license.file)) throw new Error('ZIP does no
 if (!manifest.release.tag || !manifest.artifact.downloadUrl.includes(`/${manifest.release.tag}/`)) {
   throw new Error('artifact download URL is not bound to the declared release tag')
 }
-if (dshPackage.name !== 'dsh-build-plugin' || dshPackage.dsh?.bundle?.patch !== './cordis.patch.yml') {
+if (dshPackage.name !== 'dsh-build-plugin' || dshPackage.version !== '0.2.0' || dshPackage.dsh?.bundle?.patch !== './cordis.patch.yml') {
   throw new Error('repository root is not the declared DSH Bundle')
 }
 for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
@@ -63,6 +63,10 @@ for (const expected of ['presentCall', 'presentResult', 'presentationMeta', 'liv
   requireText(cardContract, expected, 'card contract')
 }
 if (!archivedFiles.includes(manifest.entrypoints.cardContract)) throw new Error('ZIP does not contain the card contract')
+for (const entrypoint of ['candidateAudit', 'candidateTests', 'candidateEntryTemplate', 'catalogEntryTemplate']) {
+  if (!archivedFiles.includes(manifest.entrypoints[entrypoint])) throw new Error(`ZIP does not contain ${entrypoint}`)
+}
+if (manifest.verification.candidateTests !== 'CANDIDATE_TEST_OK') throw new Error('candidate audit evidence is missing')
 
 for (const [owner, text] of [['README', readme], ['INSTALL', install]]) {
   requireText(text, manifest.distributionVersion, owner)

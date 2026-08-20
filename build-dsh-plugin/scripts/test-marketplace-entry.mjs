@@ -35,6 +35,8 @@ function manifest(overrides = {}) {
 }
 
 function entry(overrides = {}) {
+  const unknownEvidence = { status: 'unknown', method: null, checkedAt: null, evidenceUrl: null, dshRelease: null, systems: [], profiles: [], summary: null }
+  const unknownOperations = { install: 'unknown', start: 'unknown', uninstall: 'unknown', rollback: 'unknown' }
   return {
     id: 'dsh-example-plugin',
     name: 'DSH Example Plugin',
@@ -48,11 +50,18 @@ function entry(overrides = {}) {
     version: '1.2.3',
     categories: ['tools'],
     featured: false,
+    source: { updatedAt: '2026-08-20T00:00:00Z', observedAt: '2026-08-20T01:00:00Z', provenance: 'github-commit' },
+    assurance: {
+      discovery: { ...unknownEvidence }, installability: { ...unknownEvidence }, runtime: { ...unknownEvidence }, securityReview: { ...unknownEvidence },
+    },
     entryIds: ['dsh-example-plugin'],
     status: 'approved',
     compatibility: {
       dsh: '>=0.1.0-rc.6',
       dshReleases: { 'rc.5': 'incompatible', 'rc.6': 'compatible', 'rc.7': 'compatible', 'rc.8': 'compatible' },
+      dshOperations: {
+        'rc.5': { ...unknownOperations }, 'rc.6': { ...unknownOperations }, 'rc.7': { ...unknownOperations }, 'rc.8': { ...unknownOperations },
+      },
       node: '>=22', systems: ['macOS'], profiles: ['web'],
     },
     details: {
@@ -77,7 +86,14 @@ async function writePlugin(root, packagePath = 'package.json', packageJson = man
 const fixture = await mkdtemp(join(tmpdir(), 'dsh-marketplace-audit-'))
 try {
   const registryPath = join(fixture, 'catalog.json')
-  await writeFile(registryPath, `${JSON.stringify({ schemaVersion: 1, registry: { categories: { tools: 'Tools' } }, entries: [] }, null, 2)}\n`)
+  await writeFile(registryPath, `${JSON.stringify({
+    schemaVersion: 1,
+    registry: {
+      categories: { tools: 'Tools' },
+      trustPolicy: { candidateInstallDisabled: true, unknownIsNotVerified: true, promotionIndependentOfVerification: true },
+    },
+    entries: [],
+  }, null, 2)}\n`)
 
   const directRoot = join(fixture, 'direct')
   await mkdir(directRoot)
@@ -137,6 +153,21 @@ try {
   assert.equal(mismatch.code, 1)
   assert.equal(mismatch.body.status, 'NEEDS_STANDARDIZATION')
   for (const code of ['MKT004', 'MKT005', 'MKT006', 'MKT008']) assert.ok(mismatch.body.errors.some(item => item.code === code), code)
+
+  const evidenceRoot = join(fixture, 'evidence')
+  await mkdir(evidenceRoot)
+  await writePlugin(evidenceRoot)
+  const evidenceEntry = join(evidenceRoot, 'entry.json')
+  await writeFile(evidenceEntry, `${JSON.stringify(entry({
+    featured: true,
+    assurance: { ...entry().assurance, runtime: { ...entry().assurance.runtime, status: 'verified' } },
+    compatibility: { ...entry().compatibility, dshOperations: { ...entry().compatibility.dshOperations, 'rc.8': { install: 'passed' } } },
+  }), null, 2)}\n`)
+  const evidence = run(evidenceRoot, evidenceEntry, registryPath)
+  assert.equal(evidence.code, 1)
+  assert.ok(evidence.body.errors.some(item => item.code === 'MKT014'))
+  assert.ok(evidence.body.errors.some(item => item.code === 'MKT015'))
+  assert.ok(evidence.body.warnings.some(item => item.code === 'MKT014'))
 } finally {
   await rm(fixture, { recursive: true, force: true })
 }

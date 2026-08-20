@@ -131,6 +131,11 @@ Never execute a plan after any hash, source, target, phrase, expiry, or used sta
 - [ ] package version updated
 - [ ] README version and install command updated
 - [ ] catalog entry version/source updated
+- [ ] discovery candidate and trusted catalog remain physically separate; candidate has no install fields/actions
+- [ ] fixed-source `updatedAt`/`observedAt`/provenance are evidence-backed
+- [ ] discovery/installability/runtime/security-review assurance states are independent and unknown remains unknown
+- [ ] rc.5–rc.8 install/start/uninstall/rollback evidence matrix is explicit
+- [ ] featured/promotion/sponsorship does not alter verification state
 - [ ] install target pinned to full commit
 - [ ] version consistency tests updated
 - [ ] lifecycle/build scripts disclosed
@@ -231,6 +236,9 @@ Remove any row that has no user outcome, bounded caller, failure behavior, and t
 
 - Requested outcome: assess/approved/blocked/unlisted
 - Current Registry contract observed at:
+- Candidate registry state: absent/READY_FOR_DISCOVERY_REGISTRY/rejected/already trusted
+- Candidate installability/actions: false/[]
+- Promotion review identity and authorization:
 - Route: direct/monorepo/adapter-required/blocked
 - Public GitHub repository:
 - Repository/change authority: verified/unverified/not required for read-only assessment
@@ -241,7 +249,12 @@ Remove any row that has no user outcome, bounded caller, failure behavior, and t
 - Lifecycle scripts:
 - Catalog ID / categories / intended status:
 - Permissions / external dependencies / compatibility evidence:
+- rc.5–rc.8 operation evidence: install/start/uninstall/rollback matrix
+- Fixed-source freshness: updatedAt / observedAt / provenance
+- Assurance: discovery / installability / runtime / security review
+- Promotion/featured independence check: PASS/PARTIAL/BLOCKED
 - General plugin audit: PASS/PARTIAL/BLOCKED
+- Candidate preflight: READY_FOR_DISCOVERY_REGISTRY/NEEDS_STANDARDIZATION/not applicable
 - Marketplace preflight: READY_FOR_CATALOG_ENTRY/READY_FOR_PINNED_SOURCE_VERIFICATION/NEEDS_STANDARDIZATION/BLOCKED
 - Fixed-Commit manifest/Patch readback: PASS/PARTIAL/BLOCKED/not run
 - STORE validate:registry: PASS/PARTIAL/BLOCKED/not run

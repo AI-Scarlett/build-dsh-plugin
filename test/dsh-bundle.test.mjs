@@ -7,7 +7,7 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.1.0')
+  assert.equal(pkg.version, '0.2.0')
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(pkg.peerDependencies['@deepseek-ai/dsh-skill-filesystem'], '>=0.1.0-rc.8 <0.2.0')
   for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
@@ -31,6 +31,8 @@ test('bundle mounts only the repository Skill root and preserves official provid
 test('mounted Skill declares DSH and card-contract workflows', async () => {
   const skill = await readFile(new URL('build-dsh-plugin/SKILL.md', root), 'utf8')
   const cards = await readFile(new URL('build-dsh-plugin/references/card-contract.md', root), 'utf8')
+  const catalog = JSON.parse(await readFile(new URL('build-dsh-plugin/assets/catalog-entry.template.json', root), 'utf8'))
+  const candidate = JSON.parse(await readFile(new URL('build-dsh-plugin/assets/candidate-entry.template.json', root), 'utf8'))
   assert.match(skill, /^---\nname: build-dsh-plugin\n/)
   assert.match(skill, /card-contract\.md/)
   assert.match(cards, /presentCall/)
@@ -40,4 +42,13 @@ test('mounted Skill declares DSH and card-contract workflows', async () => {
   assert.match(cards, /generic.*terminal.*diff/s)
   assert.match(cards, /search.*read.*web/s)
   assert.match(skill, /rc\.8|rc8/i)
+  assert.match(skill, /registry\/candidates\.json/)
+  assert.deepEqual(Object.keys(catalog.assurance), ['discovery', 'installability', 'runtime', 'securityReview'])
+  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['rc.5', 'rc.6', 'rc.7', 'rc.8'])
+  for (const release of Object.values(catalog.compatibility.dshOperations)) {
+    assert.deepEqual(Object.keys(release), ['install', 'start', 'uninstall', 'rollback'])
+  }
+  for (const forbidden of ['packageName', 'manifestPath', 'entryIds', 'compatibility', 'installable', 'allowedActions']) {
+    assert.equal(Object.hasOwn(candidate, forbidden), false)
+  }
 })
