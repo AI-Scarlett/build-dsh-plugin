@@ -50,7 +50,11 @@ function entry(overrides = {}) {
     featured: false,
     entryIds: ['dsh-example-plugin'],
     status: 'approved',
-    compatibility: { dsh: '>=0.1.0-rc.6', node: '>=22', systems: ['macOS'], profiles: ['web'] },
+    compatibility: {
+      dsh: '>=0.1.0-rc.6',
+      dshReleases: { 'rc.5': 'incompatible', 'rc.6': 'compatible', 'rc.7': 'compatible', 'rc.8': 'compatible' },
+      node: '>=22', systems: ['macOS'], profiles: ['web'],
+    },
     details: {
       pluginType: 'feature', installSource: 'github', license: 'MIT',
       permissions: { level: 'low', files: 'none', network: 'none', commands: 'none', credentials: ['none'] },

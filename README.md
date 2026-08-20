@@ -9,7 +9,7 @@
 - `build-dsh-plugin/` 是可部署到 Codex、Claude、Grok 等兼容 `SKILL.md` 的 Agent Skill；
 - 仓库根目录的 `package.json` + `cordis.patch.yml` 是标准 DSH Bundle，通过隔离的 `@deepseek-ai/dsh-skill-filesystem` Provider 将同一份 Skill 挂载到 DSH。
 
-DSH 入口要求 `dsh >= 0.1.0-rc.7`。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
+DSH 入口要求 `dsh >= 0.1.0-rc.8 <0.2.0`。兼容性矩阵按 rc.5–rc.8 显式记录：rc.8 作为当前适配基线，较早版本只有在独立证据确认后才标记兼容。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
 
 用户最低只需提供三项信息：
 
@@ -99,7 +99,7 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 node scripts/audit-marketplace-entry.mjs /path/to/plugin --entry /path/to/entry.json --registry /path/to/catalog.json
 ```
 
-通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 要求 DSH `0.1.0-rc.7` 及其 Node.js 运行时。预期测试输出包含 `BRIEF_TEST_OK` 和 `MARKETPLACE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
+通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 要求 DSH `0.1.0-rc.8 <0.2.0` 及其 Node.js 运行时。预期测试输出包含 `BRIEF_TEST_OK` 和 `MARKETPLACE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
 
 `npm test` 还会验证根目录 DSH Bundle、隔离 Provider、无生命周期脚本、卡片契约文档，以及审计器对不支持的卡片 discriminant、缺失 replay/fallback/bounds 测试的 fail-closed 行为。
 

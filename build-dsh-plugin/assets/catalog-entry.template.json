@@ -15,6 +15,7 @@
   "status": "approved",
   "compatibility": {
     "dsh": null,
+    "dshReleases": { "rc.5": "unknown", "rc.6": "unknown", "rc.7": "unknown", "rc.8": "unknown" },
     "node": null,
     "systems": [],
     "profiles": []

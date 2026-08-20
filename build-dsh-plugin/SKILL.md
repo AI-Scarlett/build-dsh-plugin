@@ -164,7 +164,7 @@ Produce two separate reports: repository release evidence and Profile/runtime ac
 
 Read [marketplace.md](references/marketplace.md) whenever building a reusable third-party DSH plugin, assessing an existing repository for DSH STORE, or preparing a catalog entry.
 
-Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. Preserve unknown metadata as unknown instead of guessing.
+Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. For the current rc.8 baseline, keep an explicit `compatibility.dshReleases` matrix for rc.5 through rc.8 and preserve unknown metadata as unknown instead of guessing.
 
 Route each third-party repository to exactly one result:
 

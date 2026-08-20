@@ -116,6 +116,7 @@ Before an `approved` catalog candidate, require all of the following:
 - `approved` entries declare at least one entry ID;
 - `blocked`/`unlisted` entries include a concrete `statusReason`;
 - metadata comes from the pinned repository and current acceptance evidence, not local guesses.
+- `compatibility.dshReleases` explicitly marks `rc.5`, `rc.6`, `rc.7`, and `rc.8` as `compatible`, `incompatible`, or `unknown`; derive it from the declared range and keep unknown evidence visible.
 - when the current schema supports `updatePolicy`, derive `source-verified`, `user-reviewed`, or `external-only` from the rules above; never label a permission-bearing plugin `source-verified`.
 
 Use [catalog-entry.template.json](../assets/catalog-entry.template.json) as a starting shape, then replace every placeholder from inspected evidence.

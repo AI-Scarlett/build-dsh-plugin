@@ -9,7 +9,7 @@ test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   assert.equal(pkg.name, 'dsh-build-plugin')
   assert.equal(pkg.version, '0.1.0')
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
-  assert.equal(pkg.peerDependencies['@deepseek-ai/dsh-skill-filesystem'], '>=0.1.0-rc.7')
+  assert.equal(pkg.peerDependencies['@deepseek-ai/dsh-skill-filesystem'], '>=0.1.0-rc.8 <0.2.0')
   for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
     assert.equal(pkg.scripts[name], undefined)
   }
@@ -39,4 +39,5 @@ test('mounted Skill declares DSH and card-contract workflows', async () => {
   assert.match(cards, /live and replay/i)
   assert.match(cards, /generic.*terminal.*diff/s)
   assert.match(cards, /search.*read.*web/s)
+  assert.match(skill, /rc\.8|rc8/i)
 })

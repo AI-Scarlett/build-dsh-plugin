@@ -120,7 +120,7 @@ For model Tools, keep four contracts separate:
 
 Presenters run on live and replay paths. They must be deterministic pure functions of validated args and durable result fields: no I/O, current session/Profile reads, clock, randomness, mutable globals, or extra permissions. Use bounded JSON `output.presentationMeta` only when a completed card needs facts that model-facing text cannot reconstruct.
 
-Use only card discriminants exported by the inspected DSH version. For `0.1.0-rc.7`, pending calls support `generic`, `terminal`, and `diff`; completed results support `generic`, `terminal`, `diff`, `search`, `read`, and `web`. Preserve a meaningful generic fallback, truthful truncation/total/status fields, and soft degradation for malformed old records or incapable clients.
+Use only card discriminants exported by the inspected DSH version. For `0.1.0-rc.8`, pending calls support `generic`, `terminal`, and `diff`; completed results support `generic`, `terminal`, `diff`, `search`, `read`, and `web`. Preserve a meaningful generic fallback, truthful truncation/total/status fields, and soft degradation for malformed old records or incapable clients.
 
 Do not put secrets, full private files, unbounded args, system/plugin context, or model reasoning in `rawInput`, content, diffs, sources, or durable metadata. Do not register a Client `tool.call.toolview` key that replaces an official Tool card. Read [card-contract.md](card-contract.md) for the selection matrix, decision analysis, and evidence gates.
 

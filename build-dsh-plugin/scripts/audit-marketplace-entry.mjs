@@ -9,6 +9,7 @@ const SIMPLE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$/
 const PACKAGE_NAME = /^(?:@[A-Za-z0-9._-]+\/)?[A-Za-z0-9._-]+$/
 const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 const COMMIT = /^[0-9a-f]{40}$/
+const DSH_RC_RELEASES = ['rc.5', 'rc.6', 'rc.7', 'rc.8']
 const ENUMS = {
   status: ['approved', 'blocked', 'unlisted'],
   updatePolicy: ['source-verified', 'user-reviewed', 'external-only'],
@@ -150,6 +151,12 @@ function validateEntryShape(entry, report) {
   else {
     for (const field of ['dsh', 'node', 'systems', 'profiles']) if (!Object.hasOwn(compatibility, field)) add(report, 'errors', 'MKT_SCHEMA', `compatibility.${field} is required`)
     if (!Array.isArray(compatibility.systems) || !Array.isArray(compatibility.profiles)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility systems/profiles must be arrays')
+    if (!isObject(compatibility.dshReleases)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility.dshReleases must declare rc.5 through rc.8')
+    else for (const release of DSH_RC_RELEASES) {
+      if (!['compatible', 'incompatible', 'unknown'].includes(compatibility.dshReleases[release])) {
+        add(report, 'errors', 'MKT_SCHEMA', `compatibility.dshReleases.${release} must be compatible, incompatible, or unknown`)
+      }
+    }
   }
   const details = entry.details
   if (!isObject(details)) add(report, 'errors', 'MKT_SCHEMA', 'details must be an object')
