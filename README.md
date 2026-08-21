@@ -7,7 +7,7 @@
 仓库现在同时提供两种宿主入口：
 
 - `build-dsh-plugin/` 是可部署到 Codex、Claude、Grok 等兼容 `SKILL.md` 的 Agent Skill；
-- 仓库根目录的 `package.json` + `cordis.patch.yml` 是标准 DSH Bundle，通过隔离的 `@deepseek-ai/dsh-skill-filesystem` Provider 将同一份 Skill 挂载到 DSH。
+- 仓库根目录的 `package.json` + `cordis.patch.yml` 是标准 DSH Bundle；Patch 只插入插件自有的 `dsh-build-plugin` Host 适配器，再由适配器通过 rc.8 与 `0.1.1-rc.1` 都提供的公开 `ctx.skills.register()` 服务接口，将同一份 Skill 挂载到 DSH。
 
 DSH 入口要求 `dsh >= 0.1.0-rc.8 <0.2.0`，当前适配和一次性运行验证基线为 `0.1.1-rc.1`。兼容性矩阵保留 rc.5–rc.8 历史键，并以完整版本键 `0.1.1-rc.1` 记录新版本，避免与早期同名 rc.1 混淆。较早版本只有在独立证据确认后才标记兼容。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
 
@@ -42,7 +42,8 @@ Skill 会补齐安全默认值，判断 DSH 宿主兼容性与 R0–R3 风险，
 
 ```text
 package.json         DSH Bundle manifest
-cordis.patch.yml     隔离 Skill Provider Patch
+cordis.patch.yml     仅插入插件自有 Host 适配器
+src/index.mjs        调用官方公开 Skills 服务接口的 Host 适配器
 build-dsh-plugin/    可直接部署的 Skill 本体
 test/                DSH Bundle 与卡片审计契约测试
 docs/                中文简介与完整方法说明

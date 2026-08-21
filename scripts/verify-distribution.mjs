@@ -38,6 +38,7 @@ const readme = (await read('README.md')).toString('utf8')
 const install = (await read('dist/INSTALL.md')).toString('utf8')
 const dshPackage = JSON.parse(await read('package.json'))
 const dshPatch = (await read('cordis.patch.yml')).toString('utf8')
+const dshHost = (await read(dshPackage.main)).toString('utf8')
 const cardContract = (await read(manifest.entrypoints.cardContract)).toString('utf8')
 
 if (artifactSha !== manifest.artifact.sha256) throw new Error('manifest SHA-256 does not match ZIP')
@@ -54,11 +55,20 @@ if (!manifest.release.tag || !manifest.artifact.downloadUrl.includes(`/${manifes
 if (dshPackage.name !== 'dsh-build-plugin' || dshPackage.version !== '0.3.0' || dshPackage.dsh?.bundle?.patch !== './cordis.patch.yml') {
   throw new Error('repository root is not the declared DSH Bundle')
 }
+if (dshPackage.main !== './src/index.mjs' || !dshPackage.files?.includes('src')) {
+  throw new Error('DSH Bundle does not ship its own Host adapter')
+}
+if (dshPackage.dependencies !== undefined || dshPackage.peerDependencies !== undefined) {
+  throw new Error('DSH Bundle Host adapter must remain dependency-free')
+}
 for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
   if (dshPackage.scripts?.[name] !== undefined) throw new Error(`DSH Bundle declares forbidden lifecycle script: ${name}`)
 }
 requireText(dshPatch, 'dsh-build-plugin-skill-provider', 'DSH Patch')
-requireText(dshPatch, "resolve('dsh-build-plugin/package.json')", 'DSH Patch')
+requireText(dshPatch, 'name: dsh-build-plugin', 'DSH Patch')
+if (dshPatch.includes('@deepseek-ai/')) throw new Error('DSH Patch must not insert an official package directly')
+requireText(dshHost, 'ctx.skills.register(skill)', 'DSH Host adapter')
+if (dshHost.includes('@deepseek-ai/')) throw new Error('DSH Host adapter must use the injected public Skills service')
 for (const expected of ['presentCall', 'presentResult', 'presentationMeta', 'live and replay']) {
   requireText(cardContract, expected, 'card contract')
 }

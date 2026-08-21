@@ -4,7 +4,9 @@
   "description": "DSH Skill adapter for the build-dsh-plugin development workflow",
   "private": true,
   "type": "module",
+  "main": "./src/index.mjs",
   "files": [
+    "src",
     "cordis.patch.yml",
     "build-dsh-plugin",
     "README.md",
@@ -22,9 +24,6 @@
   "scripts": {
     "check": "node --test \"test/*.test.mjs\" && node build-dsh-plugin/scripts/test-normalize-brief.mjs && node build-dsh-plugin/scripts/test-marketplace-entry.mjs && node build-dsh-plugin/scripts/test-candidate-entry.mjs && node scripts/verify-distribution.mjs",
     "test": "node --test \"test/*.test.mjs\""
-  },
-  "peerDependencies": {
-    "@deepseek-ai/dsh-skill-filesystem": ">=0.1.0-rc.8 <0.2.0"
   },
   "repository": {
     "type": "git",
