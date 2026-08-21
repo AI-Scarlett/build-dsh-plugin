@@ -1,6 +1,6 @@
 {
   "name": "dsh-build-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "DSH Skill adapter for the build-dsh-plugin development workflow",
   "private": true,
   "type": "module",

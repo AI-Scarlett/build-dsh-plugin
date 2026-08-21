@@ -134,7 +134,7 @@ Never execute a plan after any hash, source, target, phrase, expiry, or used sta
 - [ ] discovery candidate and trusted catalog remain physically separate; candidate has no install fields/actions
 - [ ] fixed-source `updatedAt`/`observedAt`/provenance are evidence-backed
 - [ ] discovery/installability/runtime/security-review assurance states are independent and unknown remains unknown
-- [ ] rc.5–rc.8 install/start/uninstall/rollback evidence matrix is explicit
+- [ ] rc.5–rc.8 plus `0.1.1-rc.1` install/start/uninstall/rollback evidence matrix is explicit
 - [ ] featured/promotion/sponsorship does not alter verification state
 - [ ] install target pinned to full commit
 - [ ] version consistency tests updated
@@ -249,7 +249,7 @@ Remove any row that has no user outcome, bounded caller, failure behavior, and t
 - Lifecycle scripts:
 - Catalog ID / categories / intended status:
 - Permissions / external dependencies / compatibility evidence:
-- rc.5–rc.8 operation evidence: install/start/uninstall/rollback matrix
+- rc.5–rc.8 plus `0.1.1-rc.1` operation evidence: install/start/uninstall/rollback matrix
 - Fixed-source freshness: updatedAt / observedAt / provenance
 - Assurance: discovery / installability / runtime / security review
 - Promotion/featured independence check: PASS/PARTIAL/BLOCKED

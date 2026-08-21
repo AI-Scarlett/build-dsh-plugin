@@ -7,7 +7,7 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.2.0')
+  assert.equal(pkg.version, '0.3.0')
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
   assert.equal(pkg.peerDependencies['@deepseek-ai/dsh-skill-filesystem'], '>=0.1.0-rc.8 <0.2.0')
   for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
@@ -41,10 +41,10 @@ test('mounted Skill declares DSH and card-contract workflows', async () => {
   assert.match(cards, /live and replay/i)
   assert.match(cards, /generic.*terminal.*diff/s)
   assert.match(cards, /search.*read.*web/s)
-  assert.match(skill, /rc\.8|rc8/i)
+  assert.match(skill, /0\.1\.1-rc\.1/)
   assert.match(skill, /registry\/candidates\.json/)
   assert.deepEqual(Object.keys(catalog.assurance), ['discovery', 'installability', 'runtime', 'securityReview'])
-  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['rc.5', 'rc.6', 'rc.7', 'rc.8'])
+  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['rc.5', 'rc.6', 'rc.7', 'rc.8', '0.1.1-rc.1'])
   for (const release of Object.values(catalog.compatibility.dshOperations)) {
     assert.deepEqual(Object.keys(release), ['install', 'start', 'uninstall', 'rollback'])
   }

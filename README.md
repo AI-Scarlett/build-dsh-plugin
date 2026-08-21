@@ -9,7 +9,7 @@
 - `build-dsh-plugin/` 是可部署到 Codex、Claude、Grok 等兼容 `SKILL.md` 的 Agent Skill；
 - 仓库根目录的 `package.json` + `cordis.patch.yml` 是标准 DSH Bundle，通过隔离的 `@deepseek-ai/dsh-skill-filesystem` Provider 将同一份 Skill 挂载到 DSH。
 
-DSH 入口要求 `dsh >= 0.1.0-rc.8 <0.2.0`。兼容性矩阵按 rc.5–rc.8 显式记录：rc.8 作为当前适配基线，较早版本只有在独立证据确认后才标记兼容。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
+DSH 入口要求 `dsh >= 0.1.0-rc.8 <0.2.0`，当前适配和一次性运行验证基线为 `0.1.1-rc.1`。兼容性矩阵保留 rc.5–rc.8 历史键，并以完整版本键 `0.1.1-rc.1` 记录新版本，避免与早期同名 rc.1 混淆。较早版本只有在独立证据确认后才标记兼容。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
 
 用户最低只需提供三项信息：
 
@@ -21,7 +21,7 @@ Skill 会补齐安全默认值，判断 DSH 宿主兼容性与 R0–R3 风险，
 
 对于注册模型 Tool 的插件，Skill 会同时设计 DSH 卡片契约：把规范 JSON 输出、模型可见渲染、`presentCall`/`presentResult` 卡片意图、`presentationMeta` 持久化投影和可选 Client 自定义卡片分开；要求 live/replay 一致、通用降级、字段限额、截断状态真实且不泄露凭据、完整私有文件或模型推理。
 
-对于准备进入 DSH STORE 的插件，Skill 会从开发第一天保持商城兼容结构，并把第三方仓库分流为 `direct`、`monorepo`、`adapter-required` 或 `blocked`。0.2.0 起先生成与可信安装库物理分离的发现候选：候选没有包名、安装路径、Entry ID、权限、兼容性或安装操作；只有完成独立晋级审查后才生成 Catalog 提案。可信提案会显式记录固定源更新时间、发现/可安装/运行/安全审查四级证据，以及 rc.5–rc.8 的安装/启动/卸载/回滚证据。推荐、推广或赞助不会改变验证等级。
+对于准备进入 DSH STORE 的插件，Skill 会从开发第一天保持商城兼容结构，并把第三方仓库分流为 `direct`、`monorepo`、`adapter-required` 或 `blocked`。0.2.0 起先生成与可信安装库物理分离的发现候选：候选没有包名、安装路径、Entry ID、权限、兼容性或安装操作；只有完成独立晋级审查后才生成 Catalog 提案。0.3.0 起模板和审计器同时覆盖 rc.5–rc.8 与 `0.1.1-rc.1`。可信提案会显式记录固定源更新时间、发现/可安装/运行/安全审查四级证据，以及每个受支持 DSH 版本的安装/启动/卸载/回滚证据。推荐、推广或赞助不会改变验证等级。
 
 对于已上架插件的源更新，Skill 遵循 DSH-Store 的本机决策模型：低风险候选使用 `source-verified` 生成固定 SHA 计划；具备文件、网络、命令、凭据或生命周期能力的合法插件使用 `user-reviewed`，由商城展示实际变化并让用户逐次确认；只有修改 DSH 原生代码、冒用官方命名空间、干预受保护组件等硬边界才使用 `external-only`。版本发现来自用户本机对 canonical GitHub 的有限检查，不要求服务端巡检，也不安装浮动 `main`。
 
@@ -53,17 +53,17 @@ Skill 入口是 [`build-dsh-plugin/SKILL.md`](build-dsh-plugin/SKILL.md)。完�
 
 ## 安装到通用 Agent
 
-从固定发行页下载 [`build-dsh-plugin-20260820.1.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.20.1/build-dsh-plugin-20260820.1.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.20.1/build-dsh-plugin-20260820.1.sha256)，然后验证完整性：
+从固定发行页下载 [`build-dsh-plugin-20260821.1.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.21.1/build-dsh-plugin-20260821.1.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.21.1/build-dsh-plugin-20260821.1.sha256)，然后验证完整性：
 
 ```bash
 cd dist
-shasum -a 256 -c build-dsh-plugin-20260820.1.sha256
+shasum -a 256 -c build-dsh-plugin-20260821.1.sha256
 ```
 
 确认目标 Skills 目录不存在同名文件夹，或已单独备份已有版本，然后解压：
 
 ```bash
-unzip build-dsh-plugin-20260820.1.zip -d ~/.codex/skills
+unzip build-dsh-plugin-20260821.1.zip -d ~/.codex/skills
 ```
 
 最终入口应为：
@@ -103,7 +103,7 @@ node scripts/audit-marketplace-entry.mjs /path/to/plugin --entry /path/to/entry.
 node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candidates /path/to/candidates.json --catalog /path/to/catalog.json
 ```
 
-通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 0.2.0 要求 DSH `0.1.0-rc.8 <0.2.0` 及其 Node.js 运行时。预期测试输出包含 `BRIEF_TEST_OK`、`MARKETPLACE_TEST_OK` 和 `CANDIDATE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
+通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 0.3.0 要求 DSH `0.1.0-rc.8 <0.2.0` 及其 Node.js 运行时，并已针对 `0.1.1-rc.1` 做一次性运行验证。预期测试输出包含 `BRIEF_TEST_OK`、`MARKETPLACE_TEST_OK` 和 `CANDIDATE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
 
 `npm test` 还会验证根目录 DSH Bundle、隔离 Provider、无生命周期脚本、卡片契约文档，以及审计器对不支持的卡片 discriminant、缺失 replay/fallback/bounds 测试的 fail-closed 行为。
 
@@ -119,9 +119,9 @@ node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candida
 
 ## 发行完整性
 
-- 发行版本：`2026.08.20.1`
-- 固定发行标签：[`v2026.08.20.1`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.20.1)
-- ZIP SHA-256：`93f064d910313eb9c1d02ed383a614b3f9aa0a3622aa6ed493f078e35054fe85`
+- 发行版本：`2026.08.21.1`
+- 固定发行标签：[`v2026.08.21.1`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.21.1)
+- ZIP SHA-256：`0875beb56dff055f8e876d00acec3907e48f2eceeab554f21040c034b4ad9b5d`
 - ZIP 内常规文件数：25（新增候选发现模板、候选审计器和候选负向测试；保留 Tool 卡片契约、可信 Catalog 模板与独立 `LICENSE`）
 - 已通过 Skill 结构、Node 语法、Brief/商城/卡片审计测试、DSH Bundle 契约、一次性 CLI 安装、配置合成、运行时 Skill 发现和 ZIP 解压复测
 

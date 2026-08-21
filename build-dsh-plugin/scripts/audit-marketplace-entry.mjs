@@ -9,7 +9,7 @@ const SIMPLE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$/
 const PACKAGE_NAME = /^(?:@[A-Za-z0-9._-]+\/)?[A-Za-z0-9._-]+$/
 const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 const COMMIT = /^[0-9a-f]{40}$/
-const DSH_RC_RELEASES = ['rc.5', 'rc.6', 'rc.7', 'rc.8']
+const DSH_RELEASES = ['rc.5', 'rc.6', 'rc.7', 'rc.8', '0.1.1-rc.1']
 const DSH_OPERATIONS = ['install', 'start', 'uninstall', 'rollback']
 const ASSURANCE_LEVELS = ['discovery', 'installability', 'runtime', 'securityReview']
 const ENUMS = {
@@ -163,7 +163,7 @@ function validateEntryShape(entry, report) {
     if (evidence.status === 'verified' && (typeof evidence.method !== 'string' || evidence.method.trim() === '' || !isoDate(evidence.checkedAt) || !httpsUrl(evidence.evidenceUrl))) {
       add(report, 'errors', 'MKT014', `assurance.${level} verified evidence requires method, checkedAt, and HTTPS evidenceUrl`)
     }
-    if (evidence.dshRelease !== null && evidence.dshRelease !== undefined && !DSH_RC_RELEASES.includes(evidence.dshRelease)) add(report, 'errors', 'MKT014', `assurance.${level}.dshRelease is invalid`)
+    if (evidence.dshRelease !== null && evidence.dshRelease !== undefined && !DSH_RELEASES.includes(evidence.dshRelease)) add(report, 'errors', 'MKT014', `assurance.${level}.dshRelease is invalid`)
     if (!Array.isArray(evidence.systems) || !Array.isArray(evidence.profiles)) add(report, 'errors', 'MKT014', `assurance.${level} systems/profiles must be arrays`)
   }
   const declaredEntryIds = strings(entry.entryIds)
@@ -182,14 +182,14 @@ function validateEntryShape(entry, report) {
   else {
     for (const field of ['dsh', 'node', 'systems', 'profiles']) if (!Object.hasOwn(compatibility, field)) add(report, 'errors', 'MKT_SCHEMA', `compatibility.${field} is required`)
     if (!Array.isArray(compatibility.systems) || !Array.isArray(compatibility.profiles)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility systems/profiles must be arrays')
-    if (!isObject(compatibility.dshReleases)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility.dshReleases must declare rc.5 through rc.8')
-    else for (const release of DSH_RC_RELEASES) {
+    if (!isObject(compatibility.dshReleases)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility.dshReleases must declare rc.5 through rc.8 and 0.1.1-rc.1')
+    else for (const release of DSH_RELEASES) {
       if (!['compatible', 'incompatible', 'unknown'].includes(compatibility.dshReleases[release])) {
         add(report, 'errors', 'MKT_SCHEMA', `compatibility.dshReleases.${release} must be compatible, incompatible, or unknown`)
       }
     }
-    if (!isObject(compatibility.dshOperations)) add(report, 'errors', 'MKT015', 'compatibility.dshOperations must declare install/start/uninstall/rollback for rc.5 through rc.8')
-    else for (const release of DSH_RC_RELEASES) {
+    if (!isObject(compatibility.dshOperations)) add(report, 'errors', 'MKT015', 'compatibility.dshOperations must declare install/start/uninstall/rollback for rc.5 through rc.8 and 0.1.1-rc.1')
+    else for (const release of DSH_RELEASES) {
       if (!isObject(compatibility.dshOperations[release])) add(report, 'errors', 'MKT015', `compatibility.dshOperations.${release} must be an object`)
       else for (const operation of DSH_OPERATIONS) {
         if (!['passed', 'failed', 'unknown'].includes(compatibility.dshOperations[release][operation])) {
