@@ -52,7 +52,7 @@ if (!archivedFiles.includes(manifest.license.file)) throw new Error('ZIP does no
 if (!manifest.release.tag || !manifest.artifact.downloadUrl.includes(`/${manifest.release.tag}/`)) {
   throw new Error('artifact download URL is not bound to the declared release tag')
 }
-if (dshPackage.name !== 'dsh-build-plugin' || dshPackage.version !== '0.3.1' || dshPackage.dsh?.bundle?.patch !== './cordis.patch.yml') {
+if (dshPackage.name !== 'dsh-build-plugin' || dshPackage.version !== '0.3.2' || dshPackage.dsh?.bundle?.patch !== './cordis.patch.yml') {
   throw new Error('repository root is not the declared DSH Bundle')
 }
 if (dshPackage.main !== './src/index.mjs' || !dshPackage.files?.includes('src')) {

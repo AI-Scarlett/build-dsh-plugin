@@ -9,7 +9,7 @@ const SIMPLE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$/
 const PACKAGE_NAME = /^(?:@[A-Za-z0-9._-]+\/)?[A-Za-z0-9._-]+$/
 const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 const COMMIT = /^[0-9a-f]{40}$/
-const DSH_RELEASES = ['rc.5', 'rc.6', 'rc.7', 'rc.8', '0.1.1-rc.1', '0.1.1-rc.2']
+const DSH_RELEASES = ['rc.7', 'rc.8', '0.1.1-rc.1', '0.1.1-rc.2']
 const DSH_OPERATIONS = ['install', 'start', 'uninstall', 'rollback']
 const ASSURANCE_LEVELS = ['discovery', 'installability', 'runtime', 'securityReview']
 const ENUMS = {
@@ -182,13 +182,13 @@ function validateEntryShape(entry, report) {
   else {
     for (const field of ['dsh', 'node', 'systems', 'profiles']) if (!Object.hasOwn(compatibility, field)) add(report, 'errors', 'MKT_SCHEMA', `compatibility.${field} is required`)
     if (!Array.isArray(compatibility.systems) || !Array.isArray(compatibility.profiles)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility systems/profiles must be arrays')
-    if (!isObject(compatibility.dshReleases)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility.dshReleases must declare rc.5 through rc.8, 0.1.1-rc.1, and 0.1.1-rc.2')
+    if (!isObject(compatibility.dshReleases)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility.dshReleases must declare rc.7, rc.8, 0.1.1-rc.1, and 0.1.1-rc.2')
     else for (const release of DSH_RELEASES) {
       if (!['compatible', 'incompatible', 'unknown'].includes(compatibility.dshReleases[release])) {
         add(report, 'errors', 'MKT_SCHEMA', `compatibility.dshReleases.${release} must be compatible, incompatible, or unknown`)
       }
     }
-    if (!isObject(compatibility.dshOperations)) add(report, 'errors', 'MKT015', 'compatibility.dshOperations must declare install/start/uninstall/rollback for rc.5 through rc.8, 0.1.1-rc.1, and 0.1.1-rc.2')
+    if (!isObject(compatibility.dshOperations)) add(report, 'errors', 'MKT015', 'compatibility.dshOperations must declare install/start/uninstall/rollback for rc.7, rc.8, 0.1.1-rc.1, and 0.1.1-rc.2')
     else for (const release of DSH_RELEASES) {
       if (!isObject(compatibility.dshOperations[release])) add(report, 'errors', 'MKT015', `compatibility.dshOperations.${release} must be an object`)
       else for (const operation of DSH_OPERATIONS) {

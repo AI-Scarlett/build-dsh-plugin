@@ -7,7 +7,7 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.3.1')
+  assert.equal(pkg.version, '0.3.2')
   assert.equal(pkg.main, './src/index.mjs')
   assert.ok(pkg.files.includes('src'))
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
@@ -73,7 +73,7 @@ test('mounted Skill declares DSH and card-contract workflows', async () => {
   assert.match(skill, /0\.1\.1-rc\.1/)
   assert.match(skill, /registry\/candidates\.json/)
   assert.deepEqual(Object.keys(catalog.assurance), ['discovery', 'installability', 'runtime', 'securityReview'])
-  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['rc.5', 'rc.6', 'rc.7', 'rc.8', '0.1.1-rc.1', '0.1.1-rc.2'])
+  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['rc.7', 'rc.8', '0.1.1-rc.1', '0.1.1-rc.2'])
   for (const release of Object.values(catalog.compatibility.dshOperations)) {
     assert.deepEqual(Object.keys(release), ['install', 'start', 'uninstall', 'rollback'])
   }

@@ -57,10 +57,10 @@ function entry(overrides = {}) {
     entryIds: ['dsh-example-plugin'],
     status: 'approved',
     compatibility: {
-      dsh: '>=0.1.0-rc.6',
-      dshReleases: { 'rc.5': 'incompatible', 'rc.6': 'compatible', 'rc.7': 'compatible', 'rc.8': 'compatible', '0.1.1-rc.1': 'compatible', '0.1.1-rc.2': 'compatible' },
+      dsh: '>=0.1.0-rc.7',
+      dshReleases: { 'rc.7': 'compatible', 'rc.8': 'compatible', '0.1.1-rc.1': 'compatible', '0.1.1-rc.2': 'compatible' },
       dshOperations: {
-        'rc.5': { ...unknownOperations }, 'rc.6': { ...unknownOperations }, 'rc.7': { ...unknownOperations }, 'rc.8': { ...unknownOperations }, '0.1.1-rc.1': { ...unknownOperations }, '0.1.1-rc.2': { ...unknownOperations },
+        'rc.7': { ...unknownOperations }, 'rc.8': { ...unknownOperations }, '0.1.1-rc.1': { ...unknownOperations }, '0.1.1-rc.2': { ...unknownOperations },
       },
       node: '>=22', systems: ['macOS'], profiles: ['web'],
     },
