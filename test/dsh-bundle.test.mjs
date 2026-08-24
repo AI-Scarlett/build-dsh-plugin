@@ -7,7 +7,7 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.3.0')
+  assert.equal(pkg.version, '0.3.2')
   assert.equal(pkg.main, './src/index.mjs')
   assert.ok(pkg.files.includes('src'))
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
@@ -27,7 +27,7 @@ test('bundle inserts only its own Host adapter', async () => {
   assert.doesNotMatch(patch, /(?:remove|patch):/)
 })
 
-test('Host adapter registers the packaged Skill through the public rc.8 and rc.1 service seam', async () => {
+test('Host adapter registers the packaged Skill through the public rc.8, rc.1, and rc.2 service seam', async () => {
   const source = await readFile(new URL('src/index.mjs', root), 'utf8')
   assert.match(source, /export const name = 'dsh-build-plugin'/)
   assert.match(source, /export const inject = \['skills'\]/)
@@ -38,6 +38,22 @@ test('Host adapter registers the packaged Skill through the public rc.8 and rc.1
   assert.match(source, /content: frontmatter\[2\]\.trim\(\)/)
   assert.doesNotMatch(source, /@deepseek-ai\//)
   assert.doesNotMatch(source, /(?:writeFile|appendFile|rename|unlink|rm|copyFile)\s*\(/)
+})
+
+test('Host adapter emits the rc.2 SkillRegistration shape without private imports', async () => {
+  const module = await import(new URL('../src/index.mjs?rc2-contract', import.meta.url))
+  const registrations = []
+  module.apply({ skills: { register: value => { registrations.push(value); return () => {} } } })
+  assert.equal(registrations.length, 1)
+  const registration = registrations[0]
+  assert.deepEqual(Object.keys(registration).sort(), ['content', 'description', 'name', 'path', 'provider', 'resourceBase', 'source'])
+  assert.equal(registration.name, 'build-dsh-plugin')
+  assert.equal(registration.provider, 'build-dsh-plugin')
+  assert.equal(registration.source, 'bundled')
+  assert.equal(registration.resourceBase.kind, 'directory')
+  assert.equal(registration.resourceBase.path.endsWith('/build-dsh-plugin'), true)
+  assert.equal(registration.path.endsWith('/build-dsh-plugin/SKILL.md'), true)
+  assert.ok(registration.content.includes('DSH'))
 })
 
 test('mounted Skill declares DSH and card-contract workflows', async () => {
@@ -53,10 +69,11 @@ test('mounted Skill declares DSH and card-contract workflows', async () => {
   assert.match(cards, /live and replay/i)
   assert.match(cards, /generic.*terminal.*diff/s)
   assert.match(cards, /search.*read.*web/s)
+  assert.match(skill, /0\.1\.1-rc\.2/)
   assert.match(skill, /0\.1\.1-rc\.1/)
   assert.match(skill, /registry\/candidates\.json/)
   assert.deepEqual(Object.keys(catalog.assurance), ['discovery', 'installability', 'runtime', 'securityReview'])
-  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['rc.5', 'rc.6', 'rc.7', 'rc.8', '0.1.1-rc.1'])
+  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['rc.7', 'rc.8', '0.1.1-rc.1', '0.1.1-rc.2'])
   for (const release of Object.values(catalog.compatibility.dshOperations)) {
     assert.deepEqual(Object.keys(release), ['install', 'start', 'uninstall', 'rollback'])
   }

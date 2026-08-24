@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "2026.08.21.1",
-  "createdAt": "2026-08-21T18:12:23+08:00",
+  "distributionVersion": "2026.08.24.2",
+  "createdAt": "2026-08-24T20:30:00+08:00",
   "artifact": {
-    "file": "build-dsh-plugin-20260821.1.zip",
+    "file": "build-dsh-plugin-20260824.2.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 106091,
+    "bytes": 106746,
     "regularFileCount": 25,
-    "sha256": "0875beb56dff055f8e876d00acec3907e48f2eceeab554f21040c034b4ad9b5d",
-    "sha256File": "build-dsh-plugin-20260821.1.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.21.1/build-dsh-plugin-20260821.1.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.21.1/build-dsh-plugin-20260821.1.sha256"
+    "sha256": "02f6de16d0131544eec7960d4ea7956f4dc941c23618a29c568e5d6205117a54",
+    "sha256File": "build-dsh-plugin-20260824.2.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.24.2/build-dsh-plugin-20260824.2.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.08.24.2/build-dsh-plugin-20260824.2.sha256"
   },
   "release": {
-    "tag": "v2026.08.21.1",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.21.1",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.08.21.1",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.08.21.1/dist/manifest.json"
+    "tag": "v2026.08.24.2",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.24.2",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.08.24.2",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.08.24.2/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.08.21.1/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.08.24.2/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -42,7 +42,7 @@
     "dshBundlePatch": "cordis.patch.yml"
   },
   "runtime": {
-    "required": ["Agent support for SKILL.md or equivalent instruction loading", "DSH >=0.1.0-rc.8 <0.2.0 for the repository-root Bundle; verified baseline 0.1.1-rc.1"],
+    "required": ["Agent support for SKILL.md or equivalent instruction loading", "DSH >=0.1.0-rc.8 <0.2.0 for the repository-root Bundle; verified baseline 0.1.1-rc.2"],
     "scripts": ["Node.js 18 or newer"],
     "externalPackages": []
   },
@@ -59,7 +59,8 @@
     "cardAuditTests": "passed",
     "dshDisposableInstallDumpConfig": "passed",
     "dshRuntimeSkillDiscovery": "passed",
-    "dsh011Rc1CompatibilityMatrix": "passed"
+    "dsh011Rc1CompatibilityMatrix": "passed",
+    "dsh011Rc2CompatibilityMatrix": "passed"
   },
   "excluded": [
     "Obsidian vault notes",
