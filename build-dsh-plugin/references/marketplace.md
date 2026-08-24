@@ -122,7 +122,7 @@ Before an `approved` catalog candidate, require all of the following:
 - `approved` entries declare at least one entry ID;
 - `blocked`/`unlisted` entries include a concrete `statusReason`;
 - metadata comes from the pinned repository and current acceptance evidence, not local guesses.
-- `compatibility.dshReleases` explicitly marks the historical `rc.5`, `rc.6`, `rc.7`, `rc.8` keys and the full current key `0.1.1-rc.1` as `compatible`, `incompatible`, or `unknown`; derive it from the declared range and keep unknown evidence visible.
+- `compatibility.dshReleases` explicitly marks the historical `rc.5`, `rc.6`, `rc.7`, `rc.8` keys plus full-version keys `0.1.1-rc.1` and `0.1.1-rc.2` as `compatible`, `incompatible`, or `unknown`; derive it from the declared range and keep unknown evidence visible.
 - `compatibility.dshOperations` records `install`, `start`, `uninstall`, and `rollback` as `passed`, `failed`, or `unknown` for every historical and current release key. Version-range compatibility does not substitute for operation evidence.
 - `source.updatedAt`, `source.observedAt`, and `source.provenance` bind freshness sorting to pinned source evidence; a recommendation flag never substitutes for freshness.
 - `assurance.discovery`, `assurance.installability`, `assurance.runtime`, and `assurance.securityReview` remain independent. Verified evidence requires a method, check time, and HTTPS evidence URL; missing proof stays `unknown`.
