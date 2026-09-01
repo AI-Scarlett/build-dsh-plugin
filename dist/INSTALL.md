@@ -4,13 +4,13 @@
 
 ## 文件
 
-- `build-dsh-plugin-20260824.2.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
-- `build-dsh-plugin-20260824.2.sha256`：ZIP 完整性校验。
+- `build-dsh-plugin-20260902.1.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
+- `build-dsh-plugin-20260902.1.sha256`：ZIP 完整性校验。
 - `manifest.json`：版本、入口、依赖、校验状态和明确排除项。
 
-固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.08.24.2>
+固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.09.02.1>
 
-发行版本：`2026.08.24.2`
+发行版本：`2026.09.02.1`
 
 `manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。分发页面应先解析最新 GitHub Release，再读取该标签下的 manifest；不要从 README 或 INSTALL 抽取运行时元数据。
 
@@ -19,14 +19,14 @@
 在本目录运行：
 
 ```bash
-shasum -a 256 -c build-dsh-plugin-20260824.2.sha256
-unzip -l build-dsh-plugin-20260824.2.zip
+shasum -a 256 -c build-dsh-plugin-20260902.1.sha256
+unzip -l build-dsh-plugin-20260902.1.zip
 ```
 
 期望 SHA-256：
 
 ```text
-02f6de16d0131544eec7960d4ea7956f4dc941c23618a29c568e5d6205117a54
+f19b65b06fe13c80d6d2758f0e85d1a40573bdbc445994879ddcd721a1f83f50
 ```
 
 ## 安装到另一套 Codex
@@ -42,7 +42,7 @@ unzip -l build-dsh-plugin-20260824.2.zip
 例如目标使用默认目录时，可以在确认同名目录不存在后执行：
 
 ```bash
-unzip build-dsh-plugin-20260824.2.zip -d ~/.codex/skills
+unzip build-dsh-plugin-20260902.1.zip -d ~/.codex/skills
 ```
 
 重新打开任务或让 Agent 重新加载 Skills，然后用下面的方式触发：
@@ -59,7 +59,7 @@ unzip build-dsh-plugin-20260824.2.zip -d ~/.codex/skills
 
 ## DSH 原生入口
 
-DSH `0.1.1-rc.2` 已在一次性 Profile 中验证仓库根目录的 `dsh-build-plugin` 0.3.2 Bundle；声明范围仍为 `>=0.1.0-rc.8 <0.2.0`，`0.1.1-rc.1` 作为上一版本兼容键保留。它通过唯一条目 `dsh-build-plugin-skill-provider` 隔离挂载同一份 Skill，不安装 Codex、Claude 或 Grok Runtime，也不覆盖官方 Skill Provider。固定 GitHub Commit 的远程/商城入口需要在对应 Commit 合并并通过独立 Registry 校验后使用。
+当前最新三个 DSH 版本由官方 npm `latest`/`alpha`/`beta`/`rc` 通道动态解析。仓库根目录的 `dsh-build-plugin` 0.4.0 Bundle 已核对 `0.1.2-alpha.2`、`alpha.3` 与 `alpha.4` 的公开接口，并在 `alpha.3`/`alpha.4` 一次性 Profile 中通过安装、配置合成和冷启动；`alpha.2` 安装因官方发行包缺失依赖而失败，不能记为通过。声明范围仍为 `>=0.1.0-rc.8 <0.2.0`。Bundle 通过唯一条目 `dsh-build-plugin-skill-provider` 隔离挂载同一份 Skill，不安装 Codex、Claude 或 Grok Runtime，也不覆盖官方 Skill Provider。固定 GitHub Commit 的远程/商城入口需要在对应 Commit 合并并通过独立 Registry 校验后使用。
 
 真实 Profile 安装仍属于单独操作，需要计划、确认、备份、健康检查和回滚。E3 验收必须在首次 CLI 调用前设置临时 `DSH_HOME`；不要在真实 DSH home 下对不存在的 Profile 运行 `dsh plugin --profile <name> --help`，因为 CLI 可能先创建 Profile 再显示帮助。
 
@@ -78,6 +78,7 @@ DSH `0.1.1-rc.2` 已在一次性 Profile 中验证仓库根目录的 `dsh-build-
 node scripts/test-normalize-brief.mjs
 node scripts/test-marketplace-entry.mjs
 node scripts/test-candidate-entry.mjs
+node scripts/official-dsh-releases.mjs
 node scripts/normalize-brief.mjs assets/plugin-brief.readonly-example.json
 node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 ```

@@ -7,7 +7,7 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.3.2')
+  assert.equal(pkg.version, '0.4.0')
   assert.equal(pkg.main, './src/index.mjs')
   assert.ok(pkg.files.includes('src'))
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
@@ -27,7 +27,7 @@ test('bundle inserts only its own Host adapter', async () => {
   assert.doesNotMatch(patch, /(?:remove|patch):/)
 })
 
-test('Host adapter registers the packaged Skill through the public rc.8, rc.1, and rc.2 service seam', async () => {
+test('Host adapter registers the packaged Skill through the public alpha.2, alpha.3, and alpha.4 service seam', async () => {
   const source = await readFile(new URL('src/index.mjs', root), 'utf8')
   assert.match(source, /export const name = 'dsh-build-plugin'/)
   assert.match(source, /export const inject = \['skills'\]/)
@@ -40,7 +40,7 @@ test('Host adapter registers the packaged Skill through the public rc.8, rc.1, a
   assert.doesNotMatch(source, /(?:writeFile|appendFile|rename|unlink|rm|copyFile)\s*\(/)
 })
 
-test('Host adapter emits the rc.2 SkillRegistration shape without private imports', async () => {
+test('Host adapter emits the alpha.4 SkillRegistration shape without private imports', async () => {
   const module = await import(new URL('../src/index.mjs?rc2-contract', import.meta.url))
   const registrations = []
   module.apply({ skills: { register: value => { registrations.push(value); return () => {} } } })
@@ -69,11 +69,11 @@ test('mounted Skill declares DSH and card-contract workflows', async () => {
   assert.match(cards, /live and replay/i)
   assert.match(cards, /generic.*terminal.*diff/s)
   assert.match(cards, /search.*read.*web/s)
-  assert.match(skill, /0\.1\.1-rc\.2/)
-  assert.match(skill, /0\.1\.1-rc\.1/)
+  assert.match(skill, /official-dsh-releases\.mjs/)
+  assert.match(skill, /0\.1\.2-alpha\.3/)
   assert.match(skill, /registry\/candidates\.json/)
   assert.deepEqual(Object.keys(catalog.assurance), ['discovery', 'installability', 'runtime', 'securityReview'])
-  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['rc.7', 'rc.8', '0.1.1-rc.1', '0.1.1-rc.2'])
+  assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['0.1.2-alpha.2', '0.1.2-alpha.3', '0.1.2-alpha.4'])
   for (const release of Object.values(catalog.compatibility.dshOperations)) {
     assert.deepEqual(Object.keys(release), ['install', 'start', 'uninstall', 'rollback'])
   }

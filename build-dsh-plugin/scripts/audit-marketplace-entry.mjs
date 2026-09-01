@@ -3,13 +3,14 @@
 import { readFile, readdir, stat } from 'node:fs/promises'
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path'
 import process from 'node:process'
+import { fetchOfficialDshReleaseWindow, officialDshReleaseWindow } from './official-dsh-releases.mjs'
 
 const EXCLUDED = new Set(['.git', 'node_modules', 'dist', 'build', 'coverage', '.next', '.turbo'])
 const SIMPLE_ID = /^[A-Za-z0-9][A-Za-z0-9._-]{0,95}$/
 const PACKAGE_NAME = /^(?:@[A-Za-z0-9._-]+\/)?[A-Za-z0-9._-]+$/
 const VERSION = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/
 const COMMIT = /^[0-9a-f]{40}$/
-const DSH_RELEASES = ['rc.7', 'rc.8', '0.1.1-rc.1', '0.1.1-rc.2']
+const DSH_LEGACY_RELEASES = { 'rc.7': '0.1.0-rc.7', 'rc.8': '0.1.0-rc.8' }
 const DSH_OPERATIONS = ['install', 'start', 'uninstall', 'rollback']
 const ASSURANCE_LEVELS = ['discovery', 'installability', 'runtime', 'securityReview']
 const ENUMS = {
@@ -27,17 +28,18 @@ const ENUMS = {
 }
 
 function parseArgs(argv) {
-  const out = { root: null, entry: null, registry: null, json: false }
+  const out = { root: null, entry: null, registry: null, dshMetadata: null, json: false }
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index]
     if (arg === '--json') out.json = true
     else if (arg === '--entry') out.entry = argv[++index]
     else if (arg === '--registry') out.registry = argv[++index]
+    else if (arg === '--dsh-metadata') out.dshMetadata = argv[++index]
     else if (arg.startsWith('--')) throw new Error(`unknown argument: ${arg}`)
     else if (out.root === null) out.root = arg
     else throw new Error(`unexpected argument: ${arg}`)
   }
-  if (!out.root) throw new Error('usage: audit-marketplace-entry.mjs <plugin-root> [--entry entry.json] [--registry catalog.json] [--json]')
+  if (!out.root) throw new Error('usage: audit-marketplace-entry.mjs <plugin-root> [--entry entry.json] [--registry catalog.json] [--dsh-metadata npm-metadata.json] [--json]')
   if (out.entry === undefined) throw new Error('--entry requires a path')
   if (out.registry === undefined) throw new Error('--registry requires a path')
   return out
@@ -79,6 +81,11 @@ function httpsUrl(value) {
 
 function safeRelative(value) {
   return typeof value === 'string' && value.trim() !== '' && !value.startsWith('/') && !value.includes('..') && !value.includes('\\')
+}
+
+function dshReleaseVersion(value) {
+  if (Object.hasOwn(DSH_LEGACY_RELEASES, value)) return DSH_LEGACY_RELEASES[value]
+  return VERSION.test(value ?? '') ? value : null
 }
 
 function staysInside(base, target) {
@@ -131,7 +138,7 @@ function requireEnum(report, value, allowed, path) {
   if (!allowed.includes(value)) add(report, 'errors', 'MKT_SCHEMA', `${path} must be one of ${allowed.join(', ')}`, value)
 }
 
-function validateEntryShape(entry, report) {
+function validateEntryShape(entry, report, releaseWindow) {
   if (!isObject(entry)) {
     add(report, 'errors', 'MKT_SCHEMA', 'catalog entry must be an object')
     return
@@ -163,7 +170,7 @@ function validateEntryShape(entry, report) {
     if (evidence.status === 'verified' && (typeof evidence.method !== 'string' || evidence.method.trim() === '' || !isoDate(evidence.checkedAt) || !httpsUrl(evidence.evidenceUrl))) {
       add(report, 'errors', 'MKT014', `assurance.${level} verified evidence requires method, checkedAt, and HTTPS evidenceUrl`)
     }
-    if (evidence.dshRelease !== null && evidence.dshRelease !== undefined && !DSH_RELEASES.includes(evidence.dshRelease)) add(report, 'errors', 'MKT014', `assurance.${level}.dshRelease is invalid`)
+    if (evidence.dshRelease !== null && evidence.dshRelease !== undefined && dshReleaseVersion(evidence.dshRelease) === null) add(report, 'errors', 'MKT014', `assurance.${level}.dshRelease is invalid`)
     if (!Array.isArray(evidence.systems) || !Array.isArray(evidence.profiles)) add(report, 'errors', 'MKT014', `assurance.${level} systems/profiles must be arrays`)
   }
   const declaredEntryIds = strings(entry.entryIds)
@@ -182,14 +189,19 @@ function validateEntryShape(entry, report) {
   else {
     for (const field of ['dsh', 'node', 'systems', 'profiles']) if (!Object.hasOwn(compatibility, field)) add(report, 'errors', 'MKT_SCHEMA', `compatibility.${field} is required`)
     if (!Array.isArray(compatibility.systems) || !Array.isArray(compatibility.profiles)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility systems/profiles must be arrays')
-    if (!isObject(compatibility.dshReleases)) add(report, 'errors', 'MKT_SCHEMA', 'compatibility.dshReleases must declare rc.7, rc.8, 0.1.1-rc.1, and 0.1.1-rc.2')
-    else for (const release of DSH_RELEASES) {
+    const requiredReleases = releaseWindow.releases
+    if (!isObject(compatibility.dshReleases)) add(report, 'errors', 'MKT_SCHEMA', `compatibility.dshReleases must declare the official latest releases: ${requiredReleases.join(', ')}`)
+    else for (const release of requiredReleases) {
       if (!['compatible', 'incompatible', 'unknown'].includes(compatibility.dshReleases[release])) {
         add(report, 'errors', 'MKT_SCHEMA', `compatibility.dshReleases.${release} must be compatible, incompatible, or unknown`)
       }
     }
-    if (!isObject(compatibility.dshOperations)) add(report, 'errors', 'MKT015', 'compatibility.dshOperations must declare install/start/uninstall/rollback for rc.7, rc.8, 0.1.1-rc.1, and 0.1.1-rc.2')
-    else for (const release of DSH_RELEASES) {
+    if (entry.status === 'approved' && isObject(compatibility.dshReleases)
+      && !requiredReleases.some(release => compatibility.dshReleases[release] === 'compatible')) {
+      add(report, 'errors', 'MKT008', `approved entries require an exact compatible result in the official latest-three DSH window: ${requiredReleases.join(', ')}`)
+    }
+    if (!isObject(compatibility.dshOperations)) add(report, 'errors', 'MKT015', `compatibility.dshOperations must declare install/start/uninstall/rollback for ${requiredReleases.join(', ')}`)
+    else for (const release of requiredReleases) {
       if (!isObject(compatibility.dshOperations[release])) add(report, 'errors', 'MKT015', `compatibility.dshOperations.${release} must be an object`)
       else for (const operation of DSH_OPERATIONS) {
         if (!['passed', 'failed', 'unknown'].includes(compatibility.dshOperations[release][operation])) {
@@ -248,6 +260,9 @@ async function main() {
   if (!(await exists(root))) throw new Error(`plugin root does not exist: ${root}`)
   const entry = args.entry ? await loadJson(resolve(args.entry), 'catalog entry') : null
   const registry = args.registry ? await loadJson(resolve(args.registry), 'registry catalog') : null
+  const releaseWindow = args.dshMetadata
+    ? officialDshReleaseWindow(await loadJson(resolve(args.dshMetadata), 'official DSH package metadata'))
+    : await fetchOfficialDshReleaseWindow()
   const report = {
     schemaVersion: 1,
     root,
@@ -257,6 +272,7 @@ async function main() {
     package: null,
     entryIds: [],
     lifecycleScripts: [],
+    dshReleaseWindow: releaseWindow,
     blockers: [],
     errors: [],
     warnings: [],
@@ -268,7 +284,7 @@ async function main() {
   const candidates = await findManifestCandidates(root)
   let manifestRecord = null
   if (entry) {
-    validateEntryShape(entry, report)
+    validateEntryShape(entry, report, releaseWindow)
     const manifestPath = safeRelative(entry.manifestPath ?? 'package.json') ? entry.manifestPath ?? 'package.json' : 'package.json'
     const target = resolve(root, manifestPath)
     if (!staysInside(root, target)) add(report, 'errors', 'MKT003', 'manifestPath escapes the plugin root')

@@ -9,11 +9,13 @@ import { spawnSync } from 'node:child_process'
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const auditor = join(scriptDir, 'audit-marketplace-entry.mjs')
+let dshMetadataPath = null
 
 function run(root, entry = null, registry = null) {
   const args = [auditor, root, '--json']
   if (entry) args.push('--entry', entry)
   if (registry) args.push('--registry', registry)
+  if (dshMetadataPath) args.push('--dsh-metadata', dshMetadataPath)
   const result = spawnSync(process.execPath, args, { encoding: 'utf8', env: { PATH: process.env.PATH } })
   assert.equal(result.stderr, '')
   return { code: result.status, body: JSON.parse(result.stdout) }
@@ -58,9 +60,9 @@ function entry(overrides = {}) {
     status: 'approved',
     compatibility: {
       dsh: '>=0.1.0-rc.7',
-      dshReleases: { 'rc.7': 'compatible', 'rc.8': 'compatible', '0.1.1-rc.1': 'compatible', '0.1.1-rc.2': 'compatible' },
+      dshReleases: { '0.1.2-alpha.2': 'compatible', '0.1.2-alpha.3': 'compatible', '0.1.2-alpha.4': 'compatible' },
       dshOperations: {
-        'rc.7': { ...unknownOperations }, 'rc.8': { ...unknownOperations }, '0.1.1-rc.1': { ...unknownOperations }, '0.1.1-rc.2': { ...unknownOperations },
+        '0.1.2-alpha.2': { ...unknownOperations }, '0.1.2-alpha.3': { ...unknownOperations }, '0.1.2-alpha.4': { ...unknownOperations },
       },
       node: '>=22', systems: ['macOS'], profiles: ['web'],
     },
@@ -85,6 +87,15 @@ async function writePlugin(root, packagePath = 'package.json', packageJson = man
 
 const fixture = await mkdtemp(join(tmpdir(), 'dsh-marketplace-audit-'))
 try {
+  dshMetadataPath = join(fixture, 'dsh-metadata.json')
+  await writeFile(dshMetadataPath, `${JSON.stringify({
+    name: '@deepseek-ai/dsh',
+    'dist-tags': { latest: '0.1.1-rc.2', next: '0.1.3-next.1', alpha: '0.1.2-alpha.4' },
+    versions: {
+      '0.1.0-rc.8': {}, '0.1.1-rc.1': {}, '0.1.1-rc.2': {},
+      '0.1.2-alpha.2': {}, '0.1.2-alpha.3': {}, '0.1.2-alpha.4': {}, '0.1.3-next.1': {},
+    },
+  }, null, 2)}\n`)
   const registryPath = join(fixture, 'catalog.json')
   await writeFile(registryPath, `${JSON.stringify({
     schemaVersion: 1,
@@ -105,6 +116,7 @@ try {
   assert.equal(direct.body.status, 'READY_FOR_PINNED_SOURCE_VERIFICATION')
   assert.equal(direct.body.route, 'direct')
   assert.deepEqual(direct.body.entryIds, ['dsh-example-plugin'])
+  assert.deepEqual(direct.body.dshReleaseWindow.releases, ['0.1.2-alpha.2', '0.1.2-alpha.3', '0.1.2-alpha.4'])
 
   const monorepoRoot = join(fixture, 'monorepo')
   await mkdir(monorepoRoot)
@@ -161,7 +173,7 @@ try {
   await writeFile(evidenceEntry, `${JSON.stringify(entry({
     featured: true,
     assurance: { ...entry().assurance, runtime: { ...entry().assurance.runtime, status: 'verified' } },
-    compatibility: { ...entry().compatibility, dshOperations: { ...entry().compatibility.dshOperations, 'rc.8': { install: 'passed' } } },
+    compatibility: { ...entry().compatibility, dshOperations: { ...entry().compatibility.dshOperations, '0.1.2-alpha.2': { install: 'passed' } } },
   }), null, 2)}\n`)
   const evidence = run(evidenceRoot, evidenceEntry, registryPath)
   assert.equal(evidence.code, 1)
