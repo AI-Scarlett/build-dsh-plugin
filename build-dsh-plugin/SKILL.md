@@ -164,7 +164,7 @@ Produce two separate reports: repository release evidence and Profile/runtime ac
 
 Read [marketplace.md](references/marketplace.md) whenever building a reusable third-party DSH plugin, assessing an existing repository for DSH STORE, or preparing a catalog entry.
 
-Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. For the current `0.1.1-rc.2` baseline, keep `compatibility.dshReleases` keys for public rc.7, rc.8, the previous full-version key `0.1.1-rc.1`, and `0.1.1-rc.2`; do not generate removed rc.5/rc.6 aliases. Keep matching `compatibility.dshOperations` evidence for install, start, uninstall, and rollback on every release. Preserve unknown metadata as unknown instead of guessing.
+Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. At the start of every STORE assessment, run `node scripts/official-dsh-releases.mjs` and use its official latest-three window; do not reuse a remembered window. The resolver follows the highest active npm `latest`/`alpha`/`beta`/`rc` channel, excludes `next`-only and deprecated versions, and fails closed on invalid authority. The observed 2026-09-02 window is `0.1.2-alpha.2`, `0.1.2-alpha.3`, and `0.1.2-alpha.4`, but it is evidence rather than a permanent constant. Keep exact `compatibility.dshReleases` and matching `compatibility.dshOperations` records for install, start, uninstall, and rollback on every release in the resolved window. Historical keys may remain, but unknown metadata stays unknown instead of being guessed.
 
 Keep STORE discovery and trusted installation physically and logically separate. A record in `registry/candidates.json` is discovery-only, carries no package/install/permission contract, and must normalize to `installable: false` with no allowed actions. It can move to `registry/catalog.json` only after a separate fixed-source, Bundle, license, permission, compatibility, and evidence review. Promotion, recommendation, sponsorship, Stars, or screenshots never upgrade verification.
 
@@ -188,6 +188,7 @@ An unverifiable candidate version, source lineage, manifest, Patch, entry identi
 Run both audits before a catalog candidate:
 
 ```bash
+node scripts/official-dsh-releases.mjs
 node scripts/audit-plugin.mjs /absolute/path/to/plugin --json
 node scripts/audit-marketplace-entry.mjs /absolute/path/to/plugin \
   --entry /absolute/path/to/catalog-entry.json \
@@ -207,7 +208,7 @@ node scripts/audit-candidate-entry.mjs \
 
 Use [candidate-entry.template.json](assets/candidate-entry.template.json). Candidate output never contains `packageName`, install paths, entry IDs, compatibility, permissions, risk, update policy, `installable`, or allowed actions.
 
-Use [catalog-entry.template.json](assets/catalog-entry.template.json), but derive its values from the pinned repository and current Registry contract. Include fixed-source freshness, four assurance levels, and per-release operation evidence for public rc.7, rc.8, `0.1.1-rc.1`, and `0.1.1-rc.2`. A local trusted candidate can be `READY_FOR_PINNED_SOURCE_VERIFICATION`; only current STORE validation plus fixed-Commit source verification can make it PR-ready. Only a merged remote catalog and public page readback prove actual listing.
+Use [catalog-entry.template.json](assets/catalog-entry.template.json), but derive its values from the pinned repository, the live official latest-three DSH window, and the current Registry contract. Include fixed-source freshness, four assurance levels, and per-release operation evidence for every resolved release. An approved proposal needs at least one exact `compatible` result in that window; ranges and unknown values are not installable compatibility evidence. A local trusted candidate can be `READY_FOR_PINNED_SOURCE_VERIFICATION`; only current STORE validation plus fixed-Commit source verification can make it PR-ready. Only a merged remote catalog and public page readback prove actual listing.
 
 Never silently edit or deploy DSH STORE while building the plugin. Prepare the candidate and evidence in the plugin work; make any STORE contribution a separate repository scope/branch with its own checks and authorization. Marketplace listing never authorizes real Profile installation.
 
