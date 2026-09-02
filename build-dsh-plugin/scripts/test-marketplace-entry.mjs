@@ -60,9 +60,9 @@ function entry(overrides = {}) {
     status: 'approved',
     compatibility: {
       dsh: '>=0.1.0-rc.7',
-      dshReleases: { '0.1.2-alpha.2': 'compatible', '0.1.2-alpha.3': 'compatible', '0.1.2-alpha.4': 'compatible' },
+      dshReleases: { '0.1.2-alpha.3': 'compatible', '0.1.2-alpha.4': 'compatible', '0.1.2-alpha.5': 'compatible' },
       dshOperations: {
-        '0.1.2-alpha.2': { ...unknownOperations }, '0.1.2-alpha.3': { ...unknownOperations }, '0.1.2-alpha.4': { ...unknownOperations },
+        '0.1.2-alpha.3': { ...unknownOperations }, '0.1.2-alpha.4': { ...unknownOperations }, '0.1.2-alpha.5': { ...unknownOperations },
       },
       node: '>=22', systems: ['macOS'], profiles: ['web'],
     },
@@ -90,10 +90,10 @@ try {
   dshMetadataPath = join(fixture, 'dsh-metadata.json')
   await writeFile(dshMetadataPath, `${JSON.stringify({
     name: '@deepseek-ai/dsh',
-    'dist-tags': { latest: '0.1.1-rc.2', next: '0.1.3-next.1', alpha: '0.1.2-alpha.4' },
+    'dist-tags': { latest: '0.1.1-rc.2', next: '0.1.3-next.1', alpha: '0.1.2-alpha.5' },
     versions: {
       '0.1.0-rc.8': {}, '0.1.1-rc.1': {}, '0.1.1-rc.2': {},
-      '0.1.2-alpha.2': {}, '0.1.2-alpha.3': {}, '0.1.2-alpha.4': {}, '0.1.3-next.1': {},
+      '0.1.2-alpha.2': {}, '0.1.2-alpha.3': {}, '0.1.2-alpha.4': {}, '0.1.2-alpha.5': {}, '0.1.3-next.1': {},
     },
   }, null, 2)}\n`)
   const registryPath = join(fixture, 'catalog.json')
@@ -116,7 +116,7 @@ try {
   assert.equal(direct.body.status, 'READY_FOR_PINNED_SOURCE_VERIFICATION')
   assert.equal(direct.body.route, 'direct')
   assert.deepEqual(direct.body.entryIds, ['dsh-example-plugin'])
-  assert.deepEqual(direct.body.dshReleaseWindow.releases, ['0.1.2-alpha.2', '0.1.2-alpha.3', '0.1.2-alpha.4'])
+  assert.deepEqual(direct.body.dshReleaseWindow.releases, ['0.1.2-alpha.3', '0.1.2-alpha.4', '0.1.2-alpha.5'])
 
   const monorepoRoot = join(fixture, 'monorepo')
   await mkdir(monorepoRoot)
@@ -173,7 +173,7 @@ try {
   await writeFile(evidenceEntry, `${JSON.stringify(entry({
     featured: true,
     assurance: { ...entry().assurance, runtime: { ...entry().assurance.runtime, status: 'verified' } },
-    compatibility: { ...entry().compatibility, dshOperations: { ...entry().compatibility.dshOperations, '0.1.2-alpha.2': { install: 'passed' } } },
+    compatibility: { ...entry().compatibility, dshOperations: { ...entry().compatibility.dshOperations, '0.1.2-alpha.3': { install: 'passed' } } },
   }), null, 2)}\n`)
   const evidence = run(evidenceRoot, evidenceEntry, registryPath)
   assert.equal(evidence.code, 1)
