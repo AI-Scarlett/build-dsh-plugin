@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import test from 'node:test'
+import { isTestAuditPath, normalizeAuditPath } from '../build-dsh-plugin/scripts/audit-paths.mjs'
 
 const repoRoot = new URL('../', import.meta.url)
 const audit = fileURLToPath(new URL('build-dsh-plugin/scripts/audit-plugin.mjs', repoRoot))
@@ -71,6 +72,40 @@ export const tool = {
     assert.equal(report.status, 'BLOCKED')
     assert.ok(report.blockers.some(item => item.includes('unsupported DSH Tool card')))
     assert.ok(report.blockers.some(item => item.includes('replay/fallback/bounds')))
+  } finally {
+    await rm(root, { recursive: true, force: true })
+  }
+})
+
+test('audit normalizes Windows separators and recognizes root-level test files', async () => {
+  assert.equal(normalizeAuditPath('test\\authorization.test.mjs'), 'test/authorization.test.mjs')
+  for (const path of [
+    'test\\authorization.test.mjs',
+    'tests\\nested\\profile-test.mjs',
+    '__tests__\\card.ts',
+    'test-authorization.mjs',
+    'authorization-test.mjs',
+    'authorization.test.mjs',
+  ]) assert.equal(isTestAuditPath(path), true, path)
+  assert.equal(isTestAuditPath('src\\authorization.mjs'), false)
+
+  const root = await mkdtemp(join(tmpdir(), 'dsh-root-test-'))
+  try {
+    await fixture(root, 'export const plugin = {}\n', '// placeholder\n')
+    await rm(join(root, 'test'), { recursive: true, force: true })
+    await writeFile(join(root, 'authorization.test.mjs'), `
+// fail closed, rollback, replay, malformed, JSON serialization, byte limit and truncation.
+console.log('authorization.test.mjs PASS')
+await writeFile(temporaryHome, 'profile.json', '{}')
+`)
+    const report = run(root)
+    assert.equal(report.riskSignals.profileMutation, false)
+    assert.equal(report.blockers.some(item => item.includes('secret logging')), false)
+    const testCheck = report.categories
+      .find(category => category.name === 'Tests')
+      .checks.find(check => check.label === 'test files exist')
+    assert.equal(testCheck.pass, true)
+    assert.equal(testCheck.detail, '1 text test files')
   } finally {
     await rm(root, { recursive: true, force: true })
   }
