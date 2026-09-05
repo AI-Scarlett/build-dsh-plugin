@@ -3,6 +3,7 @@
 import { readFile, readdir, stat } from 'node:fs/promises'
 import { basename, dirname, extname, isAbsolute, join, relative, resolve } from 'node:path'
 import process from 'node:process'
+import { isTestAuditPath, normalizeAuditPath } from './audit-paths.mjs'
 
 const EXCLUDED_DIRS = new Set(['.git', 'node_modules', 'dist', 'build', 'coverage', '.next', '.turbo', '.pnpm-store'])
 const TEXT_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.ts', '.tsx', '.jsx', '.json', '.yml', '.yaml', '.md', '.sh', '.txt'])
@@ -41,7 +42,7 @@ async function collectFiles(root) {
         continue
       }
       if (!entry.isFile()) continue
-      const rel = relative(root, absolute)
+      const rel = normalizeAuditPath(relative(root, absolute))
       const extension = extname(entry.name).toLowerCase()
       if (!TEXT_EXTENSIONS.has(extension) && entry.name !== 'package.json') continue
       const info = await stat(absolute)
@@ -67,7 +68,7 @@ function stringsFromEntry(value) {
 function linesMatching(records, pattern, { codeOnly = false } = {}) {
   const matches = []
   for (const record of records) {
-    const isTest = /(^|\/)(test|tests|__tests__)(\/|$)/.test(record.rel)
+    const isTest = isTestAuditPath(record.rel)
     if (codeOnly && (record.extension === '.md' || record.extension === '.txt' || isTest)) continue
     record.text.split(/\r?\n/).forEach((line, index) => {
       pattern.lastIndex = 0
@@ -124,9 +125,9 @@ async function main() {
 
   const records = await loadRecords(await collectFiles(root))
   const allText = records.map(record => record.text).join('\n')
-  const codeRecords = records.filter(record => !['.md', '.txt'].includes(record.extension) && !/(^|\/)(test|tests|__tests__)(\/|$)/.test(record.rel))
+  const codeRecords = records.filter(record => !['.md', '.txt'].includes(record.extension) && !isTestAuditPath(record.rel))
   const codeText = codeRecords.map(record => record.text).join('\n')
-  const testText = records.filter(record => /(^|\/)(test|tests|__tests__)(\/|$)/.test(record.rel)).map(record => record.text).join('\n')
+  const testText = records.filter(record => isTestAuditPath(record.rel)).map(record => record.text).join('\n')
   const readme = records.find(record => /^readme(?:\.[^.]+)?\.md$/i.test(basename(record.rel)))?.text ?? ''
 
   const patchRelRaw = pkg?.dsh?.bundle?.patch
@@ -199,7 +200,7 @@ async function main() {
   }
 
   const realHomeTestWrites = records.flatMap(record => {
-    if (!/(^|\/)(test|tests|__tests__)(\/|$)/.test(record.rel)) return []
+    if (!isTestAuditPath(record.rel)) return []
     if (!/(?:writeFile|appendFile|rename|unlink|rm|mkdir|copyFile)\s*\(/.test(record.text)) return []
     return record.text.split(/\r?\n/).flatMap((line, index) => /(?:~\/\.dsh|\/Users\/[^/]+\/\.dsh|process\.env\.HOME.*\.dsh|homedir\(\).*\.dsh)/.test(line) ? [`${record.rel}:${index + 1}`] : [])
   })
@@ -210,7 +211,7 @@ async function main() {
   const hasImmutableSha = /\b[0-9a-f]{40}\b/i.test(readme) || /\b[0-9a-f]{40}\b/i.test(allText)
   const hasRepo = typeof pkg?.repository === 'string' || (pkg?.repository && typeof pkg.repository.url === 'string')
   const hasLicense = typeof pkg?.license === 'string' || await pathExists(join(packageRoot, 'LICENSE')) || await pathExists(join(root, 'LICENSE'))
-  const testFiles = records.filter(record => /(^|\/)(test|tests|__tests__)(\/|$)/.test(record.rel))
+  const testFiles = records.filter(record => isTestAuditPath(record.rel))
   const hasTestScript = typeof pkg?.scripts?.test === 'string' || typeof pkg?.scripts?.check === 'string'
   const safetyTestMarkers = /fail closed|rollback|回滚|concurrent|并发|traversal|shell|official|malformed|篡改|replay|cross-origin/i.test(testText)
   const hasBoundaryDocs = /边界|boundary|non-goal|不修改|read-only|只读|security|permission/i.test(readme + '\n' + allText)

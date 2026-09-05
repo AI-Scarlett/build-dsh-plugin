@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "2026.09.03.1",
-  "createdAt": "2026-09-03T00:00:00+08:00",
+  "distributionVersion": "2026.09.05.1",
+  "createdAt": "2026-09-05T00:00:00+08:00",
   "artifact": {
-    "file": "build-dsh-plugin-20260903.1.zip",
+    "file": "build-dsh-plugin-20260905.1.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 111658,
-    "regularFileCount": 26,
-    "sha256": "39cdc334706e72773b6b87b4893e45aa9947d24c2da931a69b7d793165610512",
-    "sha256File": "build-dsh-plugin-20260903.1.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.09.03.1/build-dsh-plugin-20260903.1.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.09.03.1/build-dsh-plugin-20260903.1.sha256"
+    "bytes": 110422,
+    "regularFileCount": 27,
+    "sha256": "57992de93d2252c44e6ca7dde0a6446c6cee3a9484dd93031cda6e9119f2a38a",
+    "sha256File": "build-dsh-plugin-20260905.1.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.09.05.1/build-dsh-plugin-20260905.1.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.09.05.1/build-dsh-plugin-20260905.1.sha256"
   },
   "release": {
-    "tag": "v2026.09.03.1",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.09.03.1",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.09.03.1",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.09.03.1/dist/manifest.json"
+    "tag": "v2026.09.05.1",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.09.05.1",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.09.05.1",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.09.05.1/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.09.03.1/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.09.05.1/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -40,7 +40,8 @@
     "cardContract": "build-dsh-plugin/references/card-contract.md",
     "officialDshReleases": "build-dsh-plugin/scripts/official-dsh-releases.mjs",
     "dshBundleManifest": "package.json",
-    "dshBundlePatch": "cordis.patch.yml"
+    "dshBundlePatch": "cordis.patch.yml",
+    "auditPathClassifier": "build-dsh-plugin/scripts/audit-paths.mjs"
   },
   "runtime": {
     "required": [
@@ -63,8 +64,8 @@
     "disposableExtractionRetest": "passed",
     "dshBundleContractTests": "passed",
     "cardAuditTests": "passed",
-    "dshDisposableInstallDumpConfig": "passed-on-0.1.2-alpha.3-alpha.4-and-alpha.5",
-    "dshRuntimeSkillDiscovery": "passed-on-0.1.2-alpha.3-alpha.4-and-alpha.5",
+    "dshDisposableInstallDumpConfig": "passed-on-0.1.2-alpha.4-alpha.5-and-rc.1",
+    "dshRuntimeSkillDiscovery": "passed-on-0.1.2-alpha.4-alpha.5-and-rc.1",
     "dsh011Rc1CompatibilityMatrix": "passed",
     "dsh011Rc2CompatibilityMatrix": "passed",
     "dsh012Alpha2PublicContract": "passed",
@@ -75,7 +76,12 @@
     "dsh012Alpha5PublicContract": "passed",
     "dsh012Alpha5InstallDumpConfigColdStart": "passed",
     "dsh012Alpha5RuntimeSkillDiscovery": "passed",
-    "dsh012Alpha5UninstallRollback": "passed"
+    "dsh012Alpha5UninstallRollback": "passed",
+    "dsh012Rc1PublicContract": "passed",
+    "dsh012Rc1InstallDumpConfigColdStart": "passed",
+    "dsh012Rc1Uninstall": "passed",
+    "windowsAuditPathClassification": "passed-with-backslash-fixtures",
+    "rootTestFilenameClassification": "passed"
   },
   "excluded": [
     "Obsidian vault notes",
