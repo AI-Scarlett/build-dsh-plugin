@@ -48,11 +48,16 @@ if (!rootLicense.equals(skillLicense)) throw new Error('repository and distribut
 if (manifest.license.spdxId !== 'MIT') throw new Error('distribution license must be MIT')
 if (sourceFileCount !== manifest.artifact.regularFileCount) throw new Error('source file count does not match manifest')
 if (archivedFiles.length !== manifest.artifact.regularFileCount) throw new Error('ZIP file count does not match manifest')
+for (const path of archivedFiles) {
+  if (!path.startsWith('build-dsh-plugin/') || path.split('/').includes('..')) throw new Error('ZIP contains an unexpected path')
+  const archived = execFileSync('unzip', ['-p', artifactPath, path], { maxBuffer: 4 * 1024 * 1024 })
+  if (!archived.equals(await read(path))) throw new Error(`ZIP contains stale source: ${path}`)
+}
 if (!archivedFiles.includes(manifest.license.file)) throw new Error('ZIP does not contain the declared license')
 if (!manifest.release.tag || !manifest.artifact.downloadUrl.includes(`/${manifest.release.tag}/`)) {
   throw new Error('artifact download URL is not bound to the declared release tag')
 }
-if (dshPackage.name !== 'dsh-build-plugin' || dshPackage.version !== '0.4.2' || dshPackage.dsh?.bundle?.patch !== './cordis.patch.yml') {
+if (dshPackage.name !== 'dsh-build-plugin' || dshPackage.version !== '0.4.3' || dshPackage.dsh?.bundle?.patch !== './cordis.patch.yml') {
   throw new Error('repository root is not the declared DSH Bundle')
 }
 if (dshPackage.main !== './src/index.mjs' || !dshPackage.files?.includes('src')) {
