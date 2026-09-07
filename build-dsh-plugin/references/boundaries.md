@@ -213,3 +213,7 @@ Stop mutation, installation, or release when any blocker exists:
 - a lower evidence level is being presented as runtime/device/public acceptance.
 
 Hard blockers override the readiness score. Report `BLOCKED` and the smallest safe next action.
+
+## DSH 0.1.3-alpha.1 persistence and usage
+
+The official GitHub release may precede npm availability. Do not generate an npm upgrade command for a GitHub-only version. For the per-session persistence API, create/open returns an owned handle; append and flush before close, close readers in finally, and surface busy-owner errors. Never call the removed service-level append/inspect/readFrom methods on a handle-based host. Session format 2 embeds captured chunks in assistant/message or assistant/attempt data.stream; preserve retries as separate usage attempts and attribute successful failover to message.source. Test synthesized imports, same-project read bounds, durable restart, duplicate detection and incremental append with disposable data. Do not depend on an unpublished official package merely because a local source symlink makes it resolvable.

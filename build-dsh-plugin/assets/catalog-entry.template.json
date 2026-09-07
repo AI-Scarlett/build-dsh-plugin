@@ -9,7 +9,9 @@
   "updatePolicy": "user-reviewed",
   "commit": "replace-with-40-character-lowercase-commit-sha",
   "version": "0.1.0",
-  "categories": ["replace-with-current-registry-category"],
+  "categories": [
+    "replace-with-current-registry-category"
+  ],
   "featured": false,
   "source": {
     "updatedAt": "replace-with-pinned-commit-ISO-date-time",
@@ -17,20 +19,77 @@
     "provenance": "github-commit"
   },
   "assurance": {
-    "discovery": { "status": "unknown", "method": null, "checkedAt": null, "evidenceUrl": null, "dshRelease": null, "systems": [], "profiles": [], "summary": null },
-    "installability": { "status": "unknown", "method": null, "checkedAt": null, "evidenceUrl": null, "dshRelease": null, "systems": [], "profiles": [], "summary": null },
-    "runtime": { "status": "unknown", "method": null, "checkedAt": null, "evidenceUrl": null, "dshRelease": null, "systems": [], "profiles": [], "summary": null },
-    "securityReview": { "status": "unknown", "method": null, "checkedAt": null, "evidenceUrl": null, "dshRelease": null, "systems": [], "profiles": [], "summary": null }
+    "discovery": {
+      "status": "unknown",
+      "method": null,
+      "checkedAt": null,
+      "evidenceUrl": null,
+      "dshRelease": null,
+      "systems": [],
+      "profiles": [],
+      "summary": null
+    },
+    "installability": {
+      "status": "unknown",
+      "method": null,
+      "checkedAt": null,
+      "evidenceUrl": null,
+      "dshRelease": null,
+      "systems": [],
+      "profiles": [],
+      "summary": null
+    },
+    "runtime": {
+      "status": "unknown",
+      "method": null,
+      "checkedAt": null,
+      "evidenceUrl": null,
+      "dshRelease": null,
+      "systems": [],
+      "profiles": [],
+      "summary": null
+    },
+    "securityReview": {
+      "status": "unknown",
+      "method": null,
+      "checkedAt": null,
+      "evidenceUrl": null,
+      "dshRelease": null,
+      "systems": [],
+      "profiles": [],
+      "summary": null
+    }
   },
-  "entryIds": ["dsh-example-plugin"],
+  "entryIds": [
+    "dsh-example-plugin"
+  ],
   "status": "approved",
   "compatibility": {
     "dsh": null,
-    "dshReleases": { "0.1.2-alpha.4": "unknown", "0.1.2-alpha.5": "unknown", "0.1.2-rc.1": "unknown" },
+    "dshReleases": {
+      "0.1.2-alpha.5": "unknown",
+      "0.1.2-rc.1": "unknown",
+      "0.1.3-alpha.1": "unknown"
+    },
     "dshOperations": {
-      "0.1.2-alpha.4": { "install": "unknown", "start": "unknown", "uninstall": "unknown", "rollback": "unknown" },
-      "0.1.2-alpha.5": { "install": "unknown", "start": "unknown", "uninstall": "unknown", "rollback": "unknown" },
-      "0.1.2-rc.1": { "install": "unknown", "start": "unknown", "uninstall": "unknown", "rollback": "unknown" }
+      "0.1.2-alpha.5": {
+        "install": "unknown",
+        "start": "unknown",
+        "uninstall": "unknown",
+        "rollback": "unknown"
+      },
+      "0.1.2-rc.1": {
+        "install": "unknown",
+        "start": "unknown",
+        "uninstall": "unknown",
+        "rollback": "unknown"
+      },
+      "0.1.3-alpha.1": {
+        "install": "unknown",
+        "start": "unknown",
+        "uninstall": "unknown",
+        "rollback": "unknown"
+      }
     },
     "node": null,
     "systems": [],
@@ -45,7 +104,9 @@
       "files": "unknown",
       "network": "unknown",
       "commands": "unknown",
-      "credentials": ["unknown"]
+      "credentials": [
+        "unknown"
+      ]
     },
     "externalDependencies": [],
     "reviewStatus": "unreviewed"

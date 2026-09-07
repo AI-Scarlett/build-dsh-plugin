@@ -1,6 +1,6 @@
 {
   "name": "dsh-build-plugin",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "DSH Skill adapter for the build-dsh-plugin development workflow",
   "private": true,
   "type": "module",
@@ -18,13 +18,14 @@
       "patch": "./cordis.patch.yml"
     },
     "compatibility": {
-      "dsh": ">=0.1.0-rc.8 <0.2.0",
+      "dsh": ">=0.1.0-rc.8 <0.2.0 || 0.1.3-alpha.1",
       "dshReleases": {
         "0.1.2-alpha.2": "compatible",
         "0.1.2-alpha.3": "compatible",
         "0.1.2-alpha.4": "compatible",
         "0.1.2-alpha.5": "compatible",
-        "0.1.2-rc.1": "compatible"
+        "0.1.2-rc.1": "compatible",
+        "0.1.3-alpha.1": "compatible"
       }
     }
   },
