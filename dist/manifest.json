@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "2026.09.10.1",
-  "createdAt": "2026-09-10T00:00:00+08:00",
+  "distributionVersion": "0.5.0",
+  "createdAt": "2026-09-15T04:11:51.436840+00:00",
   "artifact": {
-    "file": "build-dsh-plugin-20260910.1.zip",
+    "file": "build-dsh-plugin-0.5.0.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 111796,
-    "regularFileCount": 27,
-    "sha256": "da3574a28041a21aa3aca9379c7c4e439442085a4d6b0c707839995f51a5345b",
-    "sha256File": "build-dsh-plugin-20260910.1.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.09.10.1/build-dsh-plugin-20260910.1.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v2026.09.10.1/build-dsh-plugin-20260910.1.sha256"
+    "bytes": 115721,
+    "regularFileCount": 30,
+    "sha256": "ab4d701648aab6df20cdb0aa8d9e844cf5e609855115b3311dc73f508dc8cdd9",
+    "sha256File": "build-dsh-plugin-0.5.0.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.0/build-dsh-plugin-0.5.0.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.0/build-dsh-plugin-0.5.0.sha256"
   },
   "release": {
-    "tag": "v2026.09.10.1",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v2026.09.10.1",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v2026.09.10.1",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v2026.09.10.1/dist/manifest.json"
+    "tag": "v0.5.0",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.5.0",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.5.0",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.5.0/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v2026.09.10.1/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.5.0/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -41,12 +41,15 @@
     "officialDshReleases": "build-dsh-plugin/scripts/official-dsh-releases.mjs",
     "dshBundleManifest": "package.json",
     "dshBundlePatch": "cordis.patch.yml",
-    "auditPathClassifier": "build-dsh-plugin/scripts/audit-paths.mjs"
+    "auditPathClassifier": "build-dsh-plugin/scripts/audit-paths.mjs",
+    "lifecycleAudit": "build-dsh-plugin/scripts/audit-lifecycle.mjs",
+    "lifecycleContract": "build-dsh-plugin/references/lifecycle-manager.md",
+    "lifecycleEvidenceTemplate": "build-dsh-plugin/assets/lifecycle-evidence.template.json"
   },
   "runtime": {
     "required": [
       "Agent support for SKILL.md or equivalent instruction loading",
-      "DSH >=0.1.0-rc.8 <0.2.0; latest-three window resolved from official GitHub Releases and npm published versions (current: 0.1.3-alpha.2, 0.1.5-alpha.1, 0.1.5-alpha.2)"
+      "DSH >=0.1.0-rc.8 <0.2.0; 0.1.5-rc.1 and 0.1.5-rc.2 disposable composition/start verified; 0.1.6-alpha.1 blocked by unavailable official dependency."
     ],
     "scripts": [
       "Node.js 18 or newer"
@@ -84,7 +87,11 @@
     "rootTestFilenameClassification": "passed",
     "dsh015Alpha1SourceContract": "passed",
     "dsh015Alpha2SourceContract": "passed",
-    "dshLatestThreeWindow": "0.1.3-alpha.2,0.1.5-alpha.1,0.1.5-alpha.2"
+    "dshLatestThreeWindow": "0.1.5-alpha.2,0.1.5-rc.1,0.1.5-rc.2",
+    "dsh015Rc1InstallDumpConfigColdStart": "passed",
+    "dsh015Rc2InstallDumpConfigColdStart": "passed",
+    "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
+    "lifecycleAudit": "tested-static-only"
   },
   "excluded": [
     "Obsidian vault notes",

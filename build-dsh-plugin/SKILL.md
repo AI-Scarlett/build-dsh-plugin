@@ -120,6 +120,8 @@ Produce a permission matrix with each data source/action, owning side, allowed c
 
 ### 5. Apply the mutation protocol
 
+For HTTP lifecycle managers, read [lifecycle-manager.md](references/lifecycle-manager.md) before implementing authentication, progress, recovery or discovery. Use [lifecycle-evidence.template.json](assets/lifecycle-evidence.template.json) and `scripts/audit-lifecycle.mjs` to track review gaps.
+
 For Profile/package/restart mutations, create a fresh typed plan for exactly one operation containing:
 
 1. operation and target Profile;
