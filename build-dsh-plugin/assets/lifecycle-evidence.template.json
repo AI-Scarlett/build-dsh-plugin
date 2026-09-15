@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "commit": null,
+  "hostAuthentication": {"api": "connection.requestRejection", "evidence": "unknown"},
+  "matrix": [],
+  "requiredCases": ["unauthenticated-401", "cross-origin-403", "missing-authority-503", "post-not-replayed", "crash-recovery", "windows-file-lock", "rollback-failure", "pnpm-10", "pnpm-11", "pnpm-12", "monorepo-subpath"],
+  "realProfile": "unchanged",
+  "publicRelease": "unverified"
+}

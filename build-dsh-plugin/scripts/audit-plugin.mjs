@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { auditLifecycle } from './audit-lifecycle.mjs'
 import { readFile, readdir, stat } from 'node:fs/promises'
 import { basename, dirname, extname, isAbsolute, join, relative, resolve } from 'node:path'
 import process from 'node:process'
@@ -149,7 +150,7 @@ async function main() {
   const runtimeEntryContract = allEntriesExist || patchOnlyAdapter
 
   const hasWebRegistration = /webServer\.(?:register|route)|ctx\.webServer/.test(codeText)
-  const hasOptionalWebInjection = /ctx\.inject\s*\(\s*\[\s*['"]webServer['"]\s*\]/.test(codeText) || /inject\s*=\s*\[[^\]]*['"]webServer['"]/.test(codeText)
+  const hasOptionalWebInjection = /ctx\.inject\s*\(\s*\[[^\]]*['"]webServer['"][^\]]*\]/.test(codeText) || /inject\s*=\s*\[[^\]]*['"]webServer['"]/.test(codeText)
   const hasClient = /window\.__ModuleLoader__\.load|ctx\.slots\.(?:register|inject)/.test(allText)
   const clientRecords = records.filter(record => /(^|\/)(client|browser)(\.|\/)/i.test(record.rel) || /lib\/client\.[cm]?[jt]s$/.test(record.rel))
   const clientHostImports = clientRecords.flatMap(record => {
@@ -295,6 +296,8 @@ async function main() {
   if (realHomeTestWrites.length) blockers.push('test may write to real ~/.dsh')
   if (profileMutation && Object.values(mutationMarkers).some(value => !value)) blockers.push('Profile mutation lacks one or more required transaction markers')
 
+  const lifecycle = auditLifecycle({ code: codeText, tests: testText, profileMutation, hasWebRegistration })
+  blockers.push(...lifecycle.blockers)
   const staticScore = categories.reduce((sum, category) => sum + category.score, 0)
   const total = staticScore + runtime.score
   let status = 're-scope'
@@ -307,6 +310,7 @@ async function main() {
     schemaVersion: 1,
     root,
     package: pkg ? { name: pkg.name ?? null, version: pkg.version ?? null } : null,
+    lifecycle,
     riskSignals: { profileMutation, hasWebRegistration, hasClient, lifecycleScripts },
     entryIds,
     staticScore,
