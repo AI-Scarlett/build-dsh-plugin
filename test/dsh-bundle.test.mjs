@@ -40,6 +40,7 @@ test('CI compatibility matrix consumes the ordered official latest-three resolve
   const workflow = await readFile(new URL('.github/workflows/verify-distribution.yml', root), 'utf8')
   assert.match(workflow, /fromJSON\(needs\.resolve-dsh-window\.outputs\.releases\)/)
   assert.match(workflow, /scripts\/test-disposable-dsh-bundle\.mjs/)
+  assert.doesNotMatch(workflow, /test-disposable-dsh-bundle\.mjs[^\n]*\$PWD/)
   assert.doesNotMatch(workflow, /@deepseek-ai\/dsh@0\.1\.5-rc\.2/)
 })
 
