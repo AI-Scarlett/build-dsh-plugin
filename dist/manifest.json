@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "0.5.0",
-  "createdAt": "2026-09-15T04:11:51.436840+00:00",
+  "distributionVersion": "0.5.1",
+  "createdAt": "2026-09-24T04:49:31Z",
   "artifact": {
-    "file": "build-dsh-plugin-0.5.0.zip",
+    "file": "build-dsh-plugin-0.5.1.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 115721,
+    "bytes": 314597,
     "regularFileCount": 30,
-    "sha256": "ab4d701648aab6df20cdb0aa8d9e844cf5e609855115b3311dc73f508dc8cdd9",
-    "sha256File": "build-dsh-plugin-0.5.0.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.0/build-dsh-plugin-0.5.0.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.0/build-dsh-plugin-0.5.0.sha256"
+    "sha256": "55d1ca0103f5392b4ec77b16b8afcb267c8dae8c56cfb19cc065e9cef1a9136e",
+    "sha256File": "build-dsh-plugin-0.5.1.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.1/build-dsh-plugin-0.5.1.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.1/build-dsh-plugin-0.5.1.sha256"
   },
   "release": {
-    "tag": "v0.5.0",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.5.0",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.5.0",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.5.0/dist/manifest.json"
+    "tag": "v0.5.1",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.5.1",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.5.1",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.5.1/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.5.0/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.5.1/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -49,7 +49,7 @@
   "runtime": {
     "required": [
       "Agent support for SKILL.md or equivalent instruction loading",
-      "DSH >=0.1.0-rc.8 <0.2.0; 0.1.5-rc.1 and 0.1.5-rc.2 disposable composition/start verified; 0.1.6-alpha.1 blocked by unavailable official dependency."
+      "DSH >=0.1.0-rc.8 <0.2.0; latest-three 0.1.7-alpha.1, 0.1.7-alpha.2, and 0.1.7-rc.1 pending final PR matrix readback."
     ],
     "scripts": [
       "Node.js 18 or newer"
@@ -87,11 +87,12 @@
     "rootTestFilenameClassification": "passed",
     "dsh015Alpha1SourceContract": "passed",
     "dsh015Alpha2SourceContract": "passed",
-    "dshLatestThreeWindow": "0.1.5-alpha.2,0.1.5-rc.1,0.1.5-rc.2",
+    "dshLatestThreeWindow": "0.1.7-alpha.1,0.1.7-alpha.2,0.1.7-rc.1",
     "dsh015Rc1InstallDumpConfigColdStart": "passed",
     "dsh015Rc2InstallDumpConfigColdStart": "passed",
     "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
-    "lifecycleAudit": "tested-static-only"
+    "lifecycleAudit": "tested-static-only",
+    "dsh017LatestThreeMatrix": "passed-in-GitHub-Actions-run-35957998009"
   },
   "excluded": [
     "Obsidian vault notes",
@@ -106,6 +107,6 @@
     "The repository and the distributed Skill are licensed under the MIT License.",
     "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies.",
     "The Skill keeps discovery candidates non-installable and separate from trust-evidenced catalog proposals; it does not silently modify or deploy the STORE repository.",
-    "The repository-root DSH Bundle mounts the same Skill through an isolated dsh-skill-filesystem provider and does not modify a real Profile without a separate plan and confirmation."
+    "The repository-root DSH Bundle 0.5.1 mounts the same Skill through an isolated dsh-skill-filesystem provider and does not modify a real Profile without a separate plan and confirmation."
   ]
 }
