@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
 import test from 'node:test'
+import { resolveDshUpgradeMatrix } from '../scripts/resolve-dsh-upgrade-matrix.mjs'
 
 const root = new URL('../', import.meta.url)
 
@@ -20,6 +21,45 @@ test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
     assert.equal(pkg.scripts[name], undefined)
   }
+})
+
+test('CI compatibility matrix consumes the ordered official latest-three resolver', async () => {
+  const result = await resolveDshUpgradeMatrix(async options => {
+    assert.equal(options.releaseCount, 3)
+    return {
+      authority: 'official-github-releases-and-npm-published-versions',
+      releaseCount: 3,
+      latestVersion: '0.1.7-rc.1',
+      releases: ['0.1.7-alpha.1', '0.1.7-alpha.2', '0.1.7-rc.1'],
+    }
+  })
+  assert.deepEqual(result, {
+    latestVersion: '0.1.7-rc.1',
+    releases: ['0.1.7-alpha.1', '0.1.7-alpha.2', '0.1.7-rc.1'],
+  })
+  const workflow = await readFile(new URL('.github/workflows/verify-distribution.yml', root), 'utf8')
+  assert.match(workflow, /fromJSON\(needs\.resolve-dsh-window\.outputs\.releases\)/)
+  assert.match(workflow, /scripts\/test-disposable-dsh-bundle\.mjs/)
+  assert.doesNotMatch(workflow, /@deepseek-ai\/dsh@0\.1\.5-rc\.2/)
+})
+
+test('latest-three resolver fails closed when the official window is incomplete', async () => {
+  await assert.rejects(resolveDshUpgradeMatrix(async () => ({
+    authority: 'official-github-releases-and-npm-published-versions',
+    releaseCount: 3,
+    latestVersion: '0.1.7-rc.1',
+    releases: ['0.1.7-alpha.1', '0.1.7-rc.1'],
+  })), /complete ordered latest-three window/)
+})
+
+test('disposable DSH bundle test scopes Profile and CLI operations to its temporary home', async () => {
+  const source = await readFile(new URL('scripts/test-disposable-dsh-bundle.mjs', root), 'utf8')
+  assert.match(source, /DSH_HOME:\s*resolve\(root, 'home'\)/)
+  assert.match(source, /execFileAsync\(process\.execPath, \[cli, \.\.\.args\]/)
+  assert.match(source, /plugin', '--profile', 'web', 'add'/)
+  assert.match(source, /plugin', '--profile', 'web', 'remove'/)
+  assert.doesNotMatch(source, /shell:\s*true/)
+  assert.match(source, /await rm\(root, \{ recursive: true, force: true \}\)/)
 })
 
 test('bundle inserts only its own Host adapter', async () => {
