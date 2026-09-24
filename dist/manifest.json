@@ -92,7 +92,7 @@
     "dsh015Rc2InstallDumpConfigColdStart": "passed",
     "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
     "lifecycleAudit": "tested-static-only",
-    "dsh017LatestThreeMatrix": "pending-final-PR-CI"
+    "dsh017LatestThreeMatrix": "passed-in-GitHub-Actions-run-35957998009"
   },
   "excluded": [
     "Obsidian vault notes",
