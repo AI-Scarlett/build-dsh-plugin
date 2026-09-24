@@ -58,6 +58,7 @@ test('disposable DSH bundle test scopes Profile and CLI operations to its tempor
   assert.match(source, /DSH_HOME:\s*resolve\(root, 'home'\)/)
   assert.match(source, /execFileAsync\(process\.execPath, \[cli, \.\.\.args\]/)
   assert.match(source, /plugin', '--profile', 'web', 'add'/)
+  assert.match(source, /process\.env\.DSH_TEST_PLUGIN_SPEC/)
   assert.match(source, /plugin', '--profile', 'web', 'remove'/)
   assert.doesNotMatch(source, /shell:\s*true/)
   assert.match(source, /await rm\(root, \{ recursive: true, force: true \}\)/)

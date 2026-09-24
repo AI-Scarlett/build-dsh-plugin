@@ -54,5 +54,7 @@ jobs:
         run: npm install --prefix .runtime --ignore-scripts --no-audit --no-fund --no-save "@deepseek-ai/dsh@$DSH_VERSION"
         shell: bash
       - name: Verify this bundle in a disposable Profile
+        env:
+          DSH_TEST_PLUGIN_SPEC: github:AI-Scarlett/build-dsh-plugin#${{ github.event.pull_request.head.sha || github.sha }}
         run: node scripts/test-disposable-dsh-bundle.mjs .runtime/node_modules/@deepseek-ai/dsh/lib/bin.js
         shell: bash

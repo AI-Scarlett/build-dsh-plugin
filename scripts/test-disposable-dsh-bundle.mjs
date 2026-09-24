@@ -12,6 +12,7 @@ const execFileAsync = promisify(execFile)
 const cli = resolve(process.argv[2] ?? '')
 const packageRoot = resolve(process.argv[3] ?? '.')
 if (!process.argv[2]) throw new Error('pass the fixed DSH CLI path as argv[2]')
+const pluginSpec = process.env.DSH_TEST_PLUGIN_SPEC ?? `file:${packageRoot}`
 
 const root = await mkdtemp(join(tmpdir(), 'build-dsh-plugin-e3-'))
 const env = Object.fromEntries(Object.entries(process.env)
@@ -56,7 +57,7 @@ try {
   await run(['--profile', 'web', '--dump-config'])
 
   stage = 'install'
-  await run(['plugin', '--profile', 'web', 'add', '--ignore-scripts', '--config.auto-install-peers=false', `file:${packageRoot}`])
+  await run(['plugin', '--profile', 'web', 'add', '--ignore-scripts', '--config.auto-install-peers=false', pluginSpec])
   const installedConfig = await run(['--profile', 'web', '--dump-config'])
   assert.ok(installedConfig.includes('dsh-build-plugin-skill-provider'))
 
