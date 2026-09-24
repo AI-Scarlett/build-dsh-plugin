@@ -54,7 +54,7 @@ try {
   await mkdir(env.DSH_HOME, { recursive: true })
   await writeFile(env.npm_config_userconfig, '', { mode: 0o600 })
   stage = 'initial-profile'
-  await run(['--profile', 'web', '--dump-config'])
+  const baselineConfig = await run(['--profile', 'web', '--dump-config'])
 
   stage = 'install'
   await run(['plugin', '--profile', 'web', 'add', '--ignore-scripts', '--config.auto-install-peers=false', pluginSpec])
@@ -109,6 +109,7 @@ try {
   await run(['plugin', '--profile', 'web', 'remove', 'dsh-build-plugin'])
   const removedConfig = await run(['--profile', 'web', '--dump-config'])
   assert.equal(removedConfig.includes('dsh-build-plugin-skill-provider'), false)
+  assert.equal(removedConfig, baselineConfig, 'uninstall must restore the exact pre-install Profile composition')
   console.log(JSON.stringify({ status: 'passed', dshVersion: (await run(['--version'])).trim(), install: true, composition: true, coldStart: true, authenticatedHostHttp: 200, uninstall: true, disposableProfile: true }))
 } catch (error) {
   console.error(JSON.stringify({ status: 'failed', stage, codes: error.codes ?? [], reason: error.message.startsWith('official DSH CLI') ? error.message : error.message.slice(0, 100) }))
