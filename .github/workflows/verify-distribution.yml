@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       releases: ${{ steps.window.outputs.releases }}
+      next_version: ${{ steps.window.outputs.next_version }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,6 +52,34 @@ jobs:
       - name: Install fixed DSH release in runner workspace
         env:
           DSH_VERSION: ${{ matrix.dsh-version }}
+        run: npm install --prefix .runtime --ignore-scripts --no-audit --no-fund --no-save "@deepseek-ai/dsh@$DSH_VERSION"
+        shell: bash
+      - name: Verify this bundle in a disposable Profile
+        env:
+          DSH_TEST_PLUGIN_SPEC: github:AI-Scarlett/build-dsh-plugin#${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/test-disposable-dsh-bundle.mjs .runtime/node_modules/@deepseek-ai/dsh/lib/bin.js
+        shell: bash
+
+  dsh-next-channel:
+    needs: resolve-dsh-window
+    if: needs.resolve-dsh-window.outputs.next_version != ''
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10'
+      - name: Install official DSH next-channel release in runner workspace
+        env:
+          DSH_VERSION: ${{ needs.resolve-dsh-window.outputs.next_version }}
         run: npm install --prefix .runtime --ignore-scripts --no-audit --no-fund --no-save "@deepseek-ai/dsh@$DSH_VERSION"
         shell: bash
       - name: Verify this bundle in a disposable Profile

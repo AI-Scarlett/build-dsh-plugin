@@ -8,11 +8,11 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.5.1')
+  assert.equal(pkg.version, '0.5.2')
   assert.equal(pkg.main, './src/index.mjs')
   assert.ok(pkg.files.includes('src'))
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
-  assert.equal(pkg.dsh.compatibility.dsh, '>=0.1.0-rc.8 <0.2.0 || 0.1.5-alpha.1 || 0.1.5-alpha.2 || 0.1.5-rc.1 || 0.1.5-rc.2')
+  assert.equal(pkg.dsh.compatibility.dsh, '>=0.1.0-rc.8 <0.2.0 || 0.1.5-alpha.1 || 0.1.5-alpha.2 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.2.0-rc.1')
   for (const release of ['0.1.2-alpha.5', '0.1.2-rc.1', '0.1.3-alpha.1', '0.1.5-alpha.1', '0.1.5-alpha.2']) {
     assert.equal(pkg.dsh.compatibility.dshReleases[release], 'compatible')
   }
@@ -22,6 +22,10 @@ test('repository root is a lifecycle-free DSH Skill adapter', async () => {
       install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed',
     })
   }
+  assert.equal(pkg.dsh.compatibility.dshReleases['0.2.0-rc.1'], 'compatible')
+  assert.deepEqual(pkg.dsh.compatibility.dshOperations['0.2.0-rc.1'], {
+    install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed',
+  })
   assert.equal(pkg.dependencies, undefined)
   assert.equal(pkg.peerDependencies, undefined)
   for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
@@ -35,16 +39,23 @@ test('CI compatibility matrix consumes the ordered official latest-three resolve
     return {
       authority: 'official-github-releases-and-npm-published-versions',
       releaseCount: 3,
-      latestVersion: '0.1.7-rc.1',
-      releases: ['0.1.7-alpha.1', '0.1.7-alpha.2', '0.1.7-rc.1'],
+      latestVersion: '0.1.7-rc.2',
+      releases: ['0.1.7-alpha.2', '0.1.7-rc.1', '0.1.7-rc.2'],
+      channels: [
+        { tag: 'latest', kind: 'preview', version: '0.1.7-rc.2' },
+        { tag: 'next', kind: 'preview', version: '0.2.0-rc.1' },
+      ],
     }
   })
   assert.deepEqual(result, {
-    latestVersion: '0.1.7-rc.1',
-    releases: ['0.1.7-alpha.1', '0.1.7-alpha.2', '0.1.7-rc.1'],
+    latestVersion: '0.1.7-rc.2',
+    releases: ['0.1.7-alpha.2', '0.1.7-rc.1', '0.1.7-rc.2'],
+    nextVersion: '0.2.0-rc.1',
   })
   const workflow = await readFile(new URL('.github/workflows/verify-distribution.yml', root), 'utf8')
   assert.match(workflow, /fromJSON\(needs\.resolve-dsh-window\.outputs\.releases\)/)
+  assert.match(workflow, /needs\.resolve-dsh-window\.outputs\.next_version != ''/)
+  assert.match(workflow, /dsh-next-channel:/)
   assert.match(workflow, /scripts\/test-disposable-dsh-bundle\.mjs/)
   assert.doesNotMatch(workflow, /test-disposable-dsh-bundle\.mjs[^\n]*\$PWD/)
   assert.doesNotMatch(workflow, /@deepseek-ai\/dsh@0\.1\.5-rc\.2/)
@@ -56,7 +67,26 @@ test('latest-three resolver fails closed when the official window is incomplete'
     releaseCount: 3,
     latestVersion: '0.1.7-rc.1',
     releases: ['0.1.7-alpha.1', '0.1.7-rc.1'],
+    channels: [],
   })), /complete ordered latest-three window/)
+})
+
+test('next channel resolves independently and fails closed on ambiguous authority', async () => {
+  const resolve = async channels => resolveDshUpgradeMatrix(async () => ({
+    authority: 'official-github-releases-and-npm-published-versions',
+    releaseCount: 3,
+    latestVersion: '0.1.7-rc.2',
+    releases: ['0.1.7-alpha.2', '0.1.7-rc.1', '0.1.7-rc.2'],
+    channels,
+  }))
+  assert.equal((await resolve([{ tag: 'next', kind: 'preview', version: '0.2.0-rc.1' }])).nextVersion, '0.2.0-rc.1')
+  assert.equal((await resolve([{ tag: 'next', kind: 'preview', version: '0.1.7-rc.1' }])).nextVersion, null)
+  await assert.rejects(resolve([{ tag: 'next', kind: 'stable', version: '0.2.0' }]), /next channel is malformed/)
+  await assert.rejects(resolve([{ tag: 'next', kind: 'preview', version: 'invalid' }]), /next channel is malformed/)
+  await assert.rejects(resolve([
+    { tag: 'next', kind: 'preview', version: '0.2.0-rc.1' },
+    { tag: 'next', kind: 'preview', version: '0.2.0-rc.2' },
+  ]), /duplicate next channels/)
 })
 
 test('disposable DSH bundle test scopes Profile and CLI operations to its temporary home', async () => {
