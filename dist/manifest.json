@@ -6,9 +6,9 @@
   "artifact": {
     "file": "build-dsh-plugin-0.5.2.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 314732,
+    "bytes": 314865,
     "regularFileCount": 30,
-    "sha256": "38bad1253d27f99caf897954970e8ef411dc7b82b1290ee7ec7b62d722af6bf0",
+    "sha256": "7eb7835831a706d11a7869217e99d0d4a34e06555ea2998e50984eabef56af74",
     "sha256File": "build-dsh-plugin-0.5.2.sha256",
     "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.2/build-dsh-plugin-0.5.2.zip",
     "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.2/build-dsh-plugin-0.5.2.sha256"
@@ -49,7 +49,7 @@
   "runtime": {
     "required": [
       "Agent support for SKILL.md or equivalent instruction loading",
-      "DSH >=0.1.0-rc.8 <0.2.0 || 0.2.0-rc.1; active latest-three 0.1.7-alpha.2, 0.1.7-rc.1, and 0.1.7-rc.2; next-channel compatibility is tested separately. Cross-platform PR matrix readback pending."
+      "DSH >=0.1.0-rc.8 <0.2.0 || 0.2.0-rc.1; active latest-three 0.1.7-alpha.2, 0.1.7-rc.1, and 0.1.7-rc.2; official next-channel compatibility tested separately. Both matrices passed on Linux, macOS, and Windows in GitHub Actions run 36516937038."
     ],
     "scripts": [
       "Node.js 18 or newer"
@@ -93,8 +93,8 @@
     "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
     "lifecycleAudit": "tested-static-only",
     "dsh017LatestThreeMatrix": "passed-in-GitHub-Actions-run-35957998009",
-    "dshActiveLatestThreeMatrix": "pending-PR-CI",
-    "dshNextChannel": "0.2.0-rc.1-local-disposable-linux-smoke-passed; cross-platform-PR-CI-pending"
+    "dshActiveLatestThreeMatrix": "passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
+    "dshNextChannel": "0.2.0-rc.1-passed-in-GitHub-Actions-run-36516937038-all-3-platforms"
   },
   "excluded": [
     "Obsidian vault notes",

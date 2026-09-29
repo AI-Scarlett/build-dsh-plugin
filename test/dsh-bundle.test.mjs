@@ -16,7 +16,7 @@ test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   for (const release of ['0.1.2-alpha.5', '0.1.2-rc.1', '0.1.3-alpha.1', '0.1.5-alpha.1', '0.1.5-alpha.2']) {
     assert.equal(pkg.dsh.compatibility.dshReleases[release], 'compatible')
   }
-  for (const release of ['0.1.7-alpha.1', '0.1.7-alpha.2', '0.1.7-rc.1']) {
+  for (const release of ['0.1.7-alpha.1', '0.1.7-alpha.2', '0.1.7-rc.1', '0.1.7-rc.2']) {
     assert.equal(pkg.dsh.compatibility.dshReleases[release], 'compatible')
     assert.deepEqual(pkg.dsh.compatibility.dshOperations[release], {
       install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed',

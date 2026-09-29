@@ -23,7 +23,7 @@ shasum -a 256 -c build-dsh-plugin-0.5.2.sha256
 unzip -l build-dsh-plugin-0.5.2.zip
 ```
 
-期望 SHA-256：`38bad1253d27f99caf897954970e8ef411dc7b82b1290ee7ec7b62d722af6bf0`
+期望 SHA-256：`7eb7835831a706d11a7869217e99d0d4a34e06555ea2998e50984eabef56af74`
 
 ## 安装到另一套 Codex
 
@@ -112,4 +112,4 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 
 本 Skill 使用 MIT License。发行 ZIP 内包含 `build-dsh-plugin/LICENSE`；复制、修改或再分发时必须保留该版权与许可声明。
 
-0.5.2 的 DSH 0.2.0-rc.1 disposable install/start/uninstall/rollback smoke 已在本机 Linux 通过；active latest-three 与 next-channel 跨平台矩阵、真实 Profile、公共 GitHub Release 发布及下载链接回读仍分别验收。
+0.5.2 的 active latest-three 与 next-channel 跨平台隔离 Profile 矩阵已在 GitHub Actions run `36516937038` 通过；真实 Profile、公共 GitHub Release 发布及下载链接回读仍分别验收。

@@ -9,7 +9,7 @@
 - `build-dsh-plugin/` 是可部署到 Codex、Claude、Grok 等兼容 `SKILL.md` 的 Agent Skill；
 - 仓库根目录的 `package.json` + `cordis.patch.yml` 是标准 DSH Bundle；Patch 只插入插件自有的 `dsh-build-plugin` Host 适配器，再由适配器通过 `0.1.2-alpha.4`、`0.1.2-alpha.5` 和 `0.1.2-rc.1` 都提供的公开 `ctx.skills.register()` 服务接口，将同一份 Skill 挂载到 DSH。
 
-DSH Bundle 0.5.2 将受支持范围扩展到已经验证的 `0.2.0-rc.1`，并继续从官方 GitHub Releases 与 npm 动态推导 active 最新三版本；当官方 `next` 通道有更高预览版时另设兼容矩阵，而不取代 active latest-three。当前解析到的 active 窗口为 `0.1.7-alpha.2`、`0.1.7-rc.1`、`0.1.7-rc.2`，`next` 为 `0.2.0-rc.1`。`0.2.0-rc.1` 已通过本地 Linux disposable install/start/uninstall/rollback smoke；最新 PR 的跨平台矩阵仍须以 GitHub CI 结果为准。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
+DSH Bundle 0.5.2 将受支持范围扩展到已验证的 `0.2.0-rc.1`，并继续从官方 GitHub Releases 与 npm 动态推导 active 最新三版本；官方 `next` 通道另设独立兼容矩阵，不取代 active latest-three。当前 active 窗口为 `0.1.7-alpha.2`、`0.1.7-rc.1`、`0.1.7-rc.2`，`next` 为 `0.2.0-rc.1`；两条矩阵均已在 GitHub Actions run `36516937038` 的 Linux、macOS、Windows 隔离 Profile 中通过。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
 
 用户最低只需提供三项信息：
 
@@ -122,9 +122,9 @@ node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candida
 
 - 发行版本：`2026.09.29.1`
 - 固定发行标签：[`v0.5.2`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.5.2)
-- ZIP SHA-256：`38bad1253d27f99caf897954970e8ef411dc7b82b1290ee7ec7b62d722af6bf0`
+- ZIP SHA-256：`7eb7835831a706d11a7869217e99d0d4a34e06555ea2998e50984eabef56af74`
 - ZIP 内常规文件数：30（含官方 DSH 动态版本解析器、候选审计器、Tool 卡片契约、可信 Catalog 模板与独立 `LICENSE`）
-- Active 最新三版本 `0.1.7-alpha.2`、`0.1.7-rc.1`、`0.1.7-rc.2` 由 CI 动态验证；官方 `next` 通道 `0.2.0-rc.1` 另设 Linux/macOS/Windows disposable matrix。当前 next-channel 本地 Linux smoke 已通过，PR CI 结果尚待运行。
+- Active 最新三版本 `0.1.7-alpha.2`、`0.1.7-rc.1`、`0.1.7-rc.2` 与官方 `next` 通道 `0.2.0-rc.1` 分开动态解析；GitHub Actions run `36516937038` 的两个矩阵均在 Linux、macOS、Windows 隔离环境通过。
 
 `dist/manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。README 与 INSTALL 只负责说明；DSH STORE 等分发页面必须读取“最新 GitHub Release → 对应标签下的 manifest”，不能把这些字段复制成另一份运行时数据。这样即使网页缓存暂时未刷新，下载页仍会把同一固定标签的 manifest、ZIP 和校验值绑定在一起。
 
@@ -132,4 +132,4 @@ node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candida
 
 本项目采用 [MIT License](LICENSE)。你可以使用、复制、修改、合并、发布、分发、再许可或销售本项目的副本，但必须在副本或主要部分中保留原版权声明和许可声明。发行 ZIP 内也包含相同许可证，解压后仍能保留授权信息。
 
-0.5.2 的 DSH 0.2.0-rc.1 disposable install/start/uninstall/rollback smoke 已在本机 Linux 通过；active latest-three 与 next-channel 跨平台矩阵、真实 Profile、公共 GitHub Release 发布及下载链接回读仍分别验收。
+0.5.2 的 active latest-three 与 next-channel 跨平台隔离 Profile 矩阵已在 GitHub Actions run `36516937038` 通过；真实 Profile、公共 GitHub Release 发布及下载链接回读仍分别验收。
