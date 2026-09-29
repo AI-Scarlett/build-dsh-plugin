@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "planId": "dsh-020-compatibility-refresh-20260929-build-dsh-plugin",
+  "type": "first-party-dsh-compatibility-refresh",
+  "status": "verified-ready-for-pr",
+  "createdAt": "2026-09-29T03:00:00Z",
+  "baseCommit": "16393774a52bf93c02ebd461d1fee426a3b3ac83",
+  "objective": "Update the build-dsh-plugin DSH Bundle and its Skill guidance for the current official active latest-three DSH releases plus a separately tested next-channel DSH 0.2.0-rc.1 release.",
+  "authority": {
+    "repository": "AI-Scarlett/build-dsh-plugin",
+    "baseCommit": "16393774a52bf93c02ebd461d1fee426a3b3ac83",
+    "observedLatestThree": ["0.1.7-alpha.2", "0.1.7-rc.1", "0.1.7-rc.2"],
+    "observedNextChannel": "0.2.0-rc.1",
+    "source": "official DSH GitHub Releases and published npm versions",
+    "delivery": "CI-checked source pull request; public release remains a separate release operation"
+  },
+  "scope": [
+    "docs/ops/dsh-020-compatibility-refresh-plan-20260929.json",
+    ".github/workflows/verify-distribution.yml",
+    "scripts/resolve-dsh-upgrade-matrix.mjs",
+    "package.json",
+    "test/dsh-bundle.test.mjs",
+    "build-dsh-plugin/SKILL.md",
+    "README.md",
+    "dist/manifest.json",
+    "dist/INSTALL.md",
+    "dist/build-dsh-plugin-0.5.2.zip",
+    "dist/build-dsh-plugin-0.5.2.sha256"
+  ],
+  "preconditions": {
+    ".github/workflows/verify-distribution.yml": "b939a0c55a3a33cadc88684550cc919612fc4b3d9d1e09cbb488133b0eed4722",
+    "scripts/resolve-dsh-upgrade-matrix.mjs": "bf58b13a307dd032baf41bbd8d22b29ccd36533b6c67bee2a02c5912dcce39eb",
+    "package.json": "654772be59c3b2050dbe31b35aea0e941bcf429878009adc2195d691a2d790b0",
+    "test/dsh-bundle.test.mjs": "2bf307f0cf1ce9eb79eae2ff104d1cdf9854e05afaf3f284aa3185ff4b960311",
+    "build-dsh-plugin/SKILL.md": "424044df11fdefbb8a6fe54f4c06a52c5a6c13d66af8eecbd2a691c278652976",
+    "README.md": "73aaeb557cfff338c9d3b92fcf2b0669edff21867c40fc8a1f08417859234eb5",
+    "dist/manifest.json": "67749d82ea72d63cde09bdc22d7b04b188564838582e485100e0c223f1ea1806",
+    "dist/INSTALL.md": "b8c81ce8d146fbf9cf9d87c3d522aeeb61f9e8925b06ff21898d9720e400a4d5",
+    "docs/ops/dsh-020-compatibility-refresh-plan-20260929.json": null,
+    "dist/build-dsh-plugin-0.5.2.zip": null,
+    "dist/build-dsh-plugin-0.5.2.sha256": null
+  },
+  "gates": [
+    "Preserve the official active latest-three resolver and add a separate, validated next-channel compatibility matrix.",
+    "Use disposable DSH_HOME fixtures and fixed argument arrays for install, config composition, cold start, uninstall, and exact rollback.",
+    "Do not mark any exact release compatible unless all operation gates pass.",
+    "Rebuild and hash the versioned Skill archive reproducibly; verify its root, files, license, and manifest checksums.",
+    "Run npm run check and CI; use an auditable PR.",
+    "Do not publish a GitHub Release or alter the public Catalog in this plan."
+  ],
+  "prohibitions": [
+    "Do not modify DSH source or any @deepseek-ai/* package.",
+    "Do not access or change ~/.dsh or real Profiles.",
+    "Do not contact plugin authors or trigger unrelated GitHub automation."
+  ],
+  "rollback": {
+    "source": "Revert the exact merged source commit; preserve the existing v0.5.1 archive and history.",
+    "release": "No public release operation in this plan.",
+    "profile": "No real Profile mutation in this plan."
+  },
+  "healthChecks": [
+    "Local disposable DSH 0.2.0-rc.1 install/start/uninstall/rollback smoke passes.",
+    "PR CI exercises active latest-three and official next-channel versions.",
+    "npm run check verifies tests and exact archive/checksum consistency.",
+    "Final change list is contained exactly within scope."
+  ],
+  "verification": {
+    "localNpmCheck": "passed",
+    "disposableDsh020Rc1": "passed: install, composition, cold start, authenticated host, uninstall; disposable Profile restored",
+    "upgradePlanPreconditions": "passed",
+    "distributionArchive": "passed: 0.5.2 archive verified with SHA-256",
+    "githubPrCi": "pending",
+    "publicReleaseAndCatalogPin": "not in scope"
+  }
+}
