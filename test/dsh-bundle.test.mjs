@@ -8,7 +8,7 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.5.2')
+  assert.equal(pkg.version, '0.5.3')
   assert.equal(pkg.main, './src/index.mjs')
   assert.ok(pkg.files.includes('src'))
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
@@ -26,6 +26,12 @@ test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   assert.deepEqual(pkg.dsh.compatibility.dshOperations['0.2.0-rc.1'], {
     install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed',
   })
+  for (const release of ['0.2.0-rc.2', '0.2.1-alpha.1', '0.2.1-alpha.2']) {
+    assert.equal(pkg.dsh.compatibility.dshReleases[release], 'unknown')
+    assert.deepEqual(pkg.dsh.compatibility.dshOperations[release], {
+      install: 'unknown', start: 'unknown', uninstall: 'unknown', rollback: 'unknown',
+    })
+  }
   assert.equal(pkg.dependencies, undefined)
   assert.equal(pkg.peerDependencies, undefined)
   for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
@@ -39,18 +45,19 @@ test('CI compatibility matrix consumes the ordered official latest-three resolve
     return {
       authority: 'official-github-releases-and-npm-published-versions',
       releaseCount: 3,
-      latestVersion: '0.1.7-rc.2',
-      releases: ['0.1.7-alpha.2', '0.1.7-rc.1', '0.1.7-rc.2'],
+      latestVersion: '0.2.1-alpha.2',
+      releases: ['0.2.0-rc.2', '0.2.1-alpha.1', '0.2.1-alpha.2'],
       channels: [
-        { tag: 'latest', kind: 'preview', version: '0.1.7-rc.2' },
-        { tag: 'next', kind: 'preview', version: '0.2.0-rc.1' },
+        { tag: 'latest', kind: 'preview', version: '0.2.0-rc.2' },
+        { tag: 'next', kind: 'preview', version: '0.2.0-rc.2' },
+        { tag: 'alpha', kind: 'preview', version: '0.2.1-alpha.2' },
       ],
     }
   })
   assert.deepEqual(result, {
-    latestVersion: '0.1.7-rc.2',
-    releases: ['0.1.7-alpha.2', '0.1.7-rc.1', '0.1.7-rc.2'],
-    nextVersion: '0.2.0-rc.1',
+    latestVersion: '0.2.1-alpha.2',
+    releases: ['0.2.0-rc.2', '0.2.1-alpha.1', '0.2.1-alpha.2'],
+    nextVersion: null,
   })
   const workflow = await readFile(new URL('.github/workflows/verify-distribution.yml', root), 'utf8')
   assert.match(workflow, /fromJSON\(needs\.resolve-dsh-window\.outputs\.releases\)/)
@@ -65,8 +72,8 @@ test('latest-three resolver fails closed when the official window is incomplete'
   await assert.rejects(resolveDshUpgradeMatrix(async () => ({
     authority: 'official-github-releases-and-npm-published-versions',
     releaseCount: 3,
-    latestVersion: '0.1.7-rc.1',
-    releases: ['0.1.7-alpha.1', '0.1.7-rc.1'],
+    latestVersion: '0.2.1-alpha.2',
+    releases: ['0.2.0-rc.2', '0.2.1-alpha.1'],
     channels: [],
   })), /complete ordered latest-three window/)
 })
@@ -75,17 +82,17 @@ test('next channel resolves independently and fails closed on ambiguous authorit
   const resolve = async channels => resolveDshUpgradeMatrix(async () => ({
     authority: 'official-github-releases-and-npm-published-versions',
     releaseCount: 3,
-    latestVersion: '0.1.7-rc.2',
-    releases: ['0.1.7-alpha.2', '0.1.7-rc.1', '0.1.7-rc.2'],
+    latestVersion: '0.2.1-alpha.2',
+    releases: ['0.2.0-rc.2', '0.2.1-alpha.1', '0.2.1-alpha.2'],
     channels,
   }))
-  assert.equal((await resolve([{ tag: 'next', kind: 'preview', version: '0.2.0-rc.1' }])).nextVersion, '0.2.0-rc.1')
-  assert.equal((await resolve([{ tag: 'next', kind: 'preview', version: '0.1.7-rc.1' }])).nextVersion, null)
+  assert.equal((await resolve([{ tag: 'next', kind: 'preview', version: '0.2.2-rc.1' }])).nextVersion, '0.2.2-rc.1')
+  assert.equal((await resolve([{ tag: 'next', kind: 'preview', version: '0.2.1-alpha.1' }])).nextVersion, null)
   await assert.rejects(resolve([{ tag: 'next', kind: 'stable', version: '0.2.0' }]), /next channel is malformed/)
   await assert.rejects(resolve([{ tag: 'next', kind: 'preview', version: 'invalid' }]), /next channel is malformed/)
   await assert.rejects(resolve([
-    { tag: 'next', kind: 'preview', version: '0.2.0-rc.1' },
-    { tag: 'next', kind: 'preview', version: '0.2.0-rc.2' },
+    { tag: 'next', kind: 'preview', version: '0.2.2-rc.1' },
+    { tag: 'next', kind: 'preview', version: '0.2.2-rc.2' },
   ]), /duplicate next channels/)
 })
 
@@ -110,7 +117,7 @@ test('bundle inserts only its own Host adapter', async () => {
   assert.doesNotMatch(patch, /(?:remove|patch):/)
 })
 
-test('Host adapter registers the packaged Skill through the public alpha.4, alpha.5, and rc.1 service seam', async () => {
+test('Host adapter registers the packaged Skill through the injected public Skills service', async () => {
   const source = await readFile(new URL('src/index.mjs', root), 'utf8')
   assert.match(source, /export const name = 'dsh-build-plugin'/)
   assert.match(source, /export const inject = \['skills'\]/)
@@ -123,7 +130,7 @@ test('Host adapter registers the packaged Skill through the public alpha.4, alph
   assert.doesNotMatch(source, /(?:writeFile|appendFile|rename|unlink|rm|copyFile)\s*\(/)
 })
 
-test('Host adapter emits the rc.1 SkillRegistration shape without private imports', async () => {
+test('Host adapter emits the minimal SkillRegistration shape without private imports', async () => {
   const module = await import(new URL('../src/index.mjs?rc1-contract', import.meta.url))
   const registrations = []
   module.apply({ skills: { register: value => { registrations.push(value); return () => {} } } })
@@ -153,7 +160,8 @@ test('mounted Skill declares DSH and card-contract workflows', async () => {
   assert.match(cards, /generic.*terminal.*diff/s)
   assert.match(cards, /search.*read.*web/s)
   assert.match(skill, /official-dsh-releases\.mjs/)
-  assert.match(skill, /0\.1\.2-rc\.1/)
+  assert.match(skill, /run `node scripts\/official-dsh-releases\.mjs` and use its official active latest-three window/)
+  assert.doesNotMatch(skill, /0\.1\.2-rc\.1/)
   assert.match(skill, /registry\/candidates\.json/)
   assert.deepEqual(Object.keys(catalog.assurance), ['discovery', 'installability', 'runtime', 'securityReview'])
   assert.deepEqual(Object.keys(catalog.compatibility.dshOperations), ['0.1.3-alpha.2', '0.1.5-alpha.1', '0.1.5-alpha.2'])
