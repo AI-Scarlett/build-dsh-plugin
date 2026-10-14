@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "planId": "dsh-021-latest-three-compatibility-20261014-build-dsh-plugin",
+  "type": "first-party-dsh-compatibility-refresh",
+  "status": "e3-matrix-passed-final-ci-pending",
+  "createdAt": "2026-10-14T08:30:00Z",
+  "baseCommit": "5039626d229309f76b3c934b1a420e7f9d7ccb4e",
+  "objective": "Update Build DSH Plugin to the live official DSH latest-three release window and ensure the DSH Desktop-bundled release is covered by the same fixed-version E3 compatibility matrix.",
+  "authority": {
+    "repository": "AI-Scarlett/build-dsh-plugin",
+    "baseCommit": "5039626d229309f76b3c934b1a420e7f9d7ccb4e",
+    "source": "official DSH GitHub Releases and npm metadata",
+    "observedLatestThree": [
+      "0.2.0-rc.2",
+      "0.2.1-alpha.1",
+      "0.2.1-alpha.2"
+    ],
+    "desktopFeedVersion": "0.2.0-rc.2",
+    "desktopFeeds": [
+      "https://download.deepseek.com/dsh-desk/feeds/mac-arm64/nightly-mac.yml",
+      "https://download.deepseek.com/dsh-desk/feeds/win-x64/nightly.yml"
+    ],
+    "delivery": "fixed-commit source PR; public Release/Catalog transition is a separate gated operation",
+    "observedAt": "2026-10-14T08:34:47Z",
+    "resolverOutput": {
+      "latestVersion": "0.2.1-alpha.2",
+      "releases": [
+        "0.2.0-rc.2",
+        "0.2.1-alpha.1",
+        "0.2.1-alpha.2"
+      ],
+      "nextVersion": null
+    },
+    "desktopUiAcceptance": "unverified; no official DSH Desktop installation is available on this machine"
+  },
+  "scope": [
+    "package.json",
+    "test/dsh-bundle.test.mjs",
+    "README.md",
+    "build-dsh-plugin/SKILL.md",
+    "docs/Skill简介-500字内.md",
+    "docs/Skill完整介绍-10000字内.md",
+    "dist/manifest.json",
+    "dist/INSTALL.md",
+    "docs/ops/dsh-021-compatibility-refresh-plan-20261014.json",
+    "dist/build-dsh-plugin-0.5.3.zip",
+    "dist/build-dsh-plugin-0.5.3.sha256"
+  ],
+  "preconditions": {
+    "package.json": "10f1b3c4a83d07c425dba6bcc6db7b7cba119219d2f480fd18876b5eaeedf8f0",
+    "test/dsh-bundle.test.mjs": "a5abacc59cac03bc3bf64c567e9c865481b46670e14582a12002d01a6ec45701",
+    "README.md": "61ba5c3418451067adaa25f1fa515b0c1cd93a23a0c3247d86c2d727c3580239",
+    "build-dsh-plugin/SKILL.md": "ff4f761ada46c4645f1ba86b055b43de62b7a15ac843a5c2b8d2b6836a9969f0",
+    "docs/Skill简介-500字内.md": "d50b9db2cb7312ac379b46bf4375f8490a45e756b46ea2a9373bb22956fe195d",
+    "docs/Skill完整介绍-10000字内.md": "6b3dc4d4ac75b0a69101a419929868c2e5cf9ec7ecb0fd301832834ef7b28dfc",
+    "dist/manifest.json": "6b4e9098669afbd2bbe96f3de8f1c36f304ba50cdf0f50dd2649648129eac858",
+    "dist/INSTALL.md": "392d0ef701653effd281d3a69338ca3911b7a16e9c24786155ff623b98992d10",
+    "dist/build-dsh-plugin-0.5.3.zip": null,
+    "dist/build-dsh-plugin-0.5.3.sha256": null
+  },
+  "gates": [
+    "Keep compatibility fail-closed and add exact dshReleases plus install/start/uninstall/rollback evidence only when all per-release E3 tests pass.",
+    "Use official @deepseek-ai/dsh versions via CI on Linux, macOS, and Windows; install only in fresh DSH_HOME/profile directories under disposable runners, with fixed arguments and ignore-scripts.",
+    "Do not edit DSH source or any @deepseek-ai/* package; never touch ~/.dsh or a real Profile.",
+    "Run npm run check, verify the fixed-source distribution ZIP/SHA/manifest, and check exact plan scope against baseCommit.",
+    "Submit an auditable CI-checked pull request; stop before real Profile changes or Desktop UI claims unless separately verified.",
+    "Keep 0.2.0-rc.2, 0.2.1-alpha.1, and 0.2.1-alpha.2 unknown and outside the declared compatibility range until the PR matrix passes for all three versions on all three operating systems.",
+    "Read the exact resolved matrix from the GitHub Actions run and compare it with this plan before recording any release status; if the version window drifted, refresh the plan and rerun.",
+    "After the E3 matrix passes, add exact release/operation statuses, rerun npm run check and the PR matrix, then stop before public Release, Catalog mutation, or real Desktop/Profile acceptance.",
+    "The first E3 matrix passed; exact compatibility records are now promoted from unknown and must pass final local check plus a second PR matrix before the source PR is accepted."
+  ],
+  "prohibitions": [
+    "No DSH source tree changes",
+    "No @deepseek-ai/* source or package changes",
+    "No real DSH Profile/install/restart",
+    "No third-party install/prepare/build/test/runtime execution",
+    "No author outreach"
+  ],
+  "rollback": {
+    "source": "Revert the exact source PR commit; preserve v0.5.2 and all historical releases.",
+    "profile": "Not touched; no rollback needed."
+  },
+  "downstream": {
+    "release": "Not authorized/performed by this source plan; do not publish a GitHub Release or update the Store Catalog here.",
+    "catalog": "Do not change the Registry until the merged fixed Commit has current E3 evidence and a separate Catalog plan/policy gate.",
+    "desktop": "The desktop feed version is included in the CLI runtime matrix, but Desktop UI/Profile E4 remains unverified and is not inferred."
+  },
+  "verification": {
+    "localCheck": "npm run check passed before final metadata promotion: 25 tests, 3 Skill self-tests, distribution ZIP/SHA/manifest verification.",
+    "latestThreeE3": {
+      "runId": 38536547013,
+      "commit": "96208ef0034da23002acb3c1292e5413f0638876",
+      "versions": [
+        "0.2.0-rc.2",
+        "0.2.1-alpha.1",
+        "0.2.1-alpha.2"
+      ],
+      "platforms": [
+        "ubuntu-latest",
+        "windows-latest",
+        "macos-latest"
+      ],
+      "passedJobs": 9,
+      "totalJobs": 9,
+      "operations": [
+        "install",
+        "start",
+        "uninstall",
+        "rollback"
+      ]
+    },
+    "desktop": "Desktop feed engine 0.2.0-rc.2 was included in the CLI matrix; official Desktop UI/Profile E4 remains unverified."
+  }
+}

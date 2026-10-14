@@ -1,6 +1,6 @@
 {
   "name": "dsh-build-plugin",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "DSH Skill adapter for the build-dsh-plugin development workflow",
   "private": true,
   "type": "module",
@@ -18,7 +18,7 @@
       "patch": "./cordis.patch.yml"
     },
     "compatibility": {
-      "dsh": ">=0.1.0-rc.8 <0.2.0 || 0.1.5-alpha.1 || 0.1.5-alpha.2 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.2.0-rc.1",
+      "dsh": ">=0.1.0-rc.8 <0.2.0 || 0.1.5-alpha.1 || 0.1.5-alpha.2 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-alpha.1 || 0.2.1-alpha.2",
       "dshReleases": {
         "0.1.2-alpha.2": "compatible",
         "0.1.2-alpha.3": "compatible",
@@ -36,14 +36,20 @@
         "0.1.7-alpha.2": "compatible",
         "0.1.7-rc.1": "compatible",
         "0.1.7-rc.2": "compatible",
-        "0.2.0-rc.1": "compatible"
+        "0.2.0-rc.1": "compatible",
+        "0.2.0-rc.2": "compatible",
+        "0.2.1-alpha.1": "compatible",
+        "0.2.1-alpha.2": "compatible"
       },
       "dshOperations": {
         "0.1.7-alpha.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
         "0.1.7-alpha.2": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
         "0.1.7-rc.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
         "0.1.7-rc.2": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
-        "0.2.0-rc.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" }
+        "0.2.0-rc.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
+        "0.2.0-rc.2": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
+        "0.2.1-alpha.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
+        "0.2.1-alpha.2": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" }
       }
     }
   },
