@@ -9,7 +9,7 @@
 - `build-dsh-plugin/` 是可部署到 Codex、Claude、Grok 等兼容 `SKILL.md` 的 Agent Skill；
 - 仓库根目录的 `package.json` + `cordis.patch.yml` 是标准 DSH Bundle；Patch 只插入插件自有的 `dsh-build-plugin` Host 适配器，再由适配器通过注入的公开 `ctx.skills.register()` 服务接口，将同一份 Skill 挂载到 DSH。该接口及完整 Bundle 生命周期由随官方最新三版本动态更新的隔离 CI 矩阵验证。
 
-DSH Bundle `0.5.3` 正在把官方最新三版本 `0.2.0-rc.2`、`0.2.1-alpha.1`、`0.2.1-alpha.2` 纳入固定兼容验收；在 Linux、macOS、Windows 的 E3 隔离矩阵全部通过前，新版本状态保持 `unknown` 且不加入允许范围。验收窗口由官方 GitHub Releases 与 npm 双源解析。官方 Mac/Windows 桌面 feed 当前都指向 `0.2.0-rc.2`，因此其引擎版本包含在 CLI 矩阵中；CLI 隔离矩阵不能代替桌面应用 UI/Profile 端到端验收。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
+DSH Bundle `0.5.3` 已通过官方最新三版本 `0.2.0-rc.2`、`0.2.1-alpha.1`、`0.2.1-alpha.2` 的 Linux、macOS、Windows disposable Profile 矩阵（GitHub Actions run `38536547013`，9/9）。验收窗口由官方 GitHub Releases 与 npm 双源解析。官方 Mac/Windows 桌面 feed 当前都指向 `0.2.0-rc.2`，因此其引擎版本包含在 CLI 矩阵中；CLI 隔离矩阵不能代替桌面应用 UI/Profile 端到端验收。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
 
 用户最低只需提供三项信息：
 
@@ -104,7 +104,7 @@ node scripts/audit-marketplace-entry.mjs /path/to/plugin --entry /path/to/entry.
 node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candidates /path/to/candidates.json --catalog /path/to/catalog.json
 ```
 
-通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 0.5.3 对当前最新三版本的兼容及安装/启动/卸载/回滚结果，只有在固定计划对应的跨平台隔离 Profile 矩阵全部通过后才会标记为通过。矩阵从官方权威动态解析，并在 Linux、macOS、Windows 的一次性 Profile 中执行；历史接口记录保留为历史证据，不替代当前版本矩阵。待运行或失败结果不得写成通过。预期测试输出包含 `BRIEF_TEST_OK`、`MARKETPLACE_TEST_OK` 和 `CANDIDATE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
+通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 0.5.3 的当前最新三版本已逐一通过 Linux、macOS、Windows disposable Profile 的安装/启动/卸载/精确回滚矩阵（run `38536547013`）；历史接口记录仍不替代当前版本矩阵。后续每次发布都必须重新运行动态窗口矩阵。预期测试输出包含 `BRIEF_TEST_OK`、`MARKETPLACE_TEST_OK` 和 `CANDIDATE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
 
 `npm test` 还会验证根目录 DSH Bundle、隔离 Provider、无生命周期脚本、卡片契约文档，以及审计器对不支持的卡片 discriminant、缺失 replay/fallback/bounds 测试的 fail-closed 行为。
 
@@ -124,7 +124,7 @@ node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candida
 - 固定发行标签：[`v0.5.3`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.5.3)
 - ZIP SHA-256：`97cff74dfc76b07a2ec7381889ed622186c183ff861897ce3edf20dc709e57aa`（候选发行文件；Release 需通过独立发布门）
 - ZIP 内常规文件数：30（含官方 DSH 动态版本解析器、候选审计器、Tool 卡片契约、可信 Catalog 模板与独立 `LICENSE`）
-- 本次最新三版本目标为 `0.2.0-rc.2`、`0.2.1-alpha.1`、`0.2.1-alpha.2`；实际通过状态以 v0.5.3 PR CI 为准。官方桌面当前使用 `0.2.0-rc.2`，桌面 UI/Profile 验收仍与 CLI 矩阵分开。
+- 本次最新三版本 `0.2.0-rc.2`、`0.2.1-alpha.1`、`0.2.1-alpha.2` 已由 v0.5.3 PR CI 全平台验证通过。官方桌面当前使用 `0.2.0-rc.2`，桌面 UI/Profile 验收仍与 CLI 矩阵分开。
 
 `dist/manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。README 与 INSTALL 只负责说明；DSH STORE 等分发页面必须读取“最新 GitHub Release → 对应标签下的 manifest”，不能把这些字段复制成另一份运行时数据。这样即使网页缓存暂时未刷新，下载页仍会把同一固定标签的 manifest、ZIP 和校验值绑定在一起。
 

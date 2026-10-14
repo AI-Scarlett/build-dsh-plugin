@@ -55,7 +55,7 @@ unzip build-dsh-plugin-0.5.3.zip -d ~/.codex/skills
 
 ## DSH 原生入口
 
-active 最新三个 DSH 版本由官方 GitHub Releases 与 npm 双源动态解析，官方 `next` 通道只有在高于最新版本时才启动独立矩阵。0.5.3 候选计划针对 `0.2.0-rc.2`、`0.2.1-alpha.1`、`0.2.1-alpha.2`；这些版本在对应 PR 的 Linux、macOS、Windows disposable Profile 矩阵全部通过前，兼容状态保持 unknown 且不加入允许范围。官方桌面 feed 当前为 `0.2.0-rc.2`，其引擎版本纳入 CLI 矩阵；Desktop UI/Profile E4 未在此流程中验证。Bundle 通过唯一条目 `dsh-build-plugin-skill-provider` 隔离挂载同一份 Skill，不安装 Codex、Claude 或 Grok Runtime，也不覆盖官方 Skill Provider。固定 GitHub Commit 的远程/商城入口需要在对应 Commit 合并并通过独立 Registry 校验后使用。
+active 最新三个 DSH 版本由官方 GitHub Releases 与 npm 双源动态解析，官方 `next` 通道只有在高于最新版本时才启动独立矩阵。0.5.3 的 `0.2.0-rc.2`、`0.2.1-alpha.1`、`0.2.1-alpha.2` 已通过 Linux、macOS、Windows disposable Profile 的安装/启动/卸载/回滚矩阵（GitHub Actions run `38536547013`，9/9）。官方桌面 feed 当前为 `0.2.0-rc.2`，其引擎版本纳入 CLI 矩阵；Desktop UI/Profile E4 未在此流程中验证。Bundle 通过唯一条目 `dsh-build-plugin-skill-provider` 隔离挂载同一份 Skill，不安装 Codex、Claude 或 Grok Runtime，也不覆盖官方 Skill Provider。固定 GitHub Commit 的远程/商城入口需要在对应 Commit 合并并通过独立 Registry 校验后使用。
 
 真实 Profile 安装仍属于单独操作，需要计划、确认、备份、健康检查和回滚。E3 验收必须在首次 CLI 调用前设置临时 `DSH_HOME`；不要在真实 DSH home 下对不存在的 Profile 运行 `dsh plugin --profile <name> --help`，因为 CLI 可能先创建 Profile 再显示帮助。
 
@@ -112,4 +112,4 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 
 本 Skill 使用 MIT License。发行 ZIP 内包含 `build-dsh-plugin/LICENSE`；复制、修改或再分发时必须保留该版权与许可声明。
 
-0.5.3 的 active latest-three 与 next-channel 跨平台隔离 Profile 矩阵已在 GitHub Actions run `36516937038` 通过；真实 Profile、公共 GitHub Release 发布及下载链接回读仍分别验收。
+0.5.3 的 latest-three 跨平台 E3 矩阵已在 GitHub Actions run `38536547013` 通过。该矩阵不等于真实 DSH Profile、官方桌面 UI、公共 Release 或下载链接的验收；这些状态各自独立。

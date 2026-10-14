@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
   "distributionVersion": "0.5.3",
-  "createdAt": "2026-10-14T08:34:47Z",
+  "createdAt": "2026-10-14T08:42:54Z",
   "artifact": {
     "file": "build-dsh-plugin-0.5.3.zip",
     "archiveRoot": "build-dsh-plugin/",
@@ -49,7 +49,7 @@
   "runtime": {
     "required": [
       "Agent support for SKILL.md or equivalent instruction loading",
-      "DSH latest-three plan: 0.2.0-rc.2, 0.2.1-alpha.1, 0.2.1-alpha.2 (observed 2026-10-14T08:34:47Z); exact versions remain unknown and outside the allowed range until the Linux/macOS/Windows disposable-Profile matrix passes."
+      "DSH latest-three compatibility passed in GitHub Actions run 38536547013 for 0.2.0-rc.2, 0.2.1-alpha.1, and 0.2.1-alpha.2 on Ubuntu, Windows, and macOS (install/start/uninstall/rollback). Official Desktop UI/Profile E4 remains unverified."
     ],
     "scripts": [
       "Node.js 18 or newer"
@@ -87,18 +87,18 @@
     "rootTestFilenameClassification": "passed",
     "dsh015Alpha1SourceContract": "passed",
     "dsh015Alpha2SourceContract": "passed",
-    "dshLatestThreeWindow": "0.2.0-rc.2,0.2.1-alpha.1,0.2.1-alpha.2 (observed 2026-10-14T08:34:47Z; matrix pending)",
+    "dshLatestThreeWindow": "0.2.0-rc.2,0.2.1-alpha.1,0.2.1-alpha.2 (passed in PR #19 GitHub Actions run 38536547013; 9/9 OS/version jobs)",
     "dsh015Rc1InstallDumpConfigColdStart": "passed",
     "dsh015Rc2InstallDumpConfigColdStart": "passed",
     "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
     "lifecycleAudit": "tested-static-only",
     "dsh017LatestThreeMatrix": "passed-in-GitHub-Actions-run-35957998009",
-    "dshActiveLatestThreeMatrix": "pending-for-plan-dsh-021-compatibility-refresh-20261014",
+    "dshActiveLatestThreeMatrix": "passed-in-GitHub-Actions-run-38536547013-all-3-platforms",
     "dshNextChannel": "no-version-newer-than-latest-active-as-of-2026-10-14T08:34:47Z",
     "dshPreviousLatestThreeWindow": "0.1.7-alpha.2,0.1.7-rc.1,0.1.7-rc.2",
     "dshPreviousActiveLatestThreeMatrix": "passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
     "dshPreviousNextChannel": "0.2.0-rc.1-passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
-    "dshDesktopFeedEngine": "0.2.0-rc.2 in both official feeds; Desktop UI/Profile E4 unverified"
+    "dshDesktopFeedEngine": "0.2.0-rc.2 in both official feeds and included in CLI matrix run 38536547013; Desktop UI/Profile E4 unverified"
   },
   "excluded": [
     "Obsidian vault notes",
@@ -113,7 +113,7 @@
     "The repository and the distributed Skill are licensed under the MIT License.",
     "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies.",
     "The Skill keeps discovery candidates non-installable and separate from trust-evidenced catalog proposals; it does not silently modify or deploy the STORE repository.",
-    "The repository-root DSH Bundle 0.5.3 includes the same packaged Skill; latest-three DSH versions remain unknown and outside its declared allow range until the exact cross-platform E3 matrix passes.",
-    "The DSH Desktop feed engine version is included in the planned CLI matrix, but no Desktop UI/Profile acceptance is inferred."
+    "The DSH Desktop feed engine version is included in the planned CLI matrix, but no Desktop UI/Profile acceptance is inferred.",
+    "Latest-three DSH E3 install/start/uninstall/rollback passed on Ubuntu, Windows, and macOS in GitHub Actions run 38536547013; official Desktop UI/Profile E4 is not inferred."
   ]
 }

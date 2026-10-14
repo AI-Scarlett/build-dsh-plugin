@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "planId": "dsh-021-latest-three-compatibility-20261014-build-dsh-plugin",
   "type": "first-party-dsh-compatibility-refresh",
-  "status": "in_progress",
+  "status": "e3-matrix-passed-final-ci-pending",
   "createdAt": "2026-10-14T08:30:00Z",
   "baseCommit": "5039626d229309f76b3c934b1a420e7f9d7ccb4e",
   "objective": "Update Build DSH Plugin to the live official DSH latest-three release window and ensure the DSH Desktop-bundled release is covered by the same fixed-version E3 compatibility matrix.",
@@ -66,7 +66,8 @@
     "Submit an auditable CI-checked pull request; stop before real Profile changes or Desktop UI claims unless separately verified.",
     "Keep 0.2.0-rc.2, 0.2.1-alpha.1, and 0.2.1-alpha.2 unknown and outside the declared compatibility range until the PR matrix passes for all three versions on all three operating systems.",
     "Read the exact resolved matrix from the GitHub Actions run and compare it with this plan before recording any release status; if the version window drifted, refresh the plan and rerun.",
-    "After the E3 matrix passes, add exact release/operation statuses, rerun npm run check and the PR matrix, then stop before public Release, Catalog mutation, or real Desktop/Profile acceptance."
+    "After the E3 matrix passes, add exact release/operation statuses, rerun npm run check and the PR matrix, then stop before public Release, Catalog mutation, or real Desktop/Profile acceptance.",
+    "The first E3 matrix passed; exact compatibility records are now promoted from unknown and must pass final local check plus a second PR matrix before the source PR is accepted."
   ],
   "prohibitions": [
     "No DSH source tree changes",
@@ -80,8 +81,34 @@
     "profile": "Not touched; no rollback needed."
   },
   "downstream": {
-    "release": "Not performed by this source plan",
+    "release": "Not authorized/performed by this source plan; do not publish a GitHub Release or update the Store Catalog here.",
     "catalog": "Do not change the Registry until the merged fixed Commit has current E3 evidence and a separate Catalog plan/policy gate.",
     "desktop": "The desktop feed version is included in the CLI runtime matrix, but Desktop UI/Profile E4 remains unverified and is not inferred."
+  },
+  "verification": {
+    "localCheck": "npm run check passed before final metadata promotion: 25 tests, 3 Skill self-tests, distribution ZIP/SHA/manifest verification.",
+    "latestThreeE3": {
+      "runId": 38536547013,
+      "commit": "96208ef0034da23002acb3c1292e5413f0638876",
+      "versions": [
+        "0.2.0-rc.2",
+        "0.2.1-alpha.1",
+        "0.2.1-alpha.2"
+      ],
+      "platforms": [
+        "ubuntu-latest",
+        "windows-latest",
+        "macos-latest"
+      ],
+      "passedJobs": 9,
+      "totalJobs": 9,
+      "operations": [
+        "install",
+        "start",
+        "uninstall",
+        "rollback"
+      ]
+    },
+    "desktop": "Desktop feed engine 0.2.0-rc.2 was included in the CLI matrix; official Desktop UI/Profile E4 remains unverified."
   }
 }
