@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "planId": "build-dsh-plugin-v0.5.3-github-release-20261014",
+  "type": "fixed-commit-github-release",
+  "status": "prepared",
+  "createdAt": "2026-10-14T11:19:00Z",
+  "baseCommit": "470da3fa6a5f0ca959089294dec122b39ecc7dfc",
+  "sourcePullRequest": "https://github.com/AI-Scarlett/build-dsh-plugin/pull/19",
+  "targetVersion": "0.5.3",
+  "targetTag": "v0.5.3",
+  "sourceReleaseCommit": "exact merged PR commit; resolve after merge and never move tag after publication",
+  "scope": [
+    "package.json",
+    "README.md",
+    "build-dsh-plugin/SKILL.md",
+    "docs/Skill简介-500字内.md",
+    "docs/Skill完整介绍-10000字内.md",
+    "dist/manifest.json",
+    "dist/INSTALL.md",
+    "dist/build-dsh-plugin-0.5.3.zip",
+    "dist/build-dsh-plugin-0.5.3.sha256",
+    "docs/ops/dsh-021-publication-plan-20261014.json",
+    "GitHub Release v0.5.3 only"
+  ],
+  "preconditions": {
+    "package.json": "a9f2a589d2dacce2adbd55411dd59be14fb4bca9cb7c7ff4ff1f5bcdeff4f517",
+    "README.md": "5cdb25b3bbdda82c5b01af35b362e4ba1101baed44040de29bd2332332dfd14c",
+    "build-dsh-plugin/SKILL.md": "4ca4649b04acbcbf5492b5c0d13d5a48cb8aa4afbb90919bb648c38f986aee63",
+    "docs/Skill简介-500字内.md": "e5970f5263eef31fadea6f78950e45601dcf9cbab67e9ad3b9cfdb80cfb1a656",
+    "docs/Skill完整介绍-10000字内.md": "2294900549dcc65eed3e8b1e0541a195e83a170b9241cd8702cc8b66bbf258f5",
+    "dist/manifest.json": "a8c9ce725ea6766e393698bca0ee9369c6e94203c6529cd413479fb715379ca8",
+    "dist/INSTALL.md": "fb8f6fe251d7a1f41e91af1502663677c4060dbf2c0cb55cb3fe9f8c6f1e612e",
+    "dist/build-dsh-plugin-0.5.3.zip": "97cff74dfc76b07a2ec7381889ed622186c183ff861897ce3edf20dc709e57aa",
+    "dist/build-dsh-plugin-0.5.3.sha256": "59b977bde104307fec03bb524d95e9a10ed797f6983ae94ff76f9ed32a2707ec"
+  },
+  "releaseAssets": {
+    "dist/INSTALL.md": {
+      "sha256": "fb8f6fe251d7a1f41e91af1502663677c4060dbf2c0cb55cb3fe9f8c6f1e612e",
+      "bytes": 5994
+    },
+    "dist/build-dsh-plugin-0.5.3.zip": {
+      "sha256": "97cff74dfc76b07a2ec7381889ed622186c183ff861897ce3edf20dc709e57aa",
+      "bytes": 116491
+    },
+    "dist/build-dsh-plugin-0.5.3.sha256": {
+      "sha256": "59b977bde104307fec03bb524d95e9a10ed797f6983ae94ff76f9ed32a2707ec",
+      "bytes": 93
+    }
+  },
+  "gates": [
+    "Confirm the release tag v0.5.3 and GitHub Release do not already exist; never overwrite or move an existing tag.",
+    "Merge only PR #19 at the reviewed final head after all required CI, CodeQL, npm run check, and exact latest-three × OS E3 jobs pass; fail if head changes.",
+    "Resolve the exact merged PR commit and verify its tree includes these unchanged release asset hashes before creating the tag.",
+    "Create v0.5.3 at that exact merged commit; publish only the ZIP, SHA sidecar, and manifest already bound above.",
+    "Do not update the DSH-Store Catalog in this workflow; Catalog admission remains a separate deterministic policy workflow and fixed-Commit plan.",
+    "Do not modify DSH core, any @deepseek-ai package, a real DSH Profile/Desktop, or run third-party package lifecycle code.",
+    "Do not send author messages or bypass the central author-contact ledger."
+  ],
+  "rollback": {
+    "source": "Preserve v0.5.2 and the published v0.5.3 tag. If the release is defective, use a new corrective PR and a new version; do not delete or retarget the tag.",
+    "uncertainOutcome": "Read GitHub tag and Release state before any retry; never retry asset creation blindly or replace existing assets."
+  },
+  "verification": {
+    "preMergeCi": "passed for base head; rerun is required after adding this plan",
+    "latestThreeE3": {
+      "versions": [
+        "0.2.0-rc.2",
+        "0.2.1-alpha.1",
+        "0.2.1-alpha.2"
+      ],
+      "platforms": [
+        "ubuntu-latest",
+        "macos-latest",
+        "windows-latest"
+      ],
+      "jobsPassed": 9,
+      "jobsTotal": 9
+    },
+    "releaseReadback": "pending",
+    "catalog": "not in scope"
+  }
+}
