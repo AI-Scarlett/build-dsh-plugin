@@ -166,9 +166,9 @@ function validateEntryShape(entry, report, releaseWindow) {
       add(report, 'errors', 'MKT014', `assurance.${level} must be an evidence record`)
       continue
     }
-    if (!['verified', 'failed', 'unknown', 'not-applicable'].includes(evidence.status)) add(report, 'errors', 'MKT014', `assurance.${level}.status is invalid`, evidence.status)
-    if (evidence.status === 'verified' && (typeof evidence.method !== 'string' || evidence.method.trim() === '' || !isoDate(evidence.checkedAt) || !httpsUrl(evidence.evidenceUrl))) {
-      add(report, 'errors', 'MKT014', `assurance.${level} verified evidence requires method, checkedAt, and HTTPS evidenceUrl`)
+    if (!['verified', 'partial', 'failed', 'unknown', 'not-applicable'].includes(evidence.status)) add(report, 'errors', 'MKT014', `assurance.${level}.status is invalid`, evidence.status)
+    if (['verified', 'partial'].includes(evidence.status) && (typeof evidence.method !== 'string' || evidence.method.trim() === '' || !isoDate(evidence.checkedAt) || !httpsUrl(evidence.evidenceUrl))) {
+      add(report, 'errors', 'MKT014', `assurance.${level} verified/partial evidence requires method, checkedAt, and HTTPS evidenceUrl`)
     }
     if (evidence.dshRelease !== null && evidence.dshRelease !== undefined && dshReleaseVersion(evidence.dshRelease) === null) add(report, 'errors', 'MKT014', `assurance.${level}.dshRelease is invalid`)
     if (!Array.isArray(evidence.systems) || !Array.isArray(evidence.profiles)) add(report, 'errors', 'MKT014', `assurance.${level} systems/profiles must be arrays`)
@@ -207,6 +207,41 @@ function validateEntryShape(entry, report, releaseWindow) {
         if (!['passed', 'failed', 'unknown'].includes(compatibility.dshOperations[release][operation])) {
           add(report, 'errors', 'MKT015', `compatibility.dshOperations.${release}.${operation} must be passed, failed, or unknown`)
         }
+      }
+    }
+    const desktopClaimed = strings(compatibility.profiles).includes('desktop')
+    for (const level of ['installability', 'runtime']) {
+      const evidence = entry.assurance?.[level]
+      if (!desktopClaimed && strings(evidence?.profiles).includes('desktop')) {
+        add(report, 'errors', 'MKT016', `assurance.${level} claims Desktop evidence but compatibility.profiles omits desktop`)
+      }
+    }
+    if (desktopClaimed && entry.status === 'approved') {
+      const desktopEvidence = ['installability', 'runtime'].map(level => ({
+        level,
+        evidence: entry.assurance?.[level],
+      }))
+      for (const { level, evidence } of desktopEvidence) {
+        if (evidence?.status !== 'verified' || !strings(evidence.profiles).includes('desktop')) {
+          add(report, 'errors', 'MKT016', `approved Desktop entries require verified assurance.${level} evidence whose profiles include desktop`)
+        }
+        if (!releaseWindow.releases.includes(evidence?.dshRelease)) {
+          add(report, 'errors', 'MKT016', `assurance.${level}.dshRelease must identify an exact release in the current official window`, evidence?.dshRelease ?? null)
+        } else if (compatibility.dshReleases?.[evidence.dshRelease] !== 'compatible') {
+          add(report, 'errors', 'MKT016', `assurance.${level}.dshRelease must be marked compatible in compatibility.dshReleases`, evidence.dshRelease)
+        } else {
+          const operations = compatibility.dshOperations?.[evidence.dshRelease]
+          for (const operation of DSH_OPERATIONS) {
+            if (operations?.[operation] !== 'passed') {
+              add(report, 'errors', 'MKT016', `Desktop release ${evidence.dshRelease} requires compatibility.dshOperations.${evidence.dshRelease}.${operation} = passed`)
+            }
+          }
+        }
+      }
+      const installRelease = entry.assurance?.installability?.dshRelease
+      const runtimeRelease = entry.assurance?.runtime?.dshRelease
+      if (installRelease && runtimeRelease && installRelease !== runtimeRelease) {
+        add(report, 'errors', 'MKT016', 'Desktop installability and runtime evidence must target the same exact DSH release', { installRelease, runtimeRelease })
       }
     }
   }

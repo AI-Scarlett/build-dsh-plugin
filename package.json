@@ -1,6 +1,6 @@
 {
   "name": "dsh-build-plugin",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "DSH Skill adapter for the build-dsh-plugin development workflow",
   "private": true,
   "type": "module",
@@ -39,17 +39,78 @@
         "0.2.0-rc.1": "compatible",
         "0.2.0-rc.2": "compatible",
         "0.2.1-alpha.1": "compatible",
-        "0.2.1-alpha.2": "compatible"
+        "0.2.1-alpha.2": "compatible",
+        "0.2.1-rc.4": "unknown",
+        "0.2.1-rc.5": "unknown",
+        "0.2.2-alpha.2": "unknown"
       },
       "dshOperations": {
-        "0.1.7-alpha.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
-        "0.1.7-alpha.2": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
-        "0.1.7-rc.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
-        "0.1.7-rc.2": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
-        "0.2.0-rc.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
-        "0.2.0-rc.2": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
-        "0.2.1-alpha.1": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" },
-        "0.2.1-alpha.2": { "install": "passed", "start": "passed", "uninstall": "passed", "rollback": "passed" }
+        "0.1.7-alpha.1": {
+          "install": "passed",
+          "start": "passed",
+          "uninstall": "passed",
+          "rollback": "passed"
+        },
+        "0.1.7-alpha.2": {
+          "install": "passed",
+          "start": "passed",
+          "uninstall": "passed",
+          "rollback": "passed"
+        },
+        "0.1.7-rc.1": {
+          "install": "passed",
+          "start": "passed",
+          "uninstall": "passed",
+          "rollback": "passed"
+        },
+        "0.1.7-rc.2": {
+          "install": "passed",
+          "start": "passed",
+          "uninstall": "passed",
+          "rollback": "passed"
+        },
+        "0.2.0-rc.1": {
+          "install": "passed",
+          "start": "passed",
+          "uninstall": "passed",
+          "rollback": "passed"
+        },
+        "0.2.0-rc.2": {
+          "install": "passed",
+          "start": "passed",
+          "uninstall": "passed",
+          "rollback": "passed"
+        },
+        "0.2.1-alpha.1": {
+          "install": "passed",
+          "start": "passed",
+          "uninstall": "passed",
+          "rollback": "passed"
+        },
+        "0.2.1-alpha.2": {
+          "install": "passed",
+          "start": "passed",
+          "uninstall": "passed",
+          "rollback": "passed"
+        },
+        "0.2.1-rc.4": {
+          "install": "unknown",
+          "start": "unknown",
+          "uninstall": "unknown",
+          "rollback": "unknown"
+        },
+        "0.2.1-rc.5": {
+          "install": "unknown",
+          "start": "unknown",
+          "uninstall": "unknown",
+          "rollback": "unknown"
+        },
+        "0.2.2-alpha.2": {
+          "install": "unknown",
+          "start": "unknown",
+          "uninstall": "unknown",
+          "rollback": "unknown"
+        }
       }
     }
   },

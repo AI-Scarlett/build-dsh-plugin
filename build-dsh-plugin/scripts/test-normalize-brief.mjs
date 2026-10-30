@@ -50,6 +50,9 @@ try {
   assert.equal(minimal.body.analysis.status, 'READY_WITH_ASSUMPTIONS')
   assert.equal(minimal.body.analysis.generationReady, true)
   assert.equal(minimal.body.analysis.riskClass, 'R0')
+  assert.deepEqual(minimal.body.normalized.targets.hosts, ['dsh-web', 'dsh-desktop'])
+  assert.deepEqual(minimal.body.analysis.targetHosts, ['dsh-web', 'dsh-desktop'])
+  assert.ok(minimal.body.analysis.assumptions.some(item => item.includes('target hosts default to DSH Web and official DSH Desktop')))
   assert.ok(minimal.body.analysis.assumptions.length >= 5)
   assert.equal(minimal.body.normalized.presentation.defaultCard, 'derive')
   assert.equal(minimal.body.normalized.presentation.customClientCards, false)
@@ -75,6 +78,16 @@ try {
   assert.equal(card.body.analysis.toolCardContractRequired, true)
   assert.ok(card.body.analysis.architectureCandidates.includes('tool-card'))
   assert.equal(card.body.normalized.presentation.defaultCard, 'search')
+
+  const webOnlyPath = join(tempRoot, 'web-only.json')
+  await writeFile(webOnlyPath, JSON.stringify({
+    problem: 'A Web-only route needs to expose a local dashboard.',
+    outcome: { expectedResult: 'Show the dashboard in DSH Web.', acceptanceCriteria: ['The route renders in a disposable Web Profile.'] },
+    targets: { hosts: ['dsh-web'] },
+  }))
+  const webOnly = run(webOnlyPath)
+  assert.equal(webOnly.status, 0)
+  assert.deepEqual(webOnly.body.normalized.targets.hosts, ['dsh-web'])
 
   const incompletePath = join(tempRoot, 'incomplete.json')
   await writeFile(incompletePath, JSON.stringify({

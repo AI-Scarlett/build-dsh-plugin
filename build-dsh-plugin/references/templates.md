@@ -135,6 +135,7 @@ Never execute a plan after any hash, source, target, phrase, expiry, or used sta
 - [ ] fixed-source `updatedAt`/`observedAt`/provenance are evidence-backed
 - [ ] discovery/installability/runtime/security-review assurance states are independent and unknown remains unknown
 - [ ] official latest-three DSH window was refreshed and its exact install/start/uninstall/rollback evidence matrix is explicit
+- [ ] if Desktop is claimed: `desktop` is declared only with verified Desktop installability/runtime evidence, exact DSH release match, passing operation matrix, and separate official Desktop acceptance status
 - [ ] featured/promotion/sponsorship does not alter verification state
 - [ ] install target pinned to full commit
 - [ ] version consistency tests updated
@@ -250,6 +251,7 @@ Remove any row that has no user outcome, bounded caller, failure behavior, and t
 - Catalog ID / categories / intended status:
 - Permissions / external dependencies / compatibility evidence:
 - official latest-three DSH window and operation evidence: install/start/uninstall/rollback matrix
+- Desktop target, exact DSH runtime/app version, `compatibility.profiles`, Desktop installability/runtime assurance, and profile-by-release evidence matrix (or explicitly not claimed)
 - Fixed-source freshness: updatedAt / observedAt / provenance
 - Assurance: discovery / installability / runtime / security review
 - Promotion/featured independence check: PASS/PARTIAL/BLOCKED

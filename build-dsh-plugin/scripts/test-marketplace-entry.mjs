@@ -6,10 +6,19 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
+import { officialDshReleaseWindow } from './official-dsh-releases.mjs'
 
 const scriptDir = dirname(fileURLToPath(import.meta.url))
 const auditor = join(scriptDir, 'audit-marketplace-entry.mjs')
 let dshMetadataPath = null
+const dshMetadata = {
+  name: '@deepseek-ai/dsh',
+  'dist-tags': { latest: '9.8.0-rc.1', next: '9.8.0-rc.1', alpha: '9.8.0-alpha.2' },
+  versions: {
+    '9.8.0-alpha.1': {}, '9.8.0-alpha.2': {}, '9.8.0-rc.1': {},
+  },
+}
+const testReleases = officialDshReleaseWindow(dshMetadata).releases
 
 function run(root, entry = null, registry = null) {
   const args = [auditor, root, '--json']
@@ -59,11 +68,9 @@ function entry(overrides = {}) {
     entryIds: ['dsh-example-plugin'],
     status: 'approved',
     compatibility: {
-      dsh: '>=0.1.0-rc.7',
-      dshReleases: { '0.1.2-alpha.4': 'compatible', '0.1.2-alpha.5': 'compatible', '0.1.2-rc.1': 'compatible' },
-      dshOperations: {
-        '0.1.2-alpha.4': { ...unknownOperations }, '0.1.2-alpha.5': { ...unknownOperations }, '0.1.2-rc.1': { ...unknownOperations },
-      },
+      dsh: `>=${testReleases[0]}`,
+      dshReleases: Object.fromEntries(testReleases.map(release => [release, 'compatible'])),
+      dshOperations: Object.fromEntries(testReleases.map(release => [release, { ...unknownOperations }])),
       node: '>=22', systems: ['macOS'], profiles: ['web'],
     },
     details: {
@@ -88,14 +95,7 @@ async function writePlugin(root, packagePath = 'package.json', packageJson = man
 const fixture = await mkdtemp(join(tmpdir(), 'dsh-marketplace-audit-'))
 try {
   dshMetadataPath = join(fixture, 'dsh-metadata.json')
-  await writeFile(dshMetadataPath, `${JSON.stringify({
-    name: '@deepseek-ai/dsh',
-    'dist-tags': { latest: '0.1.2-rc.1', next: '0.1.3-next.1', alpha: '0.1.2-alpha.5', rc: '0.1.2-rc.1' },
-    versions: {
-      '0.1.0-rc.8': {}, '0.1.1-rc.1': {}, '0.1.1-rc.2': {},
-      '0.1.2-alpha.2': {}, '0.1.2-alpha.3': {}, '0.1.2-alpha.4': {}, '0.1.2-alpha.5': {}, '0.1.2-rc.1': {}, '0.1.3-next.1': {},
-    },
-  }, null, 2)}\n`)
+  await writeFile(dshMetadataPath, `${JSON.stringify(dshMetadata, null, 2)}\n`)
   const registryPath = join(fixture, 'catalog.json')
   await writeFile(registryPath, `${JSON.stringify({
     schemaVersion: 1,
@@ -116,7 +116,62 @@ try {
   assert.equal(direct.body.status, 'READY_FOR_PINNED_SOURCE_VERIFICATION')
   assert.equal(direct.body.route, 'direct')
   assert.deepEqual(direct.body.entryIds, ['dsh-example-plugin'])
-  assert.deepEqual(direct.body.dshReleaseWindow.releases, ['0.1.2-alpha.4', '0.1.2-alpha.5', '0.1.2-rc.1'])
+  assert.deepEqual(direct.body.dshReleaseWindow.releases, testReleases)
+
+  const partialEvidenceRoot = join(fixture, 'partial-evidence')
+  await mkdir(partialEvidenceRoot)
+  await writePlugin(partialEvidenceRoot)
+  const partialEvidencePath = join(partialEvidenceRoot, 'entry.json')
+  const partialRecord = {
+    status: 'partial', method: 'bounded-source-review', checkedAt: '2026-08-20T00:00:00Z',
+    evidenceUrl: `https://github.com/example/dsh-example-plugin/commit/${'a'.repeat(40)}`,
+    dshRelease: testReleases[0], systems: ['macOS'], profiles: ['web'], summary: 'Static checks passed; runtime remains pending.',
+  }
+  await writeFile(partialEvidencePath, `${JSON.stringify(entry({ assurance: {
+    ...entry().assurance, installability: { ...partialRecord }, runtime: { ...partialRecord },
+  } }), null, 2)}\n`)
+  const partialEvidence = run(partialEvidenceRoot, partialEvidencePath, registryPath)
+  assert.equal(partialEvidence.code, 0)
+  assert.equal(partialEvidence.body.status, 'READY_FOR_PINNED_SOURCE_VERIFICATION')
+
+  const desktopRoot = join(fixture, 'desktop')
+  await mkdir(desktopRoot)
+  await writePlugin(desktopRoot)
+  const desktopEntryPath = join(desktopRoot, 'entry.json')
+  const desktopRelease = testReleases.at(-1)
+  const desktopEvidence = {
+    status: 'verified', method: 'disposable-official-desktop-contract', checkedAt: '2026-08-20T00:00:00Z',
+    evidenceUrl: `https://github.com/example/dsh-example-plugin/commit/${'a'.repeat(40)}`,
+    dshRelease: desktopRelease, systems: ['macOS'], profiles: ['desktop'], summary: 'Disposable Desktop host acceptance.',
+  }
+  const desktopBase = entry()
+  const desktopRecord = entry({
+    assurance: {
+      ...desktopBase.assurance,
+      installability: { ...desktopEvidence },
+      runtime: { ...desktopEvidence },
+    },
+    compatibility: {
+      ...desktopBase.compatibility,
+      profiles: ['web', 'desktop'],
+      dshOperations: {
+        ...desktopBase.compatibility.dshOperations,
+        [desktopRelease]: { install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed' },
+      },
+    },
+  })
+  await writeFile(desktopEntryPath, `${JSON.stringify(desktopRecord, null, 2)}\n`)
+  const desktop = run(desktopRoot, desktopEntryPath, registryPath)
+  assert.equal(desktop.code, 0)
+  assert.equal(desktop.body.status, 'READY_FOR_PINNED_SOURCE_VERIFICATION')
+
+  const desktopWithoutEvidencePath = join(desktopRoot, 'entry-without-desktop-evidence.json')
+  await writeFile(desktopWithoutEvidencePath, `${JSON.stringify(entry({
+    compatibility: { ...entry().compatibility, profiles: ['web', 'desktop'] },
+  }), null, 2)}\n`)
+  const desktopWithoutEvidence = run(desktopRoot, desktopWithoutEvidencePath, registryPath)
+  assert.equal(desktopWithoutEvidence.code, 1)
+  assert.ok(desktopWithoutEvidence.body.errors.some(item => item.code === 'MKT016'))
 
   const monorepoRoot = join(fixture, 'monorepo')
   await mkdir(monorepoRoot)
@@ -173,7 +228,7 @@ try {
   await writeFile(evidenceEntry, `${JSON.stringify(entry({
     featured: true,
     assurance: { ...entry().assurance, runtime: { ...entry().assurance.runtime, status: 'verified' } },
-    compatibility: { ...entry().compatibility, dshOperations: { ...entry().compatibility.dshOperations, '0.1.2-alpha.4': { install: 'passed' } } },
+    compatibility: { ...entry().compatibility, dshOperations: { ...entry().compatibility.dshOperations, [testReleases[0]]: { install: 'passed' } } },
   }), null, 2)}\n`)
   const evidence = run(evidenceRoot, evidenceEntry, registryPath)
   assert.equal(evidence.code, 1)

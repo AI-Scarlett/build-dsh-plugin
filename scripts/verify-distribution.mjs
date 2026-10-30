@@ -80,7 +80,7 @@ for (const expected of ['presentCall', 'presentResult', 'presentationMeta', 'liv
   requireText(cardContract, expected, 'card contract')
 }
 if (!archivedFiles.includes(manifest.entrypoints.cardContract)) throw new Error('ZIP does not contain the card contract')
-for (const entrypoint of ['candidateAudit', 'candidateTests', 'candidateEntryTemplate', 'catalogEntryTemplate', 'officialDshReleases']) {
+for (const entrypoint of ['candidateAudit', 'candidateTests', 'candidateEntryTemplate', 'catalogEntryTemplate', 'officialDshReleases', 'desktopGuide']) {
   if (!archivedFiles.includes(manifest.entrypoints[entrypoint])) throw new Error(`ZIP does not contain ${entrypoint}`)
 }
 if (manifest.verification.candidateTests !== 'CANDIDATE_TEST_OK') throw new Error('candidate audit evidence is missing')

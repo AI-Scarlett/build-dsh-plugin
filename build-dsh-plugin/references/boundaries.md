@@ -120,7 +120,7 @@ For model Tools, keep four contracts separate:
 
 Presenters run on live and replay paths. They must be deterministic pure functions of validated args and durable result fields: no I/O, current session/Profile reads, clock, randomness, mutable globals, or extra permissions. Use bounded JSON `output.presentationMeta` only when a completed card needs facts that model-facing text cannot reconstruct.
 
-Use only card discriminants exported by the inspected DSH version. The contract re-inspected on `0.1.2-rc.1` preserves the `0.1.2-alpha.4`/`alpha.5` vocabulary: pending calls support `generic`, `terminal`, and `diff`; completed results support `generic`, `terminal`, `diff`, `search`, `read`, and `web`. Preserve a meaningful generic fallback, truthful truncation/total/status fields, and soft degradation for malformed old records or incapable clients.
+Use only card discriminants exported by the inspected DSH version. The vocabulary listed in [card-contract.md](card-contract.md) was last checked on an earlier DSH preview and is historical; inspect the current target release's Tool package and Host-to-Client bridge before implementing a card. Preserve a meaningful generic fallback, truthful truncation/total/status fields, and soft degradation for malformed old records or incapable clients.
 
 Do not put secrets, full private files, unbounded args, system/plugin context, or model reasoning in `rawInput`, content, diffs, sources, or durable metadata. Do not register a Client `tool.call.toolview` key that replaces an official Tool card. Read [card-contract.md](card-contract.md) for the selection matrix, decision analysis, and evidence gates.
 
@@ -214,6 +214,8 @@ Stop mutation, installation, or release when any blocker exists:
 
 Hard blockers override the readiness score. Report `BLOCKED` and the smallest safe next action.
 
-## DSH 0.1.3-alpha.1 persistence and usage
+## Historical DSH 0.1.3-alpha.1 persistence and usage example
+
+This records a previous compatibility finding. It is not current API authority; recheck the exact DSH release and npm availability before using it.
 
 The official GitHub release may precede npm availability. Do not generate an npm upgrade command for a GitHub-only version. For the per-session persistence API, create/open returns an owned handle; append and flush before close, close readers in finally, and surface busy-owner errors. Never call the removed service-level append/inspect/readFrom methods on a handle-based host. Session format 2 embeds captured chunks in assistant/message or assistant/attempt data.stream; preserve retries as separate usage attempts and attribute successful failover to message.source. Test synthesized imports, same-project read bounds, durable restart, duplicate detection and incremental append with disposable data. Do not depend on an unpublished official package merely because a local source symlink makes it resolvable.
