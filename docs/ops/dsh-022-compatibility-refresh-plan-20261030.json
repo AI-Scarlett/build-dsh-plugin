@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "type": "first-party-dsh-latest-three-and-desktop-contract-refresh",
   "planId": "build-dsh-plugin-dsh-022-desktop-guidance-20261030",
-  "status": "source-prepared-latest-three-ci-pending",
+  "status": "compatibility-evidence-promoted-final-ci-pending",
   "createdAt": "2026-10-30T10:20:48.771Z",
   "repository": "AI-Scarlett/build-dsh-plugin",
   "baseCommit": "153ac8c77a492c7a69f280325b68f35004b79640",
@@ -114,7 +114,7 @@
     "test/dsh-bundle.test.mjs": "19ec44a71225ca93dab39f2e7a50ea93e92bd7d6a925b0f15ae15de97947c028"
   },
   "postconditions": {
-    "README.md": "093db13d03f3f073c495356bc78b210cc395250edcb43b75e9a2e07c832a07b0",
+    "README.md": "e6739dcd33bf0e93a39b845322673e08b3f2e5bfe7bc5fe28f0caf48965f8d85",
     "build-dsh-plugin/SKILL.md": "bb5555ad7fbc488534d2eba44b8e1c3ac71b4f507855fe95126fde0c5122017f",
     "build-dsh-plugin/assets/catalog-entry.template.json": "3cb0fb5a5ec8a0d7cfcd50f6bd48718409edcd72473c57e68f53a83d90df03ff",
     "build-dsh-plugin/assets/plugin-brief.template.json": "b990de6d49e6fa6174797b1938b4dc8fdc792a7f5987d3ce0093829c42888009",
@@ -130,16 +130,16 @@
     "build-dsh-plugin/scripts/official-dsh-releases.mjs": "ebfaaf0d661520504e426175e0187816744604560378d0023af1fc2323341a06",
     "build-dsh-plugin/scripts/test-marketplace-entry.mjs": "13cbd4a479aeaa854e4757c7b652c2eb7dacbbf5d216f42506b36ceb176ea906",
     "build-dsh-plugin/scripts/test-normalize-brief.mjs": "2cbb0085666f32dd8bcdfa19b32a91cb44414a1afb92f1a61b1f06f2dded72f5",
-    "dist/INSTALL.md": "b0a044cdf937a78899a1dd70ba133afd09fba5dfd759716738370b78f7178b1e",
+    "dist/INSTALL.md": "a19e308a0f7d90cfdc3c53bd2a1b41576a225d6364ef05450390754961f8e9b1",
     "dist/build-dsh-plugin-0.6.0.sha256": "8cdcd5512891adcd2fd70cebca2a19919abce9d51a0f47c9eccf8edcab1837fe",
     "dist/build-dsh-plugin-0.6.0.zip": "3d52ed7914507976f4cfd0eef4911b9befd3641ad425a105b021c471c6d3a342",
-    "dist/manifest.json": "5a34d8eb9352f6330f4b2674934e7ae11a12fed95e782e19331cfb891dc5b320",
+    "dist/manifest.json": "29c4a92d6d64fcff4a21c0e9568498cfc2e9bea5ccf32d33792686680a52019e",
     "docs/Skill完整介绍-10000字内.md": "ccf721f05129af743770a2a8a35533f4ca2f41fec0f857e144f115bcb7e8eecb",
     "docs/Skill简介-500字内.md": "f7dc63e9c5465834df9b66be3fefadd2f0e9166a83b8d7190ed94d9fddc05fed",
-    "docs/reviews/dsh-022-desktop-guidance-20261030.md": "c304bfeeaf204e505021d9972ae164e4f17c6bcf68d18b54dc5ce4bea72742cf",
-    "package.json": "6e09d7d08c0b858b42d281f308b44ecacba1f14344480ed500773a49bf8ecdce",
+    "docs/reviews/dsh-022-desktop-guidance-20261030.md": "df0e0e9f4686df0c4eb5a72c25a29de2809349cc2be7c0cb0792264ef374c4a4",
+    "package.json": "698ff3ff36c1747b097b3a5b6936a7166ea3f75ff5694a7d5447074de18481ac",
     "scripts/verify-distribution.mjs": "8211b2318a73ccd66a9c3f0c84e23b695c114203ddbc7411cd8b2a783bbd4e91",
-    "test/dsh-bundle.test.mjs": "fd490328c7540c8c49a4844cfcb6c334fd9cd654f8bf840be0103c13b5c10f33"
+    "test/dsh-bundle.test.mjs": "d0d4107607c9bd2ca5548f005852358090cfff631ce9aa1524060b589069c1f0"
   },
   "authorization": {
     "source": "direct-user-request-in-active-conversation",
@@ -151,16 +151,19 @@
   "gates": [
     "Re-run the official GitHub Releases plus npm latest-three resolver in CI and compare the exact resolved window with this plan; refresh scope and evidence if it changed.",
     "Require all nine fixed-version latest-three disposable Profile jobs to pass across Ubuntu, macOS, and Windows for install, start, uninstall, and rollback.",
-    "Keep current releases unknown until the first exact-head matrix passes; only then add exact compatible declarations and four passed operations for each release.",
+    "The first exact-head matrix passed; promote the three exact compatibility records and four operation statuses, then rerun npm run check and the live-resolved nine-job matrix on the final metadata-promoted head.",
     "After compatibility metadata promotion, rebuild the fixed ZIP and SHA sidecar, refresh manifest and both plans, rerun npm run check and exact-head CI, and merge only the final passing head.",
-    "Publish v0.6.0 only from the exact merged source commit using its fixed assets; read back GitHub tag, release, manifest, ZIP, SHA, and Build Lab page independently.",
+    "After final exact-head CI passes, publish v0.6.0 only from the exact merged source commit using its fixed assets and a separate fixed-release plan; read back GitHub tag, release, manifest, ZIP, SHA, and Build Lab page independently.",
     "Do not change DSH source or @deepseek-ai packages, real DSH Profile/Desktop, DSH-Store Catalog, production website files, or author-contact ledger in this source PR."
   ],
   "verification": {
     "localNpmRunCheck": "passed: 25 tests; BRIEF_TEST_OK; MARKETPLACE_TEST_OK; CANDIDATE_TEST_OK; DISTRIBUTION_OK",
     "npmPackDryRun": "passed: dsh-build-plugin-0.6.0.tgz",
-    "latestThreeMatrix": "pending-exact-head-CI",
-    "desktopUiProfileE4": "unverified-and-not-mutated"
+    "latestThreeMatrix": "passed on first source head in GitHub Actions run 41040198423; all nine exact-version/platform jobs succeeded",
+    "desktopUiProfileE4": "unverified-and-not-mutated",
+    "latestThreeMatrixRunId": 41040198423,
+    "latestThreeMatrixHeadSha": "89247b0fb91c032263ea98c92bc1f4f5aef6dc19",
+    "latestThreeMatrixFinalHead": "pending-metadata-promotion-CI"
   },
   "rollback": {
     "source": "Revert only this source PR through a new CI-checked PR; preserve immutable release tags.",

@@ -6,20 +6,20 @@ Update build-dsh-plugin to current official DSH releases and give users version-
 
 ## Changes
 
-- Sync the Agent Skill and references from the validated local skill, including the new official Desktop host contract.
+- Sync the Agent Skill and references from the current local Skill, including the official Desktop host contract.
 - Add Desktop guidance to the ZIP entrypoint and tests.
 - Prepare v0.6.0 package metadata, docs, and fixed ZIP/SHA/manifest.
-- Keep the current latest-three DSH operations marked unknown until exact-head GitHub Actions finishes.
+- Record the latest-three compatibility only after the exact version and platform matrix passed.
 
 ## Current official window
 
 - Latest three: 0.2.1-rc.4, 0.2.1-rc.5, 0.2.2-alpha.2.
 - macOS and Windows Desktop feeds: 0.2.1-rc.5.
-- The live resolver must run again in PR CI; a changed window invalidates these observed values.
+- The exact versions were independently resolved again in CI and matched this plan.
 
 ## Desktop rules added
 
-- Treat Web and official Desktop as separate hosts and profile targets.
+- Treat Web and official Desktop as separate hosts and Profile targets.
 - Use documented Host services and slots; declare Client module dependencies in the static inject list.
 - Use only the version-reviewed official Desktop plugin-manager API.
 - Require Desktop-specific install/runtime evidence before declaring Desktop catalog support.
@@ -29,9 +29,10 @@ Update build-dsh-plugin to current official DSH releases and give users version-
 
 - Local npm run check: passed (25 tests, Skill self-tests, ZIP/manifest/checksum verification).
 - npm pack --dry-run: passed.
-- Latest-three × Linux/macOS/Windows runtime matrix: pending PR CI.
-- Real DSH Desktop Profile/UI: unmodified and unverified by this source change.
-- Public GitHub Release and website: pending separate fixed-release and public-readback steps.
+- Latest-three × Linux/macOS/Windows disposable Profile matrix: passed in [GitHub Actions run 41040198423](https://github.com/AI-Scarlett/build-dsh-plugin/actions/runs/41040198423), including install, cold start, authenticated Host response, uninstall, and exact restoration of the baseline Profile composition.
+- The final metadata-promoted pull-request head must pass the same live-resolved matrix before merge.
+- Real DSH Desktop Profile/UI: unchanged and unverified by this source change.
+- Public GitHub Release and website: pending separate fixed-release plan and public readback.
 
 ## Recovery
 

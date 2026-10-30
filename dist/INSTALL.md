@@ -5,7 +5,7 @@
 ## 文件
 
 - `build-dsh-plugin-0.6.0.zip`：完整 Skill，ZIP 顶层是 `build-dsh-plugin/`。
-- `build-dsh-plugin-0.5.3.sha256`：ZIP 完整性校验。
+- `build-dsh-plugin-0.6.0.sha256`：ZIP 完整性校验。
 - `manifest.json`：版本、入口、依赖、校验状态和明确排除项。
 
 固定发行页：<https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.6.0>
@@ -19,8 +19,8 @@
 在本目录运行：
 
 ```bash
-shasum -a 256 -c build-dsh-plugin-0.5.3.sha256
-unzip -l build-dsh-plugin-0.5.3.zip
+shasum -a 256 -c build-dsh-plugin-0.6.0.sha256
+unzip -l build-dsh-plugin-0.6.0.zip
 ```
 
 期望 SHA-256：`3d52ed7914507976f4cfd0eef4911b9befd3641ad425a105b021c471c6d3a342`
@@ -38,7 +38,7 @@ unzip -l build-dsh-plugin-0.5.3.zip
 例如目标使用默认目录时，可以在确认同名目录不存在后执行：
 
 ```bash
-unzip build-dsh-plugin-0.5.3.zip -d ~/.codex/skills
+unzip build-dsh-plugin-0.6.0.zip -d ~/.codex/skills
 ```
 
 重新打开任务或让 Agent 重新加载 Skills，然后用下面的方式触发：
@@ -57,7 +57,7 @@ unzip build-dsh-plugin-0.5.3.zip -d ~/.codex/skills
 
 官方 Desktop 适配约束见 ZIP 内 `build-dsh-plugin/references/desktop.md`。网页与官方桌面端是不同宿主：分别设计、测试和记录证据；Web 兼容结果不会自动标记 Desktop 兼容。
 
-active 最新三个 DSH 版本由官方 GitHub Releases 与 npm 双源动态解析，官方 `next` 通道只有在高于最新版本时才启动独立矩阵。0.6.0 新增 `references/desktop.md`，要求逐版核对官方 Desktop 扩展契约、静态 Client 依赖、公开插件管理器服务及单独的 Desktop 证据。当前最新三版为 `0.2.1-rc.4`、`0.2.1-rc.5`、`0.2.2-alpha.2`，Desktop feed 为 `0.2.1-rc.5`；兼容结果以本次固定版本 CI 矩阵为准。CLI disposable Profile 矩阵不替代 Desktop UI/Profile E4。Bundle 通过唯一条目 `dsh-build-plugin-skill-provider` 隔离挂载同一份 Skill，不安装 Codex、Claude 或 Grok Runtime，也不覆盖官方 Skill Provider。固定 GitHub Commit 的远程/商城入口需要在对应 Commit 合并并通过独立 Registry 校验后使用。
+active 最新三个 DSH 版本由官方 GitHub Releases 与 npm 双源动态解析，官方 `next` 通道只有在高于最新版本时才启动独立矩阵。0.6.0 新增 `references/desktop.md`，要求逐版核对官方 Desktop 扩展契约、静态 Client 依赖、公开插件管理器服务及单独的 Desktop 证据。当前最新三版为 `0.2.1-rc.4`、`0.2.1-rc.5`、`0.2.2-alpha.2`，Desktop feed 为 `0.2.1-rc.5`；本次固定版本 CI 矩阵已通过，具体版本和平台证据见 `manifest.json`。CLI disposable Profile 矩阵不替代 Desktop UI/Profile E4。Bundle 通过唯一条目 `dsh-build-plugin-skill-provider` 隔离挂载同一份 Skill，不安装 Codex、Claude 或 Grok Runtime，也不覆盖官方 Skill Provider。固定 GitHub Commit 的远程/商城入口需要在对应 Commit 合并并通过独立 Registry 校验后使用。
 
 真实 Profile 安装仍属于单独操作，需要计划、确认、备份、健康检查和回滚。E3 验收必须在首次 CLI 调用前设置临时 `DSH_HOME`；不要在真实 DSH home 下对不存在的 Profile 运行 `dsh plugin --profile <name> --help`，因为 CLI 可能先创建 Profile 再显示帮助。
 
@@ -114,4 +114,4 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 
 本 Skill 使用 MIT License。发行 ZIP 内包含 `build-dsh-plugin/LICENSE`；复制、修改或再分发时必须保留该版权与许可声明。
 
-0.6.0 的 latest-three 跨平台 E3 矩阵应从当前固定 Release manifest 的 `verification` 字段核对。该矩阵不等于真实 DSH Profile、官方桌面 UI、公共 Release 或下载链接的验收；这些状态各自独立。
+0.6.0 的 latest-three 跨平台 E3 矩阵已通过 GitHub Actions run 41040198423；固定 Release manifest 的 `verification` 字段记录该证据。该矩阵不等于真实 DSH Profile、官方桌面 UI、公共 Release 或下载链接的验收；这些状态各自独立。

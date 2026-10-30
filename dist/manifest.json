@@ -50,7 +50,7 @@
   "runtime": {
     "required": [
       "Agent support for SKILL.md or equivalent instruction loading",
-      "Official DSH latest-three window: 0.2.1-rc.4, 0.2.1-rc.5, 0.2.2-alpha.2; exact E3 operation results remain pending fixed-version CI.",
+      "Official DSH latest-three window: 0.2.1-rc.4, 0.2.1-rc.5, 0.2.2-alpha.2; install, start, uninstall, and exact Profile-composition rollback passed in fixed-version CI on Ubuntu, macOS, and Windows.",
       "Official DSH Desktop feed: 0.2.1-rc.5; Desktop host, Client dependencies, plugin-manager, and UI/Profile evidence are tracked separately from Web."
     ],
     "scripts": [
@@ -95,12 +95,13 @@
     "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
     "lifecycleAudit": "tested-static-only",
     "dsh017LatestThreeMatrix": "passed-in-GitHub-Actions-run-35957998009",
-    "dshActiveLatestThreeMatrix": "pending-fixed-version-PR-CI",
-    "dshNextChannel": "no-version-newer-than-latest-active-as-of-2026-10-14T08:34:47Z",
+    "dshActiveLatestThreeMatrix": "passed: GitHub Actions run 41040198423; 0.2.1-rc.4, 0.2.1-rc.5, and 0.2.2-alpha.2 on Ubuntu, macOS, and Windows; install, cold start, authenticated Host response, uninstall, and exact baseline Profile-composition restoration",
+    "dshNextChannel": "no-version-newer-than-latest-active-as-of-2026-10-30T10:22:02Z",
     "dshPreviousLatestThreeWindow": "0.1.7-alpha.2,0.1.7-rc.1,0.1.7-rc.2",
     "dshPreviousActiveLatestThreeMatrix": "passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
     "dshPreviousNextChannel": "0.2.0-rc.1-passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
-    "dshDesktopFeedEngine": "0.2.1-rc.5 in both official feeds; CLI matrix does not prove official Desktop UI/Profile E4"
+    "dshDesktopFeedEngine": "0.2.1-rc.5 in both official feeds; CLI matrix does not prove official Desktop UI/Profile E4",
+    "dshActiveLatestThreeMatrixRunUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/actions/runs/41040198423"
   },
   "excluded": [
     "Obsidian vault notes",

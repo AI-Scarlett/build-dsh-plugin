@@ -12,7 +12,7 @@ test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   assert.equal(pkg.main, './src/index.mjs')
   assert.ok(pkg.files.includes('src'))
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
-  assert.equal(pkg.dsh.compatibility.dsh, '>=0.1.0-rc.8 <0.2.0 || 0.1.5-alpha.1 || 0.1.5-alpha.2 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-alpha.1 || 0.2.1-alpha.2')
+  assert.equal(pkg.dsh.compatibility.dsh, '>=0.1.0-rc.8 <0.2.0 || 0.1.5-alpha.1 || 0.1.5-alpha.2 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-alpha.1 || 0.2.1-alpha.2 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-alpha.2')
   for (const release of ['0.1.2-alpha.5', '0.1.2-rc.1', '0.1.3-alpha.1', '0.1.5-alpha.1', '0.1.5-alpha.2']) {
     assert.equal(pkg.dsh.compatibility.dshReleases[release], 'compatible')
   }
@@ -33,9 +33,9 @@ test('repository root is a lifecycle-free DSH Skill adapter', async () => {
     })
   }
   for (const release of ['0.2.1-rc.4', '0.2.1-rc.5', '0.2.2-alpha.2']) {
-    assert.equal(pkg.dsh.compatibility.dshReleases[release], 'unknown')
+    assert.equal(pkg.dsh.compatibility.dshReleases[release], 'compatible')
     assert.deepEqual(pkg.dsh.compatibility.dshOperations[release], {
-      install: 'unknown', start: 'unknown', uninstall: 'unknown', rollback: 'unknown',
+      install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed',
     })
   }
   assert.equal(pkg.dependencies, undefined)
