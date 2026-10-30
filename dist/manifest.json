@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "0.5.3",
-  "createdAt": "2026-10-14T08:42:54Z",
+  "distributionVersion": "0.6.0",
+  "createdAt": "2026-10-30T10:30:00Z",
   "artifact": {
-    "file": "build-dsh-plugin-0.5.3.zip",
+    "file": "build-dsh-plugin-0.6.0.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 116491,
-    "regularFileCount": 30,
-    "sha256": "97cff74dfc76b07a2ec7381889ed622186c183ff861897ce3edf20dc709e57aa",
-    "sha256File": "build-dsh-plugin-0.5.3.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.3/build-dsh-plugin-0.5.3.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.3/build-dsh-plugin-0.5.3.sha256"
+    "bytes": 120877,
+    "regularFileCount": 31,
+    "sha256": "3d52ed7914507976f4cfd0eef4911b9befd3641ad425a105b021c471c6d3a342",
+    "sha256File": "build-dsh-plugin-0.6.0.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.0/build-dsh-plugin-0.6.0.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.0/build-dsh-plugin-0.6.0.sha256"
   },
   "release": {
-    "tag": "v0.5.3",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.5.3",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.5.3",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.5.3/dist/manifest.json"
+    "tag": "v0.6.0",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.6.0",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.6.0",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.6.0/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.5.3/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.6.0/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -44,12 +44,14 @@
     "auditPathClassifier": "build-dsh-plugin/scripts/audit-paths.mjs",
     "lifecycleAudit": "build-dsh-plugin/scripts/audit-lifecycle.mjs",
     "lifecycleContract": "build-dsh-plugin/references/lifecycle-manager.md",
-    "lifecycleEvidenceTemplate": "build-dsh-plugin/assets/lifecycle-evidence.template.json"
+    "lifecycleEvidenceTemplate": "build-dsh-plugin/assets/lifecycle-evidence.template.json",
+    "desktopGuide": "build-dsh-plugin/references/desktop.md"
   },
   "runtime": {
     "required": [
       "Agent support for SKILL.md or equivalent instruction loading",
-      "DSH latest-three compatibility passed in GitHub Actions run 38536547013 for 0.2.0-rc.2, 0.2.1-alpha.1, and 0.2.1-alpha.2 on Ubuntu, Windows, and macOS (install/start/uninstall/rollback). Official Desktop UI/Profile E4 remains unverified."
+      "Official DSH latest-three window: 0.2.1-rc.4, 0.2.1-rc.5, 0.2.2-alpha.2; install, start, uninstall, and exact Profile-composition rollback passed in fixed-version CI on Ubuntu, macOS, and Windows.",
+      "Official DSH Desktop feed: 0.2.1-rc.5; Desktop host, Client dependencies, plugin-manager, and UI/Profile evidence are tracked separately from Web."
     ],
     "scripts": [
       "Node.js 18 or newer"
@@ -87,18 +89,19 @@
     "rootTestFilenameClassification": "passed",
     "dsh015Alpha1SourceContract": "passed",
     "dsh015Alpha2SourceContract": "passed",
-    "dshLatestThreeWindow": "0.2.0-rc.2,0.2.1-alpha.1,0.2.1-alpha.2 (passed in PR #19 GitHub Actions run 38536547013; 9/9 OS/version jobs)",
+    "dshLatestThreeWindow": "0.2.1-rc.4,0.2.1-rc.5,0.2.2-alpha.2 (resolved from official GitHub Releases and npm on 2026-10-30)",
     "dsh015Rc1InstallDumpConfigColdStart": "passed",
     "dsh015Rc2InstallDumpConfigColdStart": "passed",
     "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
     "lifecycleAudit": "tested-static-only",
     "dsh017LatestThreeMatrix": "passed-in-GitHub-Actions-run-35957998009",
-    "dshActiveLatestThreeMatrix": "passed-in-GitHub-Actions-run-38536547013-all-3-platforms",
-    "dshNextChannel": "no-version-newer-than-latest-active-as-of-2026-10-14T08:34:47Z",
+    "dshActiveLatestThreeMatrix": "passed: GitHub Actions run 41040198423; 0.2.1-rc.4, 0.2.1-rc.5, and 0.2.2-alpha.2 on Ubuntu, macOS, and Windows; install, cold start, authenticated Host response, uninstall, and exact baseline Profile-composition restoration",
+    "dshNextChannel": "no-version-newer-than-latest-active-as-of-2026-10-30T10:22:02Z",
     "dshPreviousLatestThreeWindow": "0.1.7-alpha.2,0.1.7-rc.1,0.1.7-rc.2",
     "dshPreviousActiveLatestThreeMatrix": "passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
     "dshPreviousNextChannel": "0.2.0-rc.1-passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
-    "dshDesktopFeedEngine": "0.2.0-rc.2 in both official feeds and included in CLI matrix run 38536547013; Desktop UI/Profile E4 unverified"
+    "dshDesktopFeedEngine": "0.2.1-rc.5 in both official feeds; CLI matrix does not prove official Desktop UI/Profile E4",
+    "dshActiveLatestThreeMatrixRunUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/actions/runs/41040198423"
   },
   "excluded": [
     "Obsidian vault notes",
@@ -113,7 +116,7 @@
     "The repository and the distributed Skill are licensed under the MIT License.",
     "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies.",
     "The Skill keeps discovery candidates non-installable and separate from trust-evidenced catalog proposals; it does not silently modify or deploy the STORE repository.",
-    "The DSH Desktop feed engine version is included in the planned CLI matrix, but no Desktop UI/Profile acceptance is inferred.",
-    "Latest-three DSH E3 install/start/uninstall/rollback passed on Ubuntu, Windows, and macOS in GitHub Actions run 38536547013; official Desktop UI/Profile E4 is not inferred."
+    "This ZIP is an Agent Skill, not a DSH Profile package. The DSH STORE website separately reads the latest GitHub Release and its tagged manifest before enabling download.",
+    "The Desktop guide separates DSH Web and official Desktop hosts, requires public version-specific contracts and static Client dependencies, and keeps real Desktop UI/Profile acceptance independent."
   ]
 }

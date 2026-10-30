@@ -34,6 +34,7 @@ Accept this Chinese template directly:
 需要读取的数据：（可选；不写则默认无）
 需要执行的动作：（可选；不写则默认只读）
 需要界面：（可选；不写则默认 Host-only）
+目标宿主：（可选；默认 DSH Web + DSH 官方桌面端，按同一插件包设计；如某项能力只能运行在一个宿主，需说明并单独限定）
 外部依赖：（可选；不写则默认无网络、进程、账号、凭据或设备）
 明确不能做什么：（可选；默认不改 DSH 核心、官方插件和真实 Profile）
 怎么才算成功：
@@ -53,6 +54,7 @@ Use [plugin-brief.template.json](../assets/plugin-brief.template.json) for compl
 | Field | Purpose | Required for source | Required for real operation |
 | --- | --- | --- | --- |
 | `mode` | Choose plan, source build, audit, release plan, or acceptance plan | Defaults to `build-source` | Yes for release/install |
+| `targets.hosts` | Select DSH Web, official DSH Desktop, or both | Defaults to both where the requested outcome permits | Exact target before host-specific compatibility claims |
 | `plugin.name` | Human working name | No; infer | Yes before release |
 | `problem` | Describe current pain and context | Yes | Yes |
 | `outcome.expectedResult` | Define desired user-visible result | Yes | Yes |
@@ -79,6 +81,7 @@ Apply and disclose these defaults when fields are absent:
 
 | Missing field | Default | Benefit | Cost |
 | --- | --- | --- | --- |
+| Target hosts | DSH Web and official DSH Desktop when the requested outcome permits | New bundles are designed against both supported host surfaces | Desktop support may need an adapter or remain unclaimed when a required seam is absent |
 | Mode | `build-source` | Produces useful code without external mutation | Does not install or publish |
 | Name/package | Derive a `dsh-*-plugin` slug | Reduces user effort | User may rename before release |
 | Target user | `DSH user` | Keeps work moving | Less precise UX until refined |

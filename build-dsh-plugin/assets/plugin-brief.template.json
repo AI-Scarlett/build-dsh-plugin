@@ -5,6 +5,12 @@
     "name": "",
     "summary": ""
   },
+  "targets": {
+    "hosts": [
+      "dsh-web",
+      "dsh-desktop"
+    ]
+  },
   "targetUsers": [],
   "problem": "",
   "whyNow": "",

@@ -123,6 +123,7 @@ function normalize(raw) {
   const secretPaths = secretLikePaths(raw)
   if (secretPaths.length > 0) errors.push(`brief contains secret-like fields; remove values from: ${secretPaths.join(', ')}`)
   const plugin = isObject(raw.plugin) ? raw.plugin : {}
+  const targets = isObject(raw.targets) ? raw.targets : {}
   const outcome = isObject(raw.outcome) ? raw.outcome : {}
   const data = isObject(raw.data) ? raw.data : {}
   const ui = isObject(raw.ui) ? raw.ui : {}
@@ -134,6 +135,15 @@ function normalize(raw) {
   const delivery = isObject(raw.delivery) ? raw.delivery : {}
   const marketplace = isObject(delivery.marketplace) ? delivery.marketplace : {}
   const acceptance = isObject(raw.acceptance) ? raw.acceptance : {}
+
+  const allowedHosts = ['dsh-web', 'dsh-desktop']
+  const requestedHosts = stringArray(targets.hosts)
+  if (hasOwn(raw, 'targets') && !hasOwn(targets, 'hosts')) errors.push('targets.hosts is required when targets is supplied')
+  if (hasOwn(targets, 'hosts')) {
+    if (requestedHosts.length === 0) errors.push('targets.hosts must include dsh-web, dsh-desktop, or both')
+    for (const host of requestedHosts) if (!allowedHosts.includes(host)) errors.push(`targets.hosts contains unsupported host: ${host}`)
+  }
+  const targetHosts = [...new Set(requestedHosts.length > 0 ? requestedHosts : allowedHosts)]
 
   const mode = safeEnum(raw.mode, ['plan', 'build-source', 'audit', 'release-plan', 'acceptance-plan'], 'build-source', errors, 'mode')
   const targetUsers = stringArray(raw.targetUsers)
@@ -165,6 +175,7 @@ function normalize(raw) {
       name: string(plugin.name),
       summary: string(plugin.summary),
     },
+    targets: { hosts: targetHosts },
     targetUsers: targetUsers.length > 0 ? targetUsers : ['DSH user'],
     problem: string(raw.problem),
     whyNow: string(raw.whyNow),
@@ -245,6 +256,7 @@ function normalize(raw) {
     },
   }
 
+  if (!hasOwn(targets, 'hosts')) assumptions.push('target hosts default to DSH Web and official DSH Desktop where the requested outcome permits; prove them separately')
   if (!hasOwn(raw, 'data')) assumptions.push('data boundary defaults to no reads and no writes')
   if (!hasOwn(raw, 'presentation')) assumptions.push('Tool cards default to semantic derivation, generic fallback, replay-safe presenters, and no custom Client card')
   if (!hasOwn(raw, 'ui')) assumptions.push('UI defaults to Host-only with no Browser Client')
@@ -388,6 +400,7 @@ function normalize(raw) {
       schemaErrors: errors,
       assumptions,
       riskClass,
+      targetHosts: normalized.targets.hosts,
       architectureCandidates: [...new Set(architectures)],
       architectureReasons,
       toolCardContractRequired,
@@ -411,6 +424,7 @@ function printHuman(result, sourcePath) {
   process.stdout.write(`completeness: ${analysis.completeness.score}/100\n`)
   process.stdout.write(`generation-ready: ${analysis.generationReady}\n`)
   process.stdout.write(`risk: ${analysis.riskClass}\n`)
+  process.stdout.write(`target-hosts: ${analysis.targetHosts.join(', ')}\n`)
   process.stdout.write(`architecture-candidates: ${analysis.architectureCandidates.join(', ')}\n`)
   process.stdout.write(`suggested-package: ${analysis.suggestedPackageName}\n`)
   process.stdout.write(`mode: ${normalized.mode}\n`)

@@ -1,6 +1,6 @@
 ---
 name: build-dsh-plugin
-description: Convert natural-language or structured briefs into plans, source, audits, packages, releases, DSH STORE catalog candidates, public artifacts, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for DSH/Cordis Host plugins, model Tools and card contracts, Browser Clients, Skill adapters, ApiProxy bridges, marketplace listing failures/submissions, Profile lifecycle managers, fixed releases, public distribution, and third-party compatibility requests. Normalize goals, problems, capabilities, data, mutations, Tool presentation, UI, external dependencies, constraints, delivery, marketplace intent, and acceptance; apply safe defaults; enforce host, card, and marketplace preflight, quantified gates, disposable tests, official CLI-only package changes, licensed immutable distribution, separate repository/catalog/Profile acceptance, and evidence-based status.
+description: Convert natural-language or structured briefs into plans, source, audits, packages, releases, DSH STORE catalog candidates, public artifacts, installations, or verification for standard non-destructive DeepSeek Harness (DSH) plugins. Use for DSH/Cordis Host plugins, model Tools and card contracts, Browser Clients, official DSH Desktop compatibility, Skill adapters, ApiProxy bridges, marketplace listing failures/submissions, Profile lifecycle managers, fixed releases, public distribution, and third-party compatibility requests. Normalize goals, problems, capabilities, data, mutations, Tool presentation, UI, external dependencies, constraints, delivery, marketplace intent, and acceptance; apply safe defaults; enforce host, card, and marketplace preflight, quantified gates, disposable tests, official package changes, licensed immutable distribution, separate repository/catalog/Profile acceptance, and evidence-based status.
 ---
 
 # Build DSH Plugin
@@ -19,7 +19,7 @@ Require only three semantic facts before source generation:
 
 Infer names, package IDs, architecture candidates, risk class, project structure, tests, and safe defaults. Do not ask the user to design Host APIs, Cordis entries, schemas, build tooling, or test strategy unless they have a preference.
 
-When optional fields are absent, default to source generation only, standard DSH Bundle, read-only behavior, no real Profile mutation, no restart, no external network/process/account/device, no credentials, local-only exposure, no publication, and E3 disposable acceptance. Build reusable DSH Bundles with marketplace-compatible package structure by default, but do not infer authorization to submit or change DSH STORE. State every default as an assumption. `No publication` is an authorization default, not a permanent prohibition: an explicitly authorized, properly licensed, internally consistent fixed release may be distributed from a website or proposed to a marketplace.
+When optional fields are absent, default to source generation only, a standard DSH Bundle targeting both DSH Web and official DSH Desktop when the requested outcome permits, read-only behavior, no real Profile mutation, no restart, no external network/process/account/device, no credentials, local-only exposure, no publication, and E3 disposable acceptance. Treat Desktop as a target to design and verify, never as an automatic compatibility claim: if the requested feature cannot use a public seam on both hosts, identify the limitation and propose an explicit host-specific adapter or target scope. Build reusable DSH Bundles with marketplace-compatible package structure by default, but do not infer authorization to submit or change DSH STORE. State every default as an assumption. `No publication` is an authorization default, not a permanent prohibition: an explicitly authorized, properly licensed, internally consistent fixed release may be distributed from a website or proposed to a marketplace.
 
 Ask only questions whose answers materially change the product outcome or risk boundary. Missing problem, outcome, or acceptance blocks generation. Missing target Profile, mutation scope, credential owner, LAN/Internet security, or real device/account blocks only the corresponding real operation; it does not block a safe source scaffold when interfaces can remain abstract.
 
@@ -38,11 +38,11 @@ Start read-only. Inspect repository instructions, the target DSH version, offici
 
 Always enforce these rules:
 
-- Build a DSH bundle, not a desktop app or a fork of DSH.
+- Build a DSH plugin bundle; a standalone desktop app or a fork of DSH is a different product.
 - Never modify the DSH source tree or any `@deepseek-ai/*` package.
 - Never disable, replace, or shadow the official plugin inventory.
 - Never call Loader/Fiber mutation APIs. Use public Host services and bundle composition.
-- Use the official DSH CLI for package changes. Pass fixed argument arrays; never build shell command strings.
+- Use the official DSH CLI or the currently documented official Desktop plugin-manager service for package changes, according to the inspected host contract. Pass fixed CLI argument arrays with `shell=false`; never build shell command strings or call private package managers.
 - Keep tests in disposable homes/profiles. Never write tests against real `~/.dsh`.
 - Do not expose credentials, full user files, injected system/plugin context, model reasoning, or private paths through logs or clients.
 - Keep planning, code completion, package release, Profile installation, runtime acceptance, and external/device acceptance as separate states.
@@ -51,6 +51,7 @@ Always enforce these rules:
 
 Read [boundaries.md](references/boundaries.md) before implementation or installation. Hard blockers in that file override every score.
 Read [card-contract.md](references/card-contract.md) before implementing a model Tool, `presentCall`, `presentResult`, `presentationMeta`, or a custom Tool card.
+When targeting the official DSH Desktop host or claiming Desktop marketplace support, also read [desktop.md](references/desktop.md). Desktop is a separate host/Profile acceptance surface; Web evidence alone does not prove it.
 
 ## Explain every consequential decision
 
@@ -73,7 +74,7 @@ Follow [workflow.md](references/workflow.md) for the complete stage-gated proces
 
 ### 1. Prove host fit
 
-Identify the target host, extension seam, requested user outcome, state mutations, external dependencies, and acceptance surface.
+Identify the target host (Web, official DSH Desktop, or both), extension seam, requested user outcome, state mutations, external dependencies, and acceptance surface. Treat Desktop as a separate host/Profile target; do not infer its support from Web evidence.
 
 Stop and report a host mismatch when the project targets Obsidian, VS Code, a browser extension, MCP only, or another runtime without a proven DSH bundle contract. Offer the compatible host or a deliberately scoped adapter. Do not divert into an adjacent project.
 
@@ -166,7 +167,9 @@ Produce two separate reports: repository release evidence and Profile/runtime ac
 
 Read [marketplace.md](references/marketplace.md) whenever building a reusable third-party DSH plugin, assessing an existing repository for DSH STORE, or preparing a catalog entry.
 
-Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. At the start of every STORE assessment, run `node scripts/official-dsh-releases.mjs` and use its official active latest-three window; do not reuse a remembered window. The resolver follows published official GitHub Releases and npm version records in the active major.minor series, excludes drafts, unsupported future previews and deprecated npm versions, and fails closed on invalid authority. Independently inspect the official `next` channel when it points to a strictly newer preview: test it in its own matrix, never replace the active latest-three gate with it. Do not publish a remembered or observed version window as current guidance. Record the live resolver output and timestamp in each fresh plan; the CI run for that exact plan is the authority for its release matrix. The latest-three matrix and any strictly newer `next`-channel matrix must pass on Linux, macOS, and Windows before marking exact versions compatible. Historical release evidence remains historical and never substitutes for a current matrix. Keep exact `compatibility.dshReleases` and matching `compatibility.dshOperations` records for install, start, uninstall, and rollback on each specifically tested release. Historical keys may remain, but unknown metadata stays unknown instead of being guessed.
+Do not wait until submission to discover listing incompatibility. From the first scaffold, reserve unique package/catalog/entry IDs; declare repository, version, license, safe `dsh.bundle.patch`, package-relative Patch, runtime/build files, lifecycle scripts, permissions, dependencies, and compatibility evidence. At the start of every STORE assessment, run `node scripts/official-dsh-releases.mjs` and use its current official latest-three window; never copy a remembered release list. The resolver combines published official GitHub Releases and npm records in the active major.minor series, excludes drafts and deprecated versions, and fails closed on invalid authority. Keep exact `compatibility.dshReleases` results and matching `compatibility.dshOperations` records for install, start, uninstall, and rollback for every version in that live window. Historical keys may remain; unknown metadata stays unknown.
+
+For official Desktop support, read [desktop.md](references/desktop.md), declare `desktop` in `compatibility.profiles` only after version-specific Desktop evidence, and keep its installability/runtime evidence separate from Web evidence. A DSH version range or a Web disposable Profile pass does not prove Desktop compatibility.
 
 Keep STORE discovery and trusted installation physically and logically separate. A record in `registry/candidates.json` is discovery-only, carries no package/install/permission contract, and must normalize to `installable: false` with no allowed actions. It can move to `registry/catalog.json` only after a separate fixed-source, Bundle, license, permission, compatibility, and evidence review. Promotion, recommendation, sponsorship, Stars, or screenshots never upgrade verification.
 

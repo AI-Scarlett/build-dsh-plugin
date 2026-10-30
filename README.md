@@ -9,7 +9,7 @@
 - `build-dsh-plugin/` 是可部署到 Codex、Claude、Grok 等兼容 `SKILL.md` 的 Agent Skill；
 - 仓库根目录的 `package.json` + `cordis.patch.yml` 是标准 DSH Bundle；Patch 只插入插件自有的 `dsh-build-plugin` Host 适配器，再由适配器通过注入的公开 `ctx.skills.register()` 服务接口，将同一份 Skill 挂载到 DSH。该接口及完整 Bundle 生命周期由随官方最新三版本动态更新的隔离 CI 矩阵验证。
 
-DSH Bundle `0.5.3` 已通过官方最新三版本 `0.2.0-rc.2`、`0.2.1-alpha.1`、`0.2.1-alpha.2` 的 Linux、macOS、Windows disposable Profile 矩阵（GitHub Actions run `38536547013`，9/9）。验收窗口由官方 GitHub Releases 与 npm 双源解析。官方 Mac/Windows 桌面 feed 当前都指向 `0.2.0-rc.2`，因此其引擎版本包含在 CLI 矩阵中；CLI 隔离矩阵不能代替桌面应用 UI/Profile 端到端验收。适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
+DSH Bundle `0.6.0` 增补官方 DSH Desktop 适配规范：将 Web 与 Desktop 视为不同宿主，要求逐版本检查公开 API、Client 静态依赖和桌面插件管理器契约；Web 测试不能推断 Desktop 支持。当前官方最新三版本是 `0.2.1-rc.4`、`0.2.1-rc.5`、`0.2.2-alpha.2`，当前 Desktop feed 为 `0.2.1-rc.5`。本次固定版本 × Ubuntu/macOS/Windows E3 矩阵已于 GitHub Actions run 41040198423 全部通过，并据此记录精确兼容声明；真实 Desktop UI/Profile E4 始终单独验收。Bundle 适配层不安装其他 Agent 运行时，不修改 DSH 核心或官方 Skill Provider，也不包含安装期生命周期脚本。
 
 用户最低只需提供三项信息：
 
@@ -21,7 +21,7 @@ Skill 会补齐安全默认值，判断 DSH 宿主兼容性与 R0–R3 风险，
 
 对于注册模型 Tool 的插件，Skill 会同时设计 DSH 卡片契约：把规范 JSON 输出、模型可见渲染、`presentCall`/`presentResult` 卡片意图、`presentationMeta` 持久化投影和可选 Client 自定义卡片分开；要求 live/replay 一致、通用降级、字段限额、截断状态真实且不泄露凭据、完整私有文件或模型推理。
 
-对于准备进入 DSH STORE 的插件，Skill 会从开发第一天保持商城兼容结构，并把第三方仓库分流为 `direct`、`monorepo`、`adapter-required` 或 `blocked`。0.2.0 起先生成与可信安装库物理分离的发现候选：候选没有包名、安装路径、Entry ID、权限、兼容性或安装操作；只有完成独立晋级审查后才生成 Catalog 提案。0.5.3 的模板和审计器在每次运行时从官方 GitHub Releases 与 npm 双源权威刷新最新三版本，并在更高版本存在时独立测试官方 `next` 通道。可信提案会显式记录固定源更新时间、发现/可安装/运行/安全审查四级证据，以及每个单独测试过的 DSH 版本之安装/启动/卸载/回滚证据。推荐、推广或赞助不会改变验证等级。
+对于准备进入 DSH STORE 的插件，Skill 会从开发第一天保持商城兼容结构，并把第三方仓库分流为 `direct`、`monorepo`、`adapter-required` 或 `blocked`。0.2.0 起先生成与可信安装库物理分离的发现候选：候选没有包名、安装路径、Entry ID、权限、兼容性或安装操作；只有完成独立晋级审查后才生成 Catalog 提案。0.6.0 的模板和审计器在每次运行时从官方 GitHub Releases 与 npm 双源权威刷新最新三版本，并在更高版本存在时独立测试官方 `next` 通道；新增的 `references/desktop.md` 给出 DSH 官方桌面端公开扩展面、静态 Client 依赖、插件管理器、按宿主记录兼容性和独立验收规则。可信提案会显式记录固定源更新时间、发现/可安装/运行/安全审查四级证据，以及每个单独测试过的 DSH 版本之安装/启动/卸载/回滚证据。推荐、推广或赞助不会改变验证等级。
 
 对于已上架插件的源更新，Skill 遵循 DSH-Store 的本机决策模型：低风险候选使用 `source-verified` 生成固定 SHA 计划；具备文件、网络、命令、凭据或生命周期能力的合法插件使用 `user-reviewed`，由商城展示实际变化并让用户逐次确认；只有修改 DSH 原生代码、冒用官方命名空间、干预受保护组件等硬边界才使用 `external-only`。版本发现来自用户本机对 canonical GitHub 的有限检查，不要求服务端巡检，也不安装浮动 `main`。
 
@@ -54,17 +54,17 @@ Skill 入口是 [`build-dsh-plugin/SKILL.md`](build-dsh-plugin/SKILL.md)。完�
 
 ## 安装到通用 Agent
 
-从固定发行页下载 [`build-dsh-plugin-0.5.3.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.3/build-dsh-plugin-0.5.3.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.5.3/build-dsh-plugin-0.5.3.sha256)，然后验证完整性：
+从固定发行页下载 [`build-dsh-plugin-0.6.0.zip`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.0/build-dsh-plugin-0.6.0.zip) 和配套的 [`SHA-256` 文件](https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.0/build-dsh-plugin-0.6.0.sha256)，然后验证完整性：
 
 ```bash
 cd dist
-shasum -a 256 -c build-dsh-plugin-0.5.3.sha256
+shasum -a 256 -c build-dsh-plugin-0.6.0.sha256
 ```
 
 确认目标 Skills 目录不存在同名文件夹，或已单独备份已有版本，然后解压：
 
 ```bash
-unzip build-dsh-plugin-0.5.3.zip -d ~/.codex/skills
+unzip build-dsh-plugin-0.6.0.zip -d ~/.codex/skills
 ```
 
 最终入口应为：
@@ -104,7 +104,7 @@ node scripts/audit-marketplace-entry.mjs /path/to/plugin --entry /path/to/entry.
 node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candidates /path/to/candidates.json --catalog /path/to/catalog.json
 ```
 
-通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle 0.5.3 的当前最新三版本已逐一通过 Linux、macOS、Windows disposable Profile 的安装/启动/卸载/精确回滚矩阵（run `38536547013`）；历史接口记录仍不替代当前版本矩阵。后续每次发布都必须重新运行动态窗口矩阵。预期测试输出包含 `BRIEF_TEST_OK`、`MARKETPLACE_TEST_OK` 和 `CANDIDATE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
+通用 Agent Skill 脚本需要 Node.js 18 或更高版本；DSH Bundle `0.6.0` 的官方最新三版本跨平台矩阵已验证安装、启动、卸载和精确回滚；当前最新三版本在本次固定版本 CI 中通过。Desktop 指南要求按 Web、官方 Desktop 分开写宿主适配和证据；CLI Disposable Profile 结果不等于已安装 Desktop UI/Profile E4。后续每次发布都必须重新运行动态窗口矩阵。预期测试输出包含 `BRIEF_TEST_OK`、`MARKETPLACE_TEST_OK` 和 `CANDIDATE_TEST_OK`；只读示例保持 `R0`，生命周期示例保持 `R3` 且不会直接执行真实 Profile 操作。
 
 `npm test` 还会验证根目录 DSH Bundle、隔离 Provider、无生命周期脚本、卡片契约文档，以及审计器对不支持的卡片 discriminant、缺失 replay/fallback/bounds 测试的 fail-closed 行为。
 
@@ -120,11 +120,11 @@ node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candida
 
 ## 发行完整性
 
-- 发行版本：`2026.10.14.1`
-- 固定发行标签：[`v0.5.3`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.5.3)
-- ZIP SHA-256：`97cff74dfc76b07a2ec7381889ed622186c183ff861897ce3edf20dc709e57aa`（候选发行文件；Release 需通过独立发布门）
-- ZIP 内常规文件数：30（含官方 DSH 动态版本解析器、候选审计器、Tool 卡片契约、可信 Catalog 模板与独立 `LICENSE`）
-- 本次最新三版本 `0.2.0-rc.2`、`0.2.1-alpha.1`、`0.2.1-alpha.2` 已由 v0.5.3 PR CI 全平台验证通过。官方桌面当前使用 `0.2.0-rc.2`，桌面 UI/Profile 验收仍与 CLI 矩阵分开。
+- 发行版本：`2026.10.30.1`
+- 固定发行标签：[`v0.6.0`](https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.6.0)
+- ZIP SHA-256：`3d52ed7914507976f4cfd0eef4911b9befd3641ad425a105b021c471c6d3a342`
+- ZIP 内常规文件数：31（含官方 DSH 桌面端指南与独立 `LICENSE`）
+- 本次最新三版本为 `0.2.1-rc.4`、`0.2.1-rc.5`、`0.2.2-alpha.2`；精确兼容声明依据 GitHub Actions run 41040198423 的版本 × 操作系统矩阵。官方 Desktop feed 当前使用 `0.2.1-rc.5`，桌面 UI/Profile 验收仍与 CLI 矩阵分开。
 
 `dist/manifest.json` 是版本、下载地址、SHA-256、文件数和许可证的机器可读单一来源。README 与 INSTALL 只负责说明；DSH STORE 等分发页面必须读取“最新 GitHub Release → 对应标签下的 manifest”，不能把这些字段复制成另一份运行时数据。这样即使网页缓存暂时未刷新，下载页仍会把同一固定标签的 manifest、ZIP 和校验值绑定在一起。
 
@@ -132,4 +132,4 @@ node scripts/audit-candidate-entry.mjs --entry /path/to/candidate.json --candida
 
 本项目采用 [MIT License](LICENSE)。你可以使用、复制、修改、合并、发布、分发、再许可或销售本项目的副本，但必须在副本或主要部分中保留原版权声明和许可声明。发行 ZIP 内也包含相同许可证，解压后仍能保留授权信息。
 
-0.5.3 的最新三版本跨平台隔离 Profile 矩阵、GitHub Release 发布与下载链接回读分别验收；真实 Profile 和官方桌面 UI 验收不会由 CI 推断。
+0.6.0 的最新三版本跨平台隔离 Profile 矩阵已通过 GitHub Actions run 41040198423；GitHub Release 发布与下载链接回读仍待独立验收。真实 Profile 和官方桌面 UI 验收不会由 CLI 矩阵推断。

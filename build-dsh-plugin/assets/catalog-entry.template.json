@@ -66,31 +66,8 @@
   "status": "approved",
   "compatibility": {
     "dsh": null,
-    "dshReleases": {
-      "0.1.3-alpha.2": "unknown",
-      "0.1.5-alpha.1": "unknown",
-      "0.1.5-alpha.2": "unknown"
-    },
-    "dshOperations": {
-      "0.1.3-alpha.2": {
-        "install": "unknown",
-        "start": "unknown",
-        "uninstall": "unknown",
-        "rollback": "unknown"
-      },
-      "0.1.5-alpha.1": {
-        "install": "unknown",
-        "start": "unknown",
-        "uninstall": "unknown",
-        "rollback": "unknown"
-      },
-      "0.1.5-alpha.2": {
-        "install": "unknown",
-        "start": "unknown",
-        "uninstall": "unknown",
-        "rollback": "unknown"
-      }
-    },
+    "dshReleases": {},
+    "dshOperations": {},
     "node": null,
     "systems": [],
     "profiles": []

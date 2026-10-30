@@ -15,7 +15,7 @@
 
 ## 1. Scope and authority
 
-Use this reference whenever a plugin registers a model Tool, returns tool-specific UI, or proposes a custom Tool card. Verify the contract against the target DSH version before coding. The contract re-inspected on `0.1.2-rc.1` is owned by `@deepseek-ai/dsh-tools`: `ToolDefinition.presentCall`, `ToolDefinition.presentResult`, `output.presentationMeta`, `ToolCallView`, and `ToolResultView`. Its inspected card discriminants remain compatible with `0.1.2-alpha.4` and `0.1.2-alpha.5`.
+Use this reference whenever a plugin registers a model Tool, returns tool-specific UI, or proposes a custom Tool card. Resolve the live official DSH release window and inspect the public types/source for each exact target version before coding. The API names and discriminants described below were last inspected on an earlier DSH preview; they are a design reference, not proof that the current 0.2.x Client bridge still exposes the same contract. Confirm `@deepseek-ai/dsh-tools`, the Host-to-Client bridge, and exported card unions at the pinned DSH Commit. If they differ, follow the current official contract and update the task's evidence record instead of adapting to this historical snapshot.
 
 Treat cards as a presentation contract, not a second business API. The canonical Tool output and `output.render` remain model-facing. Card data is a pure, provider-neutral projection for Host/Client bridges and session replay.
 

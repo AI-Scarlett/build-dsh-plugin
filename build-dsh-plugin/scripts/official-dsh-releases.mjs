@@ -94,7 +94,7 @@ export function officialDshChannels(metadata, githubReleases = []) {
   // Dist-tags are hints, not a stable naming contract. Use published version
   // records as the authority and choose the highest non-deprecated supported
   // release in the current DSH major.minor line. This prevents a future
-  // next-only 0.2.x release from displacing the active 0.1.x line.
+  // next-only versions from displacing the active line selected by the other trusted channels.
   const referenceVersion = channels
     .filter(channel => channel.tag !== 'next')
     .map(channel => channel.version)
