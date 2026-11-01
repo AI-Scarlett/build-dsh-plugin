@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "0.6.0",
-  "createdAt": "2026-10-30T10:30:00Z",
+  "distributionVersion": "0.6.1",
+  "createdAt": "2026-11-01T01:58:23Z",
   "artifact": {
-    "file": "build-dsh-plugin-0.6.0.zip",
+    "file": "build-dsh-plugin-0.6.1.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 120877,
+    "bytes": 121426,
     "regularFileCount": 31,
-    "sha256": "3d52ed7914507976f4cfd0eef4911b9befd3641ad425a105b021c471c6d3a342",
-    "sha256File": "build-dsh-plugin-0.6.0.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.0/build-dsh-plugin-0.6.0.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.0/build-dsh-plugin-0.6.0.sha256"
+    "sha256": "09a567fd382af1313591d2df45689035024a4393cb1de72e971544dc1b990aac",
+    "sha256File": "build-dsh-plugin-0.6.1.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.1/build-dsh-plugin-0.6.1.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.1/build-dsh-plugin-0.6.1.sha256"
   },
   "release": {
-    "tag": "v0.6.0",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.6.0",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.6.0",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.6.0/dist/manifest.json"
+    "tag": "v0.6.1",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.6.1",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.6.1",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.6.1/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.6.0/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.6.1/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -95,13 +95,13 @@
     "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
     "lifecycleAudit": "tested-static-only",
     "dsh017LatestThreeMatrix": "passed-in-GitHub-Actions-run-35957998009",
-    "dshActiveLatestThreeMatrix": "passed: GitHub Actions run 41040198423; 0.2.1-rc.4, 0.2.1-rc.5, and 0.2.2-alpha.2 on Ubuntu, macOS, and Windows; install, cold start, authenticated Host response, uninstall, and exact baseline Profile-composition restoration",
+    "dshActiveLatestThreeMatrix": "pending-v0.6.1-exact-head-CI; previous v0.6.0 evidence run 41040198423",
     "dshNextChannel": "no-version-newer-than-latest-active-as-of-2026-10-30T10:22:02Z",
     "dshPreviousLatestThreeWindow": "0.1.7-alpha.2,0.1.7-rc.1,0.1.7-rc.2",
     "dshPreviousActiveLatestThreeMatrix": "passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
     "dshPreviousNextChannel": "0.2.0-rc.1-passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
     "dshDesktopFeedEngine": "0.2.1-rc.5 in both official feeds; CLI matrix does not prove official Desktop UI/Profile E4",
-    "dshActiveLatestThreeMatrixRunUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/actions/runs/41040198423"
+    "dshPreviousDistributionLatestThreeMatrixRunUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/actions/runs/41040198423"
   },
   "excluded": [
     "Obsidian vault notes",
@@ -117,6 +117,6 @@
     "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies.",
     "The Skill keeps discovery candidates non-installable and separate from trust-evidenced catalog proposals; it does not silently modify or deploy the STORE repository.",
     "This ZIP is an Agent Skill, not a DSH Profile package. The DSH STORE website separately reads the latest GitHub Release and its tagged manifest before enabling download.",
-    "The Desktop guide separates DSH Web and official Desktop hosts, requires public version-specific contracts and static Client dependencies, and keeps real Desktop UI/Profile acceptance independent."
+    "Version 0.6.1 clarifies that the Desktop adaptation label is informational, approved fixed-source entries may be passed to DSH Desktop without that label, and the official Desktop plugin manager owns current-version compatibility checks; Catalog-blocked entries remain unavailable."
   ]
 }

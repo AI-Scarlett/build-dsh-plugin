@@ -8,7 +8,7 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.6.0')
+  assert.equal(pkg.version, '0.6.1')
   assert.equal(pkg.main, './src/index.mjs')
   assert.ok(pkg.files.includes('src'))
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
@@ -151,7 +151,7 @@ test('Host adapter emits the minimal SkillRegistration shape without private imp
   assert.equal(registration.path.endsWith('/build-dsh-plugin/SKILL.md'), true)
   assert.ok(registration.content.includes('DSH'))
   const desktopGuide = await readFile(new URL('build-dsh-plugin/references/desktop.md', root), 'utf8')
-  for (const contract of ['static `inject`', '`remote.pluginManager`', 'Desktop and Web', 'does not establish Desktop support']) {
+  for (const contract of ['static `inject`', '`remote.pluginManager`', 'Desktop and Web', 'does not establish Desktop support', 'not an install gate', 'official plugin manager decides compatibility']) {
     assert.ok(desktopGuide.includes(contract), `Desktop guide is missing ${contract}`)
   }
 })
