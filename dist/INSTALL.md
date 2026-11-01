@@ -114,4 +114,4 @@ node scripts/normalize-brief.mjs assets/plugin-brief.r3-example.json
 
 本 Skill 使用 MIT License。发行 ZIP 内包含 `build-dsh-plugin/LICENSE`；复制、修改或再分发时必须保留该版权与许可声明。
 
-`v0.6.1` 必须通过本次固定 PR head 的 latest-three × Linux/macOS/Windows disposable Profile 矩阵后才能发布；正式发行 manifest 会记录对应 CI 证据。该 CLI 矩阵不等于真实 DSH Profile、官方桌面 UI、公共 Release 或下载链接的验收；这些状态各自独立。
+`v0.6.1` 的 latest-three × Linux/macOS/Windows disposable Profile 矩阵已通过 GitHub Actions run 41263986543；发行 manifest 记录了对应 CI 证据。该 CLI 矩阵不等于真实 DSH Profile、官方桌面 UI、公共 Release 或下载链接的验收；这些状态各自独立。

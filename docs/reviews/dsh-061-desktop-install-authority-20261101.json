@@ -40,8 +40,8 @@
     "docs/Skill简介-500字内.md": "ec589ab6ee3b180204cb8d1728aa8b4f77d026174404c2e358e6c20ca77c93e4",
     "package.json": "bfc6d192e1947b97d2856000c0ffe1a750f52f4fb756d9d50809094e61a9ab1d",
     "test/dsh-bundle.test.mjs": "81376448b26474d4a0df89a37c1ccc9f232f214e698d9e47bc47916c13e5709b",
-    "dist/INSTALL.md": "5b6c6d605a85acbe3347152c2e70a7245494b1f2bae0d5dcc862d374cb013b5c",
-    "dist/manifest.json": "d9b86237eef4b5f00430f7d3d3c84b9a64dc4f6397eb6f49cbf2c22914c04f10",
+    "dist/INSTALL.md": "66914ca5441933ed66bf5022c10958d9baf670d7fb684baf5b59487858e6b20a",
+    "dist/manifest.json": "42614ce9706b759f5e9c99dc3129153b5e2d381c5c7bd01572359d90ae97350d",
     "dist/build-dsh-plugin-0.6.1.zip": "09a567fd382af1313591d2df45689035024a4393cb1de72e971544dc1b990aac",
     "dist/build-dsh-plugin-0.6.1.sha256": "738ca8e4d51743b257c6d88cf814746aec0961f3c5a01034f35400458a889199"
   },
@@ -77,7 +77,7 @@
       "sha256": "09a567fd382af1313591d2df45689035024a4393cb1de72e971544dc1b990aac",
       "license": "MIT included"
     },
-    "exactHeadLatestThreeMatrix": "pending GitHub Actions before release",
+    "exactHeadLatestThreeMatrix": "passed: GitHub Actions run 41263986543; all 9 latest-three x Ubuntu/macOS/Windows disposable Profile jobs passed",
     "publicReleaseReadback": "pending merged tag and unauthenticated asset verification",
     "realDshProfileAndDesktopUi": "unchanged and unverified by this documentation/distribution update"
   }
