@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "type": "build-dsh-plugin-desktop-install-authority-release",
+  "planId": "dsh-061-desktop-install-authority-20261101",
+  "createdAt": "2026-11-01T01:47:39Z",
+  "baseCommit": "bd5c363264df52d19ce8795f3b105d609a399ffe",
+  "scope": [
+    "docs/reviews/dsh-061-desktop-install-authority-20261101.json",
+    "build-dsh-plugin/SKILL.md",
+    "build-dsh-plugin/references/desktop.md",
+    "build-dsh-plugin/references/marketplace.md",
+    "README.md",
+    "docs/Skill简介-500字内.md",
+    "package.json",
+    "test/dsh-bundle.test.mjs",
+    "dist/INSTALL.md",
+    "dist/manifest.json",
+    "dist/build-dsh-plugin-0.6.1.zip",
+    "dist/build-dsh-plugin-0.6.1.sha256"
+  ],
+  "preconditions": {
+    "docs/reviews/dsh-061-desktop-install-authority-20261101.json": null,
+    "build-dsh-plugin/SKILL.md": "bb5555ad7fbc488534d2eba44b8e1c3ac71b4f507855fe95126fde0c5122017f",
+    "build-dsh-plugin/references/desktop.md": "260d37ca23b1d8e347ab185ec92069f45249a8c81927865dbe3d6679c526b901",
+    "build-dsh-plugin/references/marketplace.md": "805196fba63474d2cd14f52664020753196183c5d656bee3612d9171dce1cdad",
+    "README.md": "e6739dcd33bf0e93a39b845322673e08b3f2e5bfe7bc5fe28f0caf48965f8d85",
+    "docs/Skill简介-500字内.md": "f7dc63e9c5465834df9b66be3fefadd2f0e9166a83b8d7190ed94d9fddc05fed",
+    "package.json": "698ff3ff36c1747b097b3a5b6936a7166ea3f75ff5694a7d5447074de18481ac",
+    "test/dsh-bundle.test.mjs": "d0d4107607c9bd2ca5548f005852358090cfff631ce9aa1524060b589069c1f0",
+    "dist/INSTALL.md": "a19e308a0f7d90cfdc3c53bd2a1b41576a225d6364ef05450390754961f8e9b1",
+    "dist/manifest.json": "29c4a92d6d64fcff4a21c0e9568498cfc2e9bea5ccf32d33792686680a52019e",
+    "dist/build-dsh-plugin-0.6.1.zip": null,
+    "dist/build-dsh-plugin-0.6.1.sha256": null
+  },
+  "postconditions": {
+    "build-dsh-plugin/SKILL.md": "ef0bc52dbb58ad1517a2b80e9b1ed32c526d5f97a2db231c225d998eb18d56c7",
+    "build-dsh-plugin/references/desktop.md": "a82339b53745bf3a620ca1c1e186ecb74baef813a94f349659848cc126b8a9cc",
+    "build-dsh-plugin/references/marketplace.md": "a46c70b74ccdcc8022f6cba55eed44698edac5dc6bc61c057d67d1cebb914d9d",
+    "README.md": "a908ba4239d7db6e925e6af753288b3cf5cebadbbc4f711668f63010f0fbe666",
+    "docs/Skill简介-500字内.md": "ec589ab6ee3b180204cb8d1728aa8b4f77d026174404c2e358e6c20ca77c93e4",
+    "package.json": "bfc6d192e1947b97d2856000c0ffe1a750f52f4fb756d9d50809094e61a9ab1d",
+    "test/dsh-bundle.test.mjs": "81376448b26474d4a0df89a37c1ccc9f232f214e698d9e47bc47916c13e5709b",
+    "dist/INSTALL.md": "66914ca5441933ed66bf5022c10958d9baf670d7fb684baf5b59487858e6b20a",
+    "dist/manifest.json": "42614ce9706b759f5e9c99dc3129153b5e2d381c5c7bd01572359d90ae97350d",
+    "dist/build-dsh-plugin-0.6.1.zip": "09a567fd382af1313591d2df45689035024a4393cb1de72e971544dc1b990aac",
+    "dist/build-dsh-plugin-0.6.1.sha256": "738ca8e4d51743b257c6d88cf814746aec0961f3c5a01034f35400458a889199"
+  },
+  "authorization": {
+    "source": "direct-user-request",
+    "publicRelease": "previously-authorized-and-currently-requested-plugin-update",
+    "sourcePublication": "auditable-ci-checked-pull-request-using-connected-short-lived-GitHub-authorization"
+  },
+  "objective": "Make the build-dsh-plugin workflow accurately distinguish Desktop-specific UI adaptation from installability and defer DSH Desktop compatibility decisions to the official plugin manager.",
+  "decisions": [
+    "A Desktop compatibility/profile label describes separately evidenced Desktop-specific client experience; it is not an install gate.",
+    "Catalog admission and security status remain independent; Catalog-blocked entries remain unavailable through the Store.",
+    "For an approved fixed-source entry installed inside DSH Desktop, inspect and installation are owned by the official Desktop pluginManager; a host-only plugin may still be installable.",
+    "This documentation release does not change DSH core, @deepseek-ai packages, a real Profile, or the Catalog status of build-dsh-plugin."
+  ],
+  "gates": [
+    "current official release resolver succeeds",
+    "npm run check",
+    "fixed Agent Skill archive hash/contents/LICENSE verified",
+    "GitHub exact-head CI passes, including the live latest-three x Linux/macOS/Windows disposable Profile matrix",
+    "GitHub v0.6.1 release API/assets and ZIP hash read back"
+  ],
+  "rollback": "Revert the exact merged documentation/distribution commit in a CI-checked PR; retain v0.6.0 and all prior immutable release assets.",
+  "healthCheck": "Documentation explains that an unadapted UI can still be installed when Catalog-approved and accepted by DSH Desktop pluginManager; Catalog blocked status stays an independent refusal; v0.6.1 archive and checksum match the tagged manifest.",
+  "verification": {
+    "baseAndPreconditions": "passed against bd5c363264df52d19ce8795f3b105d609a399ffe",
+    "officialLatestThree": "resolved from official GitHub Releases and npm: 0.2.1-rc.4, 0.2.1-rc.5, 0.2.2-alpha.2; next channel has no newer release",
+    "localNpmRunCheck": "passed: 25 tests, BRIEF_TEST_OK, MARKETPLACE_TEST_OK, CANDIDATE_TEST_OK, distribution ZIP verification",
+    "npmPackDryRun": "passed: dsh-build-plugin@0.6.1, 37 files",
+    "artifact": {
+      "files": 31,
+      "bytes": 121426,
+      "sha256": "09a567fd382af1313591d2df45689035024a4393cb1de72e971544dc1b990aac",
+      "license": "MIT included"
+    },
+    "exactHeadLatestThreeMatrix": "passed: GitHub Actions run 41263986543; all 9 latest-three x Ubuntu/macOS/Windows disposable Profile jobs passed",
+    "publicReleaseReadback": "pending merged tag and unauthenticated asset verification",
+    "realDshProfileAndDesktopUi": "unchanged and unverified by this documentation/distribution update"
+  }
+}
