@@ -48,6 +48,7 @@ Minimum manifest shape:
   "name": "dsh-example-plugin",
   "version": "0.1.0",
   "type": "module",
+  "engines": { "dsh": ">=0.2.0 <0.3.0" },
   "main": "index.mjs",
   "files": ["index.mjs", "cordis.patch.yml"],
   "dsh": { "bundle": { "patch": "./cordis.patch.yml" } }

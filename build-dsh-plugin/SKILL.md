@@ -103,7 +103,7 @@ Produce a risk register that names assets, actors, trust boundaries, write surfa
 - **Lifecycle manager**: treat every Profile change as an `R3` transaction and use the mutation protocol below.
 - **Tool card contract**: prefer provider-neutral `presentCall`/`presentResult` render intents; use a custom Client Slot card only for a plugin-owned Tool when the inspected built-in vocabulary cannot express the outcome.
 
-Create a bundle manifest with `dsh.bundle.patch`, a package-resolvable `cordis.patch.yml`, unique entry IDs, explicit files, version, license, and build contract. Remember that later patch layers replace a row's complete `config`; they do not deep-merge it.
+Create a bundle manifest with `dsh.bundle.patch`, a package-resolvable `cordis.patch.yml`, unique entry IDs, explicit files, version, license, and build contract. Declare the supported host range under the official root `engines.dsh` field. Keep Catalog `compatibility.dsh` metadata synchronized with that range, and keep exact per-release evidence separate from both declarations. If `engines.dsh` is absent, DSH checks the bundle's `@deepseek-ai/dsh*` peer-dependency ranges instead; do not leave both forms undeclared. Remember that later patch layers replace a row's complete `config`; they do not deep-merge it.
 
 Compare at least two plausible patterns when the choice affects permissions, process boundaries, install behavior, or user experience. Record benefits and costs; do not select an architecture only because an earlier project used it.
 

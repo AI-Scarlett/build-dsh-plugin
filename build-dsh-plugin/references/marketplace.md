@@ -101,6 +101,7 @@ Before an `approved` catalog candidate, require all of the following:
 
 - `manifestPath` resolves to valid JSON at the pinned Commit;
 - manifest `name`, semantic `version`, and declared license agree with the catalog;
+- the manifest declares the official root `engines.dsh` range; although DSH can fall back to `@deepseek-ai/dsh*` peer ranges, a marketplace proposal must make its supported range explicit, and catalog `compatibility.dsh` must match it;
 - manifest declares a safe relative `dsh.bundle.patch`;
 - the Patch exists at the same Commit and inserts globally unique DSH entry IDs;
 - catalog `entryIds` exactly describe the package's inserted rows;
@@ -123,6 +124,7 @@ Before an `approved` catalog candidate, require all of the following:
 - `blocked`/`unlisted` entries include a concrete `statusReason`;
 - metadata comes from the pinned repository and current acceptance evidence, not local guesses.
 - resolve the official latest-three window immediately before review with `node scripts/official-dsh-releases.mjs`; its authority combines published official GitHub Releases with npm version records in the active major.minor series, excludes drafts and deprecated versions, and must fail closed when unavailable;
+- verify the package's root `engines.dsh` at the same pinned Commit. This is the official install/start compatibility gate; Catalog's `compatibility.dshReleases` is evidence metadata and does not replace it;
 - `compatibility.dshReleases` explicitly marks every full version in that live window as `compatible`, `incompatible`, or `unknown`; an approved proposal needs at least one exact `compatible` result. Never copy a remembered release window into a new assessment;
 - `compatibility.dshOperations` records `install`, `start`, `uninstall`, and `rollback` as `passed`, `failed`, or `unknown` for every release in the live window. Historical keys may remain; version-range compatibility does not substitute for exact compatibility or operation evidence.
 - When claiming Desktop-specific compatibility by declaring `desktop` in `compatibility.profiles`, `assurance.installability` and `assurance.runtime` must both be `verified`, include `desktop` in their own `profiles` arrays, and identify the same exact DSH release in the live window. That release must be `compatible`, and its four operation results must all be `passed`. Evidence must come from the official Desktop target; Web Profile results do not count. This evidence requirement controls the Desktop-specific compatibility claim, not whether an approved entry can be offered for installation in Desktop.
@@ -170,7 +172,7 @@ Conservative values improve trust without needlessly excluding third-party plugi
 - treat `automated-scan` and `author-verified` as evidence provenance, not security certification;
 - do not claim DSH/system/Profile compatibility until the relevant disposable or real acceptance exists.
 
-For Catalog admission, unknown critical source, security, or general DSH compatibility evidence may justify `blocked` under the current Registry policy. After an entry is approved, the absence of a Desktop-specific profile label alone does not disable its Desktop install action: DSH Desktop's official plugin manager checks the pinned source against the running environment. The remedy for missing claims is evidence, not invented metadata.
+For Catalog admission, unknown critical source, security, or general DSH compatibility evidence may justify `blocked` under the current Registry policy. `blocked` records Store review status; it is not a DSH compatibility result. In DSH Store's Desktop panel, a user-confirmed, structurally safe fixed GitHub source can be handed to the official manager for `inspect`; call `installBundle` only when DSH returns `accepted`, and report DSH's outcome. This does not approve the Catalog record or open the Store-managed Web install/update path. The absence of a Desktop-specific profile label alone does not disable the official manager handoff for an approved entry. The remedy for missing claims is evidence, not invented metadata.
 
 ## 8. Preflight workflow
 

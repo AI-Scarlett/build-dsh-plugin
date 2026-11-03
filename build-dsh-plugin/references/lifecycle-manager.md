@@ -12,6 +12,8 @@ A Guardian must use the official launch-token exchange from the child it owns. A
 
 Every mutation consumes a fresh typed plan with immutable repository, Commit, manifestPath and installPath; file preconditions; fixed official CLI argv; backup; health and rollback. Reserve a durable bounded operation ID before dispatch. Journal only declared non-secret fields. Poll status via GET. Never retry mutation POST on timeout, page refresh, or restart.
 
+DSH `0.2.2-alpha.3` also adds native plugin-management operations to its TypeScript and Python SDKs. Use that surface only when the target application is the SDK runtime and the exact release documents the operation. Each action, including listing, requires full access or per-call approval; a composition without an approval responder refuses the operation. Saved package/profile changes report `restart-required` with `no-hmr`, so do not report the new version as active until the runtime restarts and is read back. This SDK surface does not replace the official DSH Desktop Plugins page for a Desktop user's package installation.
+
 Use queued, running, succeeded, failed, rolled-back, recovery-required. Only verified Profile AND dependency restoration permits rolled-back. A changed precondition before mutation is failed. Windows locks or uncertain interruption require recovery and prohibit automatic restart. A new process may display an interrupted journal but must not execute it. Use atomic mode-0600 files, corruption rejection, capacity limits, and protection against competing operations.
 
 ## Activation and diagnostics

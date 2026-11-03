@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "type": "dsh-plugin-source-pr",
+  "planId": "build-dsh-plugin-0.6.2-source-pr-20261103",
+  "status": "validated-ready-for-source-pr",
+  "createdAt": "2026-11-03T12:14:58Z",
+  "expiresAt": "2026-11-04T12:14:58Z",
+  "repository": "AI-Scarlett/build-dsh-plugin",
+  "baseCommit": "c71903bffd9098aecbca4b1cf60b0d7602c51f33",
+  "objective": "Publish the reviewed Build DSH Plugin 0.6.2 source candidate and submit it through an auditable GitHub pull request.",
+  "authorization": {
+    "source": "direct-user-request-in-active-conversation",
+    "request": "Push and submit the marketplace review.",
+    "githubWrite": "short-lived GitHub connector authorization; source and Catalog changes only through separate auditable pull requests",
+    "merge": false,
+    "publicRelease": false,
+    "realProfileMutation": false
+  },
+  "operation": {
+    "branch": "codex/dsh-022-alpha3",
+    "baseBranch": "main",
+    "writeActions": [
+      "create branch at baseCommit",
+      "create exact-scope Git tree and commit",
+      "update branch ref with expected base SHA",
+      "open source pull request"
+    ],
+    "fixedArgv": null,
+    "connector": "GitHub integration; no credential material stored in plan"
+  },
+  "source": {
+    "package": "dsh-build-plugin",
+    "version": "0.6.2",
+    "candidateZip": "dist/build-dsh-plugin-0.6.2.zip",
+    "candidateSha256": "b3e8e11f6503e5ca6193d87d4ae8124be04920758f0af56578c8e9e8f7b530a5",
+    "scope": [
+      "README.md",
+      "build-dsh-plugin/SKILL.md",
+      "build-dsh-plugin/references/boundaries.md",
+      "build-dsh-plugin/references/desktop.md",
+      "build-dsh-plugin/references/lifecycle-manager.md",
+      "build-dsh-plugin/references/marketplace.md",
+      "build-dsh-plugin/scripts/audit-marketplace-entry.mjs",
+      "build-dsh-plugin/scripts/test-marketplace-entry.mjs",
+      "dist/INSTALL.md",
+      "dist/build-dsh-plugin-0.6.2.sha256",
+      "dist/build-dsh-plugin-0.6.2.zip",
+      "dist/manifest.json",
+      "docs/Skill简介-500字内.md",
+      "docs/ops/build-dsh-plugin-0.6.2-source-pr-plan-20261103.json",
+      "docs/reviews/dsh-023-alpha3-compatibility-review-20261103.md",
+      "package.json",
+      "test/dsh-bundle.test.mjs"
+    ]
+  },
+  "preconditions": {
+    "README.md": "a908ba4239d7db6e925e6af753288b3cf5cebadbbc4f711668f63010f0fbe666",
+    "build-dsh-plugin/SKILL.md": "ef0bc52dbb58ad1517a2b80e9b1ed32c526d5f97a2db231c225d998eb18d56c7",
+    "build-dsh-plugin/references/boundaries.md": "80e0319a99e255fcbdbba8b9fd66b2348b03c73237d36e9ec917ac58733cbdc3",
+    "build-dsh-plugin/references/desktop.md": "a82339b53745bf3a620ca1c1e186ecb74baef813a94f349659848cc126b8a9cc",
+    "build-dsh-plugin/references/lifecycle-manager.md": "09114273ba6cde89ece79fdadbf6361e80becf3e64c07cb6943e198e0015b4fd",
+    "build-dsh-plugin/references/marketplace.md": "a46c70b74ccdcc8022f6cba55eed44698edac5dc6bc61c057d67d1cebb914d9d",
+    "build-dsh-plugin/scripts/audit-marketplace-entry.mjs": "cf8951908451ba783e366844c6926b23f23858b99e1d36672949f366797c0b23",
+    "build-dsh-plugin/scripts/test-marketplace-entry.mjs": "13cbd4a479aeaa854e4757c7b652c2eb7dacbbf5d216f42506b36ceb176ea906",
+    "dist/INSTALL.md": "66914ca5441933ed66bf5022c10958d9baf670d7fb684baf5b59487858e6b20a",
+    "dist/build-dsh-plugin-0.6.2.sha256": null,
+    "dist/build-dsh-plugin-0.6.2.zip": null,
+    "dist/manifest.json": "42614ce9706b759f5e9c99dc3129153b5e2d381c5c7bd01572359d90ae97350d",
+    "docs/Skill简介-500字内.md": "ec589ab6ee3b180204cb8d1728aa8b4f77d026174404c2e358e6c20ca77c93e4",
+    "docs/ops/build-dsh-plugin-0.6.2-source-pr-plan-20261103.json": null,
+    "docs/reviews/dsh-023-alpha3-compatibility-review-20261103.md": null,
+    "package.json": "bfc6d192e1947b97d2856000c0ffe1a750f52f4fb756d9d50809094e61a9ab1d",
+    "test/dsh-bundle.test.mjs": "81376448b26474d4a0df89a37c1ccc9f232f214e698d9e47bc47916c13e5709b"
+  },
+  "postconditions": {
+    "README.md": "45af2f0609a8fbc5ac0879823a07984dac4664d11fe173a28cadff837bce1a84",
+    "build-dsh-plugin/SKILL.md": "0a9ad8cb941d655546f8fb51e73124df671d83ed48cb11e2ec29e508130c7300",
+    "build-dsh-plugin/references/boundaries.md": "dcdb0397f769be6d5183f95746fa3dd8758043b0d4db78c18be851f29f274699",
+    "build-dsh-plugin/references/desktop.md": "bdcaff20985abe35fe90cfba5f796397c6d15ad62a8a964aec1cb69b9941db9b",
+    "build-dsh-plugin/references/lifecycle-manager.md": "ec78130d44959f4b429c794c370dc9a55f9bc3c6614ff32c65d4e173ed676cbc",
+    "build-dsh-plugin/references/marketplace.md": "fe8b6b3ba249b140459dabcd6aabc4d21e4f2db2c8a2fe258be621015535735f",
+    "build-dsh-plugin/scripts/audit-marketplace-entry.mjs": "fdaa38ccaf7c350b5c5afe1ad13ad6dc6f9ba2e9a9faf30979329d33547f6ca2",
+    "build-dsh-plugin/scripts/test-marketplace-entry.mjs": "db21bd9570be4f14d369151c5856fc330df60a2c819291f81635f20d3ff154e2",
+    "dist/INSTALL.md": "19749b96971183f83b42f9da793a277c014ce3a53e8ec0ad03510aabeb460fbc",
+    "dist/build-dsh-plugin-0.6.2.sha256": "8b1049a40498942ed681205882ae919d046c53b84ce6d0ff229f342e613a3ec4",
+    "dist/build-dsh-plugin-0.6.2.zip": "b3e8e11f6503e5ca6193d87d4ae8124be04920758f0af56578c8e9e8f7b530a5",
+    "dist/manifest.json": "a7d8dff22639b4680228513e6b000a72e739c9ed661d68b0cc57ceb37a25dfaf",
+    "docs/Skill简介-500字内.md": "a85aba5a30a37ac45b6c0713c15bd8d9b6838ca37d26fac6633aaa61fc1c2b06",
+    "docs/reviews/dsh-023-alpha3-compatibility-review-20261103.md": "a12f9f989ec01c96ec5f8ff8b9c4b9cbd4da5be4529cce6200291a5293ff2069",
+    "package.json": "1fadfa23cd3b4626b26295ce3c4e665822bf7fc0696be7ccb6d7262810778bf8",
+    "test/dsh-bundle.test.mjs": "ef44618567d6699260d1e34502d753c5f846a27c655b6ccf582626f6a1a7399e"
+  },
+  "gates": [
+    {
+      "name": "base-binding",
+      "result": "passed",
+      "evidence": "local HEAD and origin/main are c71903bffd9098aecbca4b1cf60b0d7602c51f33; remote branch and matching PR do not exist"
+    },
+    {
+      "name": "npm-run-check",
+      "result": "passed",
+      "evidence": "25/25 tests; BRIEF_TEST_OK; MARKETPLACE_TEST_OK; CANDIDATE_TEST_OK; DISTRIBUTION_OK"
+    },
+    {
+      "name": "marketplace-structure",
+      "result": "passed",
+      "evidence": "READY_FOR_CATALOG_ENTRY; DSH latest-three 0.2.1-rc.5, 0.2.2-alpha.2, 0.2.2-alpha.3"
+    },
+    {
+      "name": "plugin-static-audit",
+      "result": "passed",
+      "evidence": "80/80 static score; isolated-acceptance-ready; no blockers"
+    },
+    {
+      "name": "archive-integrity",
+      "result": "passed",
+      "evidence": "31 files; ZIP SHA-256 matches dist/manifest.json; source bytes match every archived path"
+    },
+    {
+      "name": "disposable-runtime",
+      "result": "partial",
+      "evidence": "macOS official-CLI disposable Profile acceptance passed for all latest-three; Linux/Windows CI and real Desktop UI/Profile remain pending"
+    }
+  ],
+  "rollback": {
+    "unmerged": "close the source PR and retain the immutable commit for audit",
+    "merged": "revert only with a new CI-checked PR",
+    "profile": "no real Profile changed"
+  },
+  "limitations": [
+    "Do not merge this PR or create a release tag in this plan.",
+    "Catalog admission is a separate fresh Store plan and PR pinned to a public full Commit.",
+    "A GitHub PR does not prove merged Catalog or public storefront visibility."
+  ]
+}

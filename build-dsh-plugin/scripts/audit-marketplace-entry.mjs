@@ -345,6 +345,15 @@ async function main() {
     report.package = { name: manifest.name ?? null, version: manifest.version ?? null, license: manifest.license ?? null }
     if (!PACKAGE_NAME.test(manifest.name ?? '') || String(manifest.name ?? '').includes('..')) add(report, 'errors', 'MKT004', 'manifest package name is missing or invalid', manifest.name)
     if (!VERSION.test(manifest.version ?? '')) add(report, 'errors', 'MKT004', 'manifest version is missing or invalid', manifest.version)
+    const dshEngineRange = manifest.engines?.dsh
+    if (typeof dshEngineRange !== 'string' || dshEngineRange.trim() === '') {
+      add(report, 'errors', 'MKT017', 'manifest must declare an explicit root engines.dsh range for marketplace review')
+    } else if (entry && entry.compatibility?.dsh !== dshEngineRange) {
+      add(report, 'errors', 'MKT017', 'catalog compatibility.dsh must match the manifest engines.dsh range', {
+        manifest: dshEngineRange,
+        catalog: entry.compatibility?.dsh ?? null,
+      })
+    }
     const patchRelative = manifest?.dsh?.bundle?.patch
     if (!safeRelative(patchRelative)) add(report, 'errors', 'MKT002', 'manifest does not declare a safe relative dsh.bundle.patch', patchRelative)
     else {

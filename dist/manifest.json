@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
   "name": "build-dsh-plugin",
-  "distributionVersion": "0.6.1",
-  "createdAt": "2026-11-01T01:58:23Z",
+  "distributionVersion": "0.6.2",
+  "createdAt": "2026-11-03T12:04:29Z",
   "artifact": {
-    "file": "build-dsh-plugin-0.6.1.zip",
+    "file": "build-dsh-plugin-0.6.2.zip",
     "archiveRoot": "build-dsh-plugin/",
-    "bytes": 121426,
+    "bytes": 123336,
     "regularFileCount": 31,
-    "sha256": "09a567fd382af1313591d2df45689035024a4393cb1de72e971544dc1b990aac",
-    "sha256File": "build-dsh-plugin-0.6.1.sha256",
-    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.1/build-dsh-plugin-0.6.1.zip",
-    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.1/build-dsh-plugin-0.6.1.sha256"
+    "sha256": "b3e8e11f6503e5ca6193d87d4ae8124be04920758f0af56578c8e9e8f7b530a5",
+    "sha256File": "build-dsh-plugin-0.6.2.sha256",
+    "downloadUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.2/build-dsh-plugin-0.6.2.zip",
+    "sha256Url": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/download/v0.6.2/build-dsh-plugin-0.6.2.sha256"
   },
   "release": {
-    "tag": "v0.6.1",
-    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.6.1",
-    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.6.1",
-    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.6.1/dist/manifest.json"
+    "tag": "v0.6.2",
+    "pageUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/releases/tag/v0.6.2",
+    "sourceUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/tree/v0.6.2",
+    "manifestUrl": "https://raw.githubusercontent.com/AI-Scarlett/build-dsh-plugin/v0.6.2/dist/manifest.json"
   },
   "license": {
     "spdxId": "MIT",
     "file": "build-dsh-plugin/LICENSE",
-    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.6.1/build-dsh-plugin/LICENSE",
+    "url": "https://github.com/AI-Scarlett/build-dsh-plugin/blob/v0.6.2/build-dsh-plugin/LICENSE",
     "notice": "Copyright (c) 2026 AI-Scarlett. Preserve the copyright and permission notice in copies or substantial portions."
   },
   "entrypoints": {
@@ -50,7 +50,7 @@
   "runtime": {
     "required": [
       "Agent support for SKILL.md or equivalent instruction loading",
-      "Official DSH latest-three window: 0.2.1-rc.4, 0.2.1-rc.5, 0.2.2-alpha.2; install, start, uninstall, and exact Profile-composition rollback passed in fixed-version CI on Ubuntu, macOS, and Windows.",
+      "Official DSH latest-three window: 0.2.1-rc.5, 0.2.2-alpha.2, 0.2.2-alpha.3. All three passed official-CLI install/start/uninstall/exact Profile-composition restoration on macOS disposable Profiles for this 0.6.2 candidate. Linux/Windows CI remains pending.",
       "Official DSH Desktop feed: 0.2.1-rc.5; Desktop host, Client dependencies, plugin-manager, and UI/Profile evidence are tracked separately from Web."
     ],
     "scripts": [
@@ -59,17 +59,17 @@
     "externalPackages": []
   },
   "verification": {
-    "skillStructure": "passed",
-    "nodeSyntax": "passed",
-    "briefTests": "BRIEF_TEST_OK",
-    "marketplaceTests": "MARKETPLACE_TEST_OK",
+    "skillStructure": "passed static audit 80/80 and marketplace route review for 0.6.2 candidate",
+    "nodeSyntax": "passed: node --check for all .mjs under build-dsh-plugin, src, scripts, and test (2026-11-03)",
+    "briefTests": "BRIEF_TEST_OK (2026-11-03)",
+    "marketplaceTests": "MARKETPLACE_TEST_OK (2026-11-03)",
     "candidateTests": "CANDIDATE_TEST_OK",
-    "personalAbsolutePathScan": "passed",
-    "secretPatternScan": "passed",
-    "disposableExtractionRetest": "passed",
-    "dshBundleContractTests": "passed",
-    "cardAuditTests": "passed",
-    "dshDisposableInstallDumpConfig": "passed-on-0.1.2-alpha.4-alpha.5-and-rc.1",
+    "personalAbsolutePathScan": "passed 2026-11-03: no personal absolute paths; generic /home/CLI documentation is not a user path",
+    "secretPatternScan": "passed 2026-11-03: no common GitHub, OpenAI-style, or AWS key patterns in source/docs",
+    "disposableExtractionRetest": "not-run-for-0.6.2-candidate",
+    "dshBundleContractTests": "passed: npm test 25/25 (2026-11-03)",
+    "cardAuditTests": "passed: npm test 25/25 (2026-11-03)",
+    "dshDisposableInstallDumpConfig": "passed on macOS disposable Profiles for current latest-three: 0.2.1-rc.5, 0.2.2-alpha.2, 0.2.2-alpha.3",
     "dshRuntimeSkillDiscovery": "passed-on-0.1.2-alpha.4-alpha.5-and-rc.1",
     "dsh011Rc1CompatibilityMatrix": "passed",
     "dsh011Rc2CompatibilityMatrix": "passed",
@@ -89,7 +89,7 @@
     "rootTestFilenameClassification": "passed",
     "dsh015Alpha1SourceContract": "passed",
     "dsh015Alpha2SourceContract": "passed",
-    "dshLatestThreeWindow": "0.2.1-rc.4,0.2.1-rc.5,0.2.2-alpha.2 (resolved from official GitHub Releases and npm on 2026-10-30)",
+    "dshLatestThreeWindow": "0.2.1-rc.5,0.2.2-alpha.2,0.2.2-alpha.3 (resolved from official GitHub Releases and npm on 2026-11-03)",
     "dsh015Rc1InstallDumpConfigColdStart": "passed",
     "dsh015Rc2InstallDumpConfigColdStart": "passed",
     "dsh016Alpha1Install": "blocked-official-dependency-unpublished",
@@ -101,7 +101,10 @@
     "dshPreviousActiveLatestThreeMatrix": "passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
     "dshPreviousNextChannel": "0.2.0-rc.1-passed-in-GitHub-Actions-run-36516937038-all-3-platforms",
     "dshDesktopFeedEngine": "0.2.1-rc.5 in both official feeds; CLI matrix does not prove official Desktop UI/Profile E4",
-    "dshActiveLatestThreeMatrixRunUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/actions/runs/41263986543"
+    "dshActiveLatestThreeMatrixRunUrl": "https://github.com/AI-Scarlett/build-dsh-plugin/actions/runs/41263986543",
+    "dshLatestThreeMacOSDisposableAcceptance": "passed for 0.2.1-rc.5, 0.2.2-alpha.2, 0.2.2-alpha.3: official CLI installed local 0.6.2 Bundle, dump-config contained dsh-build-plugin-skill-provider, Web cold start and authenticated HTTP probe passed, uninstall restored exact pre-install Profile composition; Linux/Windows matrix pending",
+    "dshV061ActiveLatestThreeMatrix": "passed for v0.6.1 and its prior window 0.2.1-rc.4, 0.2.1-rc.5, 0.2.2-alpha.2; not inherited by v0.6.2",
+    "marketplaceManifestAudit": "not-run-for-0.6.2-catalog-entry; source changed and requires a new pinned Commit"
   },
   "excluded": [
     "Obsidian vault notes",
@@ -117,6 +120,7 @@
     "The archive contains build-dsh-plugin/LICENSE so the license travels with redistributed copies.",
     "The Skill keeps discovery candidates non-installable and separate from trust-evidenced catalog proposals; it does not silently modify or deploy the STORE repository.",
     "This ZIP is an Agent Skill, not a DSH Profile package. The DSH STORE website separately reads the latest GitHub Release and its tagged manifest before enabling download.",
-    "Version 0.6.1 clarifies that the Desktop adaptation label is informational, approved fixed-source entries may be passed to DSH Desktop without that label, and the official Desktop plugin manager owns current-version compatibility checks; Catalog-blocked entries remain unavailable."
+    "Version 0.6.1 clarified that the Desktop adaptation label is informational. Version 0.6.2 further distinguishes Catalog review status from Desktop installation: a structurally safe blocked fixed source may be handed to DSH Desktop under user confirmation, while Store admission remains unchanged.",
+    "0.6.2 remains a candidate until CI and Catalog review. The candidate has macOS disposable CLI acceptance across the current latest-three; local contract tests passed 25/25, marketplace test gates passed, Linux/Windows CI and real Desktop UI/Profile acceptance remain unverified."
   ]
 }
