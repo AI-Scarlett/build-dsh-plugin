@@ -8,11 +8,15 @@ const root = new URL('../', import.meta.url)
 test('repository root is a lifecycle-free DSH Skill adapter', async () => {
   const pkg = JSON.parse(await readFile(new URL('package.json', root), 'utf8'))
   assert.equal(pkg.name, 'dsh-build-plugin')
-  assert.equal(pkg.version, '0.6.1')
+  assert.equal(pkg.version, '0.6.2')
   assert.equal(pkg.main, './src/index.mjs')
   assert.ok(pkg.files.includes('src'))
+  assert.ok(pkg.files.includes('build-dsh-plugin/scripts/audit-plugin.mjs'))
+  assert.equal(pkg.files.includes('build-dsh-plugin'), false)
+  assert.equal(pkg.files.some(path => /\/test-[^/]+\.mjs$/.test(path)), false)
   assert.equal(pkg.dsh.bundle.patch, './cordis.patch.yml')
-  assert.equal(pkg.dsh.compatibility.dsh, '>=0.1.0-rc.8 <0.2.0 || 0.1.5-alpha.1 || 0.1.5-alpha.2 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-alpha.1 || 0.2.1-alpha.2 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-alpha.2')
+  assert.equal(pkg.dsh.compatibility.dsh, '>=0.1.0-rc.8 <0.2.0 || 0.1.5-alpha.1 || 0.1.5-alpha.2 || 0.1.5-rc.1 || 0.1.5-rc.2 || 0.2.0-rc.1 || 0.2.0-rc.2 || 0.2.1-alpha.1 || 0.2.1-alpha.2 || 0.2.1-rc.4 || 0.2.1-rc.5 || 0.2.2-alpha.2 || 0.2.2-alpha.3')
+  assert.equal(pkg.engines.dsh, pkg.dsh.compatibility.dsh)
   for (const release of ['0.1.2-alpha.5', '0.1.2-rc.1', '0.1.3-alpha.1', '0.1.5-alpha.1', '0.1.5-alpha.2']) {
     assert.equal(pkg.dsh.compatibility.dshReleases[release], 'compatible')
   }
@@ -32,12 +36,16 @@ test('repository root is a lifecycle-free DSH Skill adapter', async () => {
       install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed',
     })
   }
-  for (const release of ['0.2.1-rc.4', '0.2.1-rc.5', '0.2.2-alpha.2']) {
+  for (const release of ['0.2.1-rc.5', '0.2.2-alpha.2']) {
     assert.equal(pkg.dsh.compatibility.dshReleases[release], 'compatible')
     assert.deepEqual(pkg.dsh.compatibility.dshOperations[release], {
       install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed',
     })
   }
+  assert.equal(pkg.dsh.compatibility.dshReleases['0.2.2-alpha.3'], 'compatible')
+  assert.deepEqual(pkg.dsh.compatibility.dshOperations['0.2.2-alpha.3'], {
+    install: 'passed', start: 'passed', uninstall: 'passed', rollback: 'passed',
+  })
   assert.equal(pkg.dependencies, undefined)
   assert.equal(pkg.peerDependencies, undefined)
   for (const name of ['preinstall', 'install', 'postinstall', 'prepare']) {
@@ -51,18 +59,18 @@ test('CI compatibility matrix consumes the ordered official latest-three resolve
     return {
       authority: 'official-github-releases-and-npm-published-versions',
       releaseCount: 3,
-      latestVersion: '0.2.2-alpha.2',
-      releases: ['0.2.1-rc.4', '0.2.1-rc.5', '0.2.2-alpha.2'],
+      latestVersion: '0.2.2-alpha.3',
+      releases: ['0.2.1-rc.5', '0.2.2-alpha.2', '0.2.2-alpha.3'],
       channels: [
         { tag: 'latest', kind: 'preview', version: '0.2.1-rc.5' },
         { tag: 'next', kind: 'preview', version: '0.2.1-rc.5' },
-        { tag: 'alpha', kind: 'preview', version: '0.2.2-alpha.2' },
+        { tag: 'alpha', kind: 'preview', version: '0.2.2-alpha.3' },
       ],
     }
   })
   assert.deepEqual(result, {
-    latestVersion: '0.2.2-alpha.2',
-    releases: ['0.2.1-rc.4', '0.2.1-rc.5', '0.2.2-alpha.2'],
+    latestVersion: '0.2.2-alpha.3',
+    releases: ['0.2.1-rc.5', '0.2.2-alpha.2', '0.2.2-alpha.3'],
     nextVersion: null,
   })
   const workflow = await readFile(new URL('.github/workflows/verify-distribution.yml', root), 'utf8')
@@ -78,8 +86,8 @@ test('latest-three resolver fails closed when the official window is incomplete'
   await assert.rejects(resolveDshUpgradeMatrix(async () => ({
     authority: 'official-github-releases-and-npm-published-versions',
     releaseCount: 3,
-    latestVersion: '0.2.2-alpha.2',
-    releases: ['0.2.1-rc.4', '0.2.1-rc.5'],
+    latestVersion: '0.2.2-alpha.3',
+    releases: ['0.2.1-rc.5', '0.2.2-alpha.2'],
     channels: [],
   })), /complete ordered latest-three window/)
 })
@@ -88,8 +96,8 @@ test('next channel resolves independently and fails closed on ambiguous authorit
   const resolve = async channels => resolveDshUpgradeMatrix(async () => ({
     authority: 'official-github-releases-and-npm-published-versions',
     releaseCount: 3,
-    latestVersion: '0.2.2-alpha.2',
-    releases: ['0.2.1-rc.4', '0.2.1-rc.5', '0.2.2-alpha.2'],
+    latestVersion: '0.2.2-alpha.3',
+    releases: ['0.2.1-rc.5', '0.2.2-alpha.2', '0.2.2-alpha.3'],
     channels,
   }))
   assert.equal((await resolve([{ tag: 'next', kind: 'preview', version: '0.2.2-rc.1' }])).nextVersion, '0.2.2-rc.1')
@@ -151,7 +159,7 @@ test('Host adapter emits the minimal SkillRegistration shape without private imp
   assert.equal(registration.path.endsWith('/build-dsh-plugin/SKILL.md'), true)
   assert.ok(registration.content.includes('DSH'))
   const desktopGuide = await readFile(new URL('build-dsh-plugin/references/desktop.md', root), 'utf8')
-  for (const contract of ['static `inject`', '`remote.pluginManager`', 'Desktop and Web', 'does not establish Desktop support', 'not an install gate', 'official plugin manager decides compatibility']) {
+  for (const contract of ['static `inject`', '`remote.pluginManager`', 'Desktop and Web', 'does not establish Desktop support', "Store's compatibility label as an install gate", "DSH Desktop's official plugin manager decides whether the exact pinned source is compatible"]) {
     assert.ok(desktopGuide.includes(contract), `Desktop guide is missing ${contract}`)
   }
 })

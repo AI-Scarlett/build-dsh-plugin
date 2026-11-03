@@ -39,6 +39,7 @@ function manifest(overrides = {}) {
     type: 'module',
     main: './index.mjs',
     files: ['index.mjs', 'cordis.patch.yml', 'LICENSE'],
+    engines: { dsh: `>=${testReleases[0]}` },
     dsh: { bundle: { patch: './cordis.patch.yml' } },
     scripts: {},
     ...overrides,
@@ -117,6 +118,24 @@ try {
   assert.equal(direct.body.route, 'direct')
   assert.deepEqual(direct.body.entryIds, ['dsh-example-plugin'])
   assert.deepEqual(direct.body.dshReleaseWindow.releases, testReleases)
+
+  const missingEngineRoot = join(fixture, 'missing-engine')
+  await mkdir(missingEngineRoot)
+  await writePlugin(missingEngineRoot, 'package.json', manifest({ engines: { node: '>=22' } }))
+  const missingEnginePath = join(missingEngineRoot, 'entry.json')
+  await writeFile(missingEnginePath, `${JSON.stringify(entry(), null, 2)}\n`)
+  const missingEngine = run(missingEngineRoot, missingEnginePath, registryPath)
+  assert.equal(missingEngine.code, 1)
+  assert.ok(missingEngine.body.errors.some(item => item.code === 'MKT017'))
+
+  const engineMismatchRoot = join(fixture, 'engine-mismatch')
+  await mkdir(engineMismatchRoot)
+  await writePlugin(engineMismatchRoot, 'package.json', manifest({ engines: { dsh: '>=9.0.0' } }))
+  const engineMismatchPath = join(engineMismatchRoot, 'entry.json')
+  await writeFile(engineMismatchPath, `${JSON.stringify(entry(), null, 2)}\n`)
+  const engineMismatch = run(engineMismatchRoot, engineMismatchPath, registryPath)
+  assert.equal(engineMismatch.code, 1)
+  assert.ok(engineMismatch.body.errors.some(item => item.code === 'MKT017'))
 
   const partialEvidenceRoot = join(fixture, 'partial-evidence')
   await mkdir(partialEvidenceRoot)
